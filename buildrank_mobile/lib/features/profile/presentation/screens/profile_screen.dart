@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
 import 'package:buildrank_mobile/features/formBuilding/presentation/screens/form_building_screen.dart';
+import 'package:buildrank_mobile/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:buildrank_mobile/shared/widgets/building_list_item.dart';
 import 'package:buildrank_mobile/shared/widgets/badge_item.dart';
 import 'package:buildrank_mobile/features/myChat/my_chats_screen.dart';
@@ -25,6 +26,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadProfile();
+  }
+
+  bool get _isAdminFinca {
+    final role = (_userData?['role'] ?? '').toString();
+    return role == 'owner';
   }
 
   Future<void> _loadProfile() async {
@@ -110,6 +116,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _openEditProfile() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditProfileScreen(
+          initialFullName: _buildFullName(),
+          initialEmail: (_userData?['email'] ?? '').toString(),
+          initialRoleLabel: _buildRoleLabel(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,50 +168,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 const SizedBox(height: 16),
 
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const BuildingFormScreen(),
-                                ),
-                              );
-                            },
-                            child: const Text("Afegeix Edifici"),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {},
-                            child: const Text("Informes"),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const MyChatsScreen(),
+                if (_isAdminFinca) ...[
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const BuildingFormScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text("Crear Edifici"),
                             ),
-                          );
-                        },
-                        icon: const Icon(Icons.chat_bubble_outline),
-                        label: const Text("Els meus xats"),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              child: const Text("Informes"),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const MyChatsScreen(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.chat_bubble_outline),
+                          label: const Text("Els meus xats"),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
 
                 const SizedBox(height: 16),
 
@@ -215,6 +237,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
 
                 const SizedBox(height: 10),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Text(
+                      "Afegir Edifici",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
 
                 BuildingListItem(
                   title: "Torre Crystal Heights",
@@ -322,16 +362,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(
         children: [
-          ListTile(
-            leading: const CircleAvatar(radius: 25),
-            title: Text(_buildFullName()),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_buildRoleLabel()),
-                if (email.isNotEmpty) Text(email),
-              ],
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const CircleAvatar(radius: 25),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _buildFullName(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(_buildRoleLabel()),
+                      if (email.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(email),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              IconButton(
+                tooltip: 'Editar perfil',
+                onPressed: _openEditProfile,
+                icon: const Icon(Icons.edit_outlined),
+              ),
+            ],
           ),
           const Divider(),
           const Row(
