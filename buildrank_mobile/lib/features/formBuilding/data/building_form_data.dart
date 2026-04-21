@@ -36,9 +36,6 @@ class BuildingFormData {
       'numero': numero,
       'codiPostal': codiPostal,
       'barri': barri,
-      'latitud': latitud,
-      'longitud': longitud,
-      'zonaClimatica': zonaClimatica,
     };
   }
 

@@ -81,10 +81,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
   void initState() {
     super.initState();
 
-    _buildingService = BuildingService(
-      baseUrl: ApiConfig.baseUrl,
-      getAccessToken: TokenStorage.getAccessToken,
-    );
+    _buildingService = BuildingService();
   }
 
   @override
