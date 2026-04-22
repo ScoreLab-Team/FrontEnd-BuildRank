@@ -18,7 +18,7 @@ class ApiConfig {
   /// - Ejemplo: http://192.168.1.134:8000
   /// - Pis: http://192.168.1.108:8000
   /// - Casa: http://192.168.1.134:8000
-  static const String physicalDeviceBaseUrl = 'http://10.252.118.58:80';
+  static const String physicalDeviceBaseUrl = 'http://192.168.1.107:80';
 
   /// URL base activa de la aplicación.
   static const String baseUrl = physicalDeviceBaseUrl;

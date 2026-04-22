@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SimulationScreen extends StatefulWidget {
+class AlternativaSimulationScreen extends StatefulWidget {
   final String userRole;
   final String buildingName;
   final int currentPoints;
   final void Function(List<SimulationImprovement> selectedImprovements)?
   onPresentToVote;
 
-  const SimulationScreen({
+  const AlternativaSimulationScreen({
     super.key,
     required this.userRole,
     this.buildingName = 'Edifici A-240',
@@ -16,10 +16,12 @@ class SimulationScreen extends StatefulWidget {
   });
 
   @override
-  State<SimulationScreen> createState() => _SimulationScreenState();
+  State<AlternativaSimulationScreen> createState() =>
+      _AlternativaSimulationScreenState();
 }
 
-class _SimulationScreenState extends State<SimulationScreen> {
+class _AlternativaSimulationScreenState
+    extends State<AlternativaSimulationScreen> {
   final List<SimulationImprovement> _improvements = [
     const SimulationImprovement(
       id: 'solar_panels',
@@ -206,26 +208,27 @@ class _SimulationScreenState extends State<SimulationScreen> {
               ),
               const SizedBox(height: 14),
 
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _improvements.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                  childAspectRatio: 0.72,
-                ),
-                itemBuilder: (context, index) {
-                  final item = _improvements[index];
-                  final isSelected = _selectedIds.contains(item.id);
+              // PANEL HORITZONTAL SCROLL
+              SizedBox(
+                height: 285,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _improvements.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 14),
+                  itemBuilder: (context, index) {
+                    final item = _improvements[index];
+                    final isSelected = _selectedIds.contains(item.id);
 
-                  return _ImprovementCard(
-                    improvement: item,
-                    selected: isSelected,
-                    onTap: () => _toggleImprovement(item.id),
-                  );
-                },
+                    return SizedBox(
+                      width: 250,
+                      child: _ImprovementCard(
+                        improvement: item,
+                        selected: isSelected,
+                        onTap: () => _toggleImprovement(item.id),
+                      ),
+                    );
+                  },
+                ),
               ),
 
               const SizedBox(height: 28),
