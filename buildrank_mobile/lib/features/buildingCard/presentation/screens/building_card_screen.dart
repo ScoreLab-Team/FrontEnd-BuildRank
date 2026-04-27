@@ -178,6 +178,57 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
     return 'E';
   }
 
+  Map<String, dynamic>? get _classificacioEnergetica {
+    final value = _building['classificacio_energetica'];
+
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+
+    return null;
+  }
+
+  String get _energyLetter {
+    final letter = _classificacioEnergetica?['lletra']?.toString();
+
+    if (letter == null || letter.isEmpty || letter == 'null') {
+      // Fallback visual si el backend encara no retorna classificació.
+      // Així la pantalla no queda buida ni es trenca.
+      return _classificacioEnergetica == null ? _energyGradeFromScore() : '—';
+    }
+
+    return letter;
+  }
+
+  String get _energyMetricTitle {
+    final label = _classificacioEnergetica?['etiqueta']?.toString();
+
+    if (label == null || label.isEmpty || label == 'null') {
+      return 'QUALIFICACIÓ ESTIMADA';
+    }
+
+    return label.toUpperCase();
+  }
+
+  String? get _energyDetail {
+    final detail = _classificacioEnergetica?['detall']?.toString();
+
+    if (detail == null || detail.isEmpty || detail == 'null') {
+      return null;
+    }
+
+    return detail;
+  }
+
+  String? get _energyMissingDataText {
+    final missing = _classificacioEnergetica?['dades_insuficients'];
+
+    if (missing is List && missing.isNotEmpty) {
+      return 'Dades pendents: ${missing.join(", ")}';
+    }
+
+    return null;
+  }
+
   String _activeStatusLabel() {
     final actiu = _building['actiu'];
     if (actiu == false) return 'INACTIU';
@@ -407,8 +458,8 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
             childAspectRatio: 1.7,
             children: [
               MetricCard(
-                title: "QUALIFICACIÓ ESTIMADA",
-                value: _energyGradeFromScore(),
+                title: _energyMetricTitle,
+                value: _energyLetter,
                 icon: Icons.bolt,
               ),
               MetricCard(
@@ -428,6 +479,45 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
               ),
             ],
           ),
+
+          if (_energyDetail != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey.shade50,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.blueGrey.shade100),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _energyDetail!,
+                    style: TextStyle(
+                      color: Colors.blueGrey.shade900,
+                      height: 1.35,
+                      fontSize: 13,
+                    ),
+                  ),
+                  if (_energyMissingDataText != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      _energyMissingDataText!,
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade700,
+                        height: 1.35,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+
         ],
       ),
     );
