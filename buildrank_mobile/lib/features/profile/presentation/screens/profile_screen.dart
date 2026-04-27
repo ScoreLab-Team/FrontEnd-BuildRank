@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool get _isAdminFinca {
     final role = (_userData?['role'] ?? '').toString();
-    return role == 'owner';
+    return role == 'admin';
   }
 
   Future<void> _loadProfile() async {
@@ -105,12 +105,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final role = (_userData?['role'] ?? '').toString();
 
     switch (role) {
-      case 'owner':
+      case 'admin':
         return 'Administrador de finca';
+      case 'owner':
+        return 'Propietari';
       case 'tenant':
         return 'Llogater';
-      case 'admin':
-        return 'Administrador';
       default:
         return 'Usuari';
     }
@@ -238,23 +238,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 const SizedBox(height: 10),
 
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                if (_isAdminFinca) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const BuildingFormScreen(),
+                          ),
+                        );
+
+                        if (mounted) {
+                          _loadProfile();
+                        }
+                      },
+                      icon: const Icon(Icons.add_business_outlined),
+                      label: const Text(
+                        "Afegir edifici",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
                       ),
                     ),
-                    child: const Text(
-                      "Afegir Edifici",
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 12),
+                ] else ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.green.shade100),
+                    ),
+                    child: Text(
+                      "En aquest rol es mostraran els habitatges vinculats al teu compte. "
+                      "La gestió d'edificis queda reservada als administradors de finca.",
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.35,
+                        color: Colors.green.shade900,
+                      ),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
+                ],
 
                 BuildingListItem(
                   title: "Torre Crystal Heights",
