@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'package:buildrank_mobile/features/formBuilding/data/building_service.dart';
 import '../../../../shared/widgets/metric_card.dart';
 import '../../../../shared/widgets/action_tile.dart';
 import '../../../../shared/widgets/league_info_card.dart';
 import '../../../../shared/widgets/revision_card.dart';
 
 class BuildingDetailScreen extends StatefulWidget {
-  final int? idEdifici;
-  final Map<String, dynamic>? building;
-  final String? title;
-  final String? address;
-  final int? score;
+  final int idEdifici;
+  final Map<String, dynamic> building;
+  final String title;
+  final String address;
+  final int score;
 
   const BuildingDetailScreen({
     super.key,
-    this.idEdifici,
-    this.building,
-    this.title,
-    this.address,
-    this.score,
+    required this.idEdifici,
+    required this.building,
+    required this.title,
+    required this.address,
+    required this.score,
   });
 
   @override
@@ -26,77 +27,260 @@ class BuildingDetailScreen extends StatefulWidget {
 }
 
 class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
+  final BuildingService _buildingService = BuildingService();
+
   int _tabIndex = 0;
+  bool _isLoading = true;
+  String? _errorText;
+  Map<String, dynamic>? _buildingDetail;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildingDetail = widget.building;
+    _loadBuildingDetail();
+  }
+
+  Future<void> _loadBuildingDetail() async {
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+
+    try {
+      final detail = await _buildingService.getBuildingDetail(widget.idEdifici);
+
+      if (!mounted) return;
+
+      setState(() {
+        _buildingDetail = detail;
+      });
+    } on BuildingApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = 'No s’ha pogut carregar el detall de l’edifici.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Map<String, dynamic> get _building => _buildingDetail ?? widget.building;
+
+  Map<String, dynamic>? get _localitzacio {
+    final value = _building['localitzacio'];
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    return null;
+  }
+
+  int get _score => _readScore(_building, fallback: widget.score);
+
+  String get _title {
+    final localitzacio = _localitzacio;
+    final carrer = localitzacio?['carrer']?.toString().trim();
+    final numero = localitzacio?['numero']?.toString().trim();
+
+    if (carrer != null && carrer.isNotEmpty) {
+      return numero != null && numero.isNotEmpty ? '$carrer, $numero' : carrer;
+    }
+
+    return widget.title;
+  }
+
+  String get _address {
+    final localitzacio = _localitzacio;
+
+    if (localitzacio == null) {
+      return widget.address;
+    }
+
+    final barri = localitzacio['barri']?.toString().trim();
+    final codiPostal = localitzacio['codiPostal']?.toString().trim();
+    final zona = localitzacio['zonaClimatica']?.toString().trim();
+
+    final parts = [
+      if (barri != null && barri.isNotEmpty) barri,
+      if (codiPostal != null && codiPostal.isNotEmpty) codiPostal,
+      if (zona != null && zona.isNotEmpty) 'Zona climàtica $zona',
+    ];
+
+    return parts.isEmpty ? widget.address : parts.join(' · ');
+  }
+
+  String get _scoreLabel {
+    if (_score >= 80) return 'EXCEL·LENT';
+    if (_score >= 65) return 'BO';
+    if (_score >= 50) return 'MILLORABLE';
+    return 'PRIORITARI';
+  }
+
+  Color get _scoreColor {
+    if (_score >= 80) return Colors.green;
+    if (_score >= 65) return Colors.blue;
+    if (_score >= 50) return Colors.orange;
+    return Colors.red;
+  }
+
+  String _value(String key, {String fallback = 'No disponible'}) {
+    final value = _building[key];
+    if (value == null) return fallback;
+
+    final text = value.toString().trim();
+    return text.isEmpty ? fallback : text;
+  }
+
+  String _formatDouble(String key, {String suffix = '', String fallback = 'No disponible'}) {
+    final value = _building[key];
+
+    if (value is int) return '$value$suffix';
+    if (value is double) return '${value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1)}$suffix';
+
+    if (value is String) {
+      final parsed = double.tryParse(value);
+      if (parsed != null) {
+        return '${parsed.toStringAsFixed(parsed.truncateToDouble() == parsed ? 0 : 1)}$suffix';
+      }
+    }
+
+    return fallback;
+  }
+
+  int _readScore(Map<String, dynamic> building, {required int fallback}) {
+    final value = building['puntuacioBase'];
+
+    if (value is int) return value.clamp(0, 100);
+    if (value is double) return value.round().clamp(0, 100);
+    if (value is String) {
+      final parsed = double.tryParse(value);
+      if (parsed != null) return parsed.round().clamp(0, 100);
+    }
+
+    return fallback.clamp(0, 100);
+  }
+
+  String _energyGradeFromScore() {
+    if (_score >= 90) return 'A';
+    if (_score >= 75) return 'B';
+    if (_score >= 60) return 'C';
+    if (_score >= 45) return 'D';
+    return 'E';
+  }
+
+  String _activeStatusLabel() {
+    final actiu = _building['actiu'];
+    if (actiu == false) return 'INACTIU';
+    return 'ACTIU';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leadingWidth: 120,
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.arrow_back),
-                label: const Text("Torna"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+      body: RefreshIndicator(
+        onRefresh: _loadBuildingDetail,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leadingWidth: 120,
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text("Torna"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                  ),
                 ),
               ),
-            ),
-
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage("https://i.pravatar.cc/100"),
+              actions: [
+                IconButton(
+                  tooltip: 'Refrescar',
+                  onPressed: _isLoading ? null : _loadBuildingDetail,
+                  icon: _isLoading
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.refresh),
                 ),
-              ),
-            ],
-          ),
-
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                _buildHeader(),
-
-                const SizedBox(height: 20),
-
-                _buildPerformance(),
-
-                const SizedBox(height: 20),
-
-                _buildActions(),
-
-                const SizedBox(height: 20),
-
-                _buildTabs(),
-
-                const SizedBox(height: 16),
-
-                _buildDetails(),
-
-                const SizedBox(height: 20),
-
-                const LeagueInfoCard(),
-
-                const SizedBox(height: 20),
-
-                const RevisionCard(),
-
-                const SizedBox(height: 40),
+                const Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage("https://i.pravatar.cc/100"),
+                  ),
+                ),
               ],
             ),
+
+            if (_errorText != null)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: _buildErrorState(),
+              )
+            else
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 20),
+                    _buildPerformance(),
+                    const SizedBox(height: 20),
+                    _buildActions(),
+                    const SizedBox(height: 20),
+                    _buildTabs(),
+                    const SizedBox(height: 16),
+                    _buildTabContent(),
+                    const SizedBox(height: 20),
+                    const LeagueInfoCard(),
+                    const SizedBox(height: 20),
+                    const RevisionCard(),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 42),
+          const SizedBox(height: 12),
+          Text(
+            _errorText ?? 'No s’ha pogut carregar l’edifici.',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _loadBuildingDetail,
+            child: const Text('Torna-ho a provar'),
           ),
         ],
       ),
@@ -110,20 +294,13 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              "VERIFICAT • NIVELL 3",
-              style: TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-              ),
-            ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _StatusChip(text: _activeStatusLabel(), color: Colors.green),
+              _StatusChip(text: 'ID ${widget.idEdifici}', color: Colors.blueGrey),
+            ],
           ),
 
           const SizedBox(height: 10),
@@ -161,12 +338,11 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                       children: [
                         Text(
                           _score.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 46,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         Text(
                           _scoreLabel,
                           style: TextStyle(
@@ -182,15 +358,12 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                 const SizedBox(height: 16),
 
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
-                  child: const Text("+12% vs temporada anterior"),
+                  child: const Text("Puntuació base BuildRank"),
                 ),
               ],
             ),
@@ -214,7 +387,7 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                 style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1),
               ),
               Text(
-                "Veure Auditoria",
+                "Dades inicials",
                 style: TextStyle(
                   color: Colors.green,
                   fontWeight: FontWeight.w600,
@@ -232,29 +405,26 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             childAspectRatio: 1.7,
-            children: const [
+            children: [
               MetricCard(
-                title: "QUALIFICACIÓ ENERGÈTICA",
-                value: "B",
+                title: "QUALIFICACIÓ ESTIMADA",
+                value: _energyGradeFromScore(),
                 icon: Icons.bolt,
               ),
-
               MetricCard(
-                title: "EFICIÈNCIA HÍDRICA",
-                value: "A",
-                icon: Icons.water_drop,
+                title: "SUPERFÍCIE",
+                value: _formatDouble('superficieTotal', suffix: ' m²'),
+                icon: Icons.square_foot,
               ),
-
               MetricCard(
-                title: "RESILIÈNCIA",
-                value: "Alta",
-                icon: Icons.shield,
+                title: "PLANTES",
+                value: _value('nombrePlantes'),
+                icon: Icons.layers,
               ),
-
               MetricCard(
-                title: "EMISSIONS DE CO2",
-                value: "12kg/m²",
-                icon: Icons.eco,
+                title: "ORIENTACIÓ",
+                value: _value('orientacioPrincipal'),
+                icon: Icons.explore,
               ),
             ],
           ),
@@ -264,40 +434,34 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
   }
 
   Widget _buildActions() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             "ACCIONS RECOMANADES",
             style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1),
           ),
-
           SizedBox(height: 14),
-
           ActionTile(
             icon: Icons.bolt,
-            title: "Executa Simulació",
-            subtitle: "Prova el ROI de solar i aïllament",
+            title: "Executa simulació",
+            subtitle: "Prova escenaris de millora per aquest edifici",
             color: Color(0xFFE8F4EC),
           ),
-
           SizedBox(height: 10),
-
           ActionTile(
             icon: Icons.how_to_vote,
             title: "Votació de la comunitat",
-            subtitle: "Revisa 2 renovacions actives",
+            subtitle: "Funcionalitat preparada per futures propostes",
             color: Color(0xFFE7ECF7),
           ),
-
           SizedBox(height: 10),
-
           ActionTile(
             icon: Icons.description,
-            title: "Genera Informe",
-            subtitle: "Exporta les dades de l'edifici",
+            title: "Genera informe",
+            subtitle: "Exportació documental pendent d’integració",
             color: Color(0xFFF1F1F1),
           ),
         ],
@@ -324,21 +488,81 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
     );
   }
 
+  Widget _buildTabContent() {
+    switch (_tabIndex) {
+      case 1:
+        return _buildPlaceholderTab(
+          icon: Icons.history,
+          title: 'Historial encara no disponible',
+          text:
+              'En aquesta secció es mostraran canvis de puntuació, validacions i simulacions guardades.',
+        );
+      case 2:
+        return _buildPlaceholderTab(
+          icon: Icons.folder_outlined,
+          title: 'Documents pendents d’integració',
+          text:
+              'Aquí es podran consultar certificats, informes i documents associats a l’edifici.',
+        );
+      case 0:
+      default:
+        return _buildDetails();
+    }
+  }
+
+  Widget _buildPlaceholderTab({
+    required IconData icon,
+    required String title,
+    required String text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 32, color: Colors.black45),
+            const SizedBox(height: 10),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black54, height: 1.35),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDetails() {
+    final localitzacio = _localitzacio;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _DetailItem(
-                label: "ANY DE CONSTRUCCIÓ",
-                value: _value("anyConstruccio"),
+              Expanded(
+                child: _DetailItem(
+                  label: "ANY DE CONSTRUCCIÓ",
+                  value: _value("anyConstruccio"),
+                ),
               ),
-              _DetailItem(
-                label: "PLANTES",
-                value: "${_value("nombrePlantes")} plantes",
+              const SizedBox(width: 16),
+              Expanded(
+                child: _DetailItem(
+                  label: "PLANTES",
+                  value: "${_value("nombrePlantes")} plantes",
+                ),
               ),
             ],
           ),
@@ -346,50 +570,94 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
           const SizedBox(height: 20),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _DetailItem(
-                label: "TIPOLOGIA",
-                value: _value("tipologia"),
+              Expanded(
+                child: _DetailItem(
+                  label: "TIPOLOGIA",
+                  value: _value("tipologia"),
+                ),
               ),
-              _DetailItem(
-                label: "SUPERFÍCIE",
-                value: "${_value("superficieTotal")} m²",
+              const SizedBox(width: 16),
+              Expanded(
+                child: _DetailItem(
+                  label: "SUPERFÍCIE",
+                  value: _formatDouble("superficieTotal", suffix: " m²"),
+                ),
               ),
             ],
+          ),
+
+          const SizedBox(height: 20),
+
+          Row(
+            children: [
+              Expanded(
+                child: _DetailItem(
+                  label: "REGLAMENT",
+                  value: _value("reglament"),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _DetailItem(
+                  label: "ORIENTACIÓ",
+                  value: _value("orientacioPrincipal"),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.green.shade50,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.green.shade100),
+            ),
+            child: Text(
+              localitzacio == null
+                  ? 'Aquest edifici encara no té localització associada.'
+                  : 'Localització: ${localitzacio['carrer'] ?? '-'}, '
+                      '${localitzacio['numero'] ?? '-'} · '
+                      '${localitzacio['barri'] ?? '-'} · '
+                      '${localitzacio['codiPostal'] ?? '-'}',
+              style: TextStyle(
+                height: 1.35,
+                color: Colors.green.shade900,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  int get _score => (widget.score ?? 0).clamp(0, 100);
+class _StatusChip extends StatelessWidget {
+  final String text;
+  final Color color;
 
-  String get _title => widget.title ?? 'Edifici';
+  const _StatusChip({
+    required this.text,
+    required this.color,
+  });
 
-  String get _address => widget.address ?? 'Localització no disponible';
-
-  String get _scoreLabel {
-    if (_score >= 80) return 'EXCEL·LENT';
-    if (_score >= 65) return 'BO';
-    if (_score >= 50) return 'MILLORABLE';
-    return 'PRIORITARI';
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Text(text),
+      backgroundColor: color.withValues(alpha: 0.12),
+      labelStyle: TextStyle(
+        color: color,
+        fontWeight: FontWeight.w700,
+        fontSize: 12,
+      ),
+      side: BorderSide(color: color.withValues(alpha: 0.2)),
+    );
   }
-
-  Color get _scoreColor {
-    if (_score >= 80) return Colors.green;
-    if (_score >= 65) return Colors.blue;
-    if (_score >= 50) return Colors.orange;
-    return Colors.red;
-  }
-
-  String _value(String key, {String fallback = 'No disponible'}) {
-    final value = widget.building?[key];
-    if (value == null) return fallback;
-    final text = value.toString().trim();
-    return text.isEmpty ? fallback : text;
-  }
-  
 }
 
 class _DetailItem extends StatelessWidget {
@@ -411,9 +679,7 @@ class _DetailItem extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-
         const SizedBox(height: 4),
-
         Text(
           value,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

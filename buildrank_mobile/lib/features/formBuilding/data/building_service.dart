@@ -72,6 +72,50 @@ class BuildingService {
     }
   }
 
+  Future<Map<String, dynamic>> getBuildingDetail(int idEdifici) async {
+    try {
+      final response = await http
+          .get(
+            ApiConfig.uri(ApiConfig.edificiDetail(idEdifici)),
+            headers: await _buildHeaders(),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      final data = _decodeBody(response);
+
+      if (response.statusCode == 200) {
+        return data;
+      }
+
+      throw BuildingApiException(
+        _extractErrorMessage(
+          data,
+          fallback: 'No s’ha pogut carregar el detall de l’edifici.',
+        ),
+        statusCode: response.statusCode,
+        details: data,
+      );
+    } on BuildingApiException {
+      rethrow;
+    } on TimeoutException {
+      throw const BuildingApiException(
+        'La càrrega del detall de l’edifici ha trigat massa.',
+      );
+    } on SocketException {
+      throw const BuildingApiException(
+        'No s’ha pogut connectar amb el servidor.',
+      );
+    } on FormatException {
+      throw const BuildingApiException(
+        'La resposta del servidor no té el format esperat.',
+      );
+    } catch (_) {
+      throw const BuildingApiException(
+        'S’ha produït un error inesperat carregant l’edifici.',
+      );
+    }
+  }
+
   Future<List<Map<String, dynamic>>> autocompleteCarrers(String query) async {
     final trimmedQuery = query.trim();
 
