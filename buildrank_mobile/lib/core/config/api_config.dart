@@ -63,6 +63,9 @@ class ApiConfig {
   static String simulacions(int idEdifici) =>
       '$baseUrl/api/buildings/edificis/$idEdifici/simulacions/';
 
+  static String milloresImplementades(int idEdifici) =>
+    '$baseUrl/api/buildings/edificis/$idEdifici/millores-implementades/';
+
   /// Helper comú per construir Uri amb query params.
   static Uri uri(String endpoint, {Map<String, dynamic>? queryParameters}) {
     return Uri.parse(endpoint).replace(

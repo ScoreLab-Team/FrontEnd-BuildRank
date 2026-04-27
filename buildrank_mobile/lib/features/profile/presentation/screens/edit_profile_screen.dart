@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
+
 class EditProfileScreen extends StatefulWidget {
   final String initialFullName;
   final String initialEmail;
@@ -17,41 +19,47 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late final TextEditingController _fullNameController;
+  final _authService = AuthService();
+
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _lastNameController;
   late final TextEditingController _emailController;
 
-  late String _selectedRoleLabel;
   bool _isSaving = false;
-
-  final List<String> _roleOptions = const [
-    'Administrador de finca',
-    'Propietari',
-    'Llogater',
-  ];
 
   @override
   void initState() {
     super.initState();
-    _fullNameController = TextEditingController(text: widget.initialFullName);
+
+    final parts = widget.initialFullName.trim().split(RegExp(r'\s+'));
+    final firstName = parts.isNotEmpty ? parts.first : '';
+    final lastName = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+
+    _firstNameController = TextEditingController(text: firstName);
+    _lastNameController = TextEditingController(text: lastName);
     _emailController = TextEditingController(text: widget.initialEmail);
-    _selectedRoleLabel = _roleOptions.contains(widget.initialRoleLabel)
-        ? widget.initialRoleLabel
-        : _roleOptions.first;
   }
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _emailController.dispose();
     super.dispose();
   }
 
-  void _saveProfile() async {
-    final fullName = _fullNameController.text.trim();
+  Future<void> _saveProfile() async {
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
     final email = _emailController.text.trim();
 
-    if (fullName.isEmpty) {
+    if (firstName.isEmpty) {
       _showMessage('El nom és obligatori.');
+      return;
+    }
+
+    if (lastName.isEmpty) {
+      _showMessage('Els cognoms són obligatoris.');
       return;
     }
 
@@ -69,41 +77,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _isSaving = true;
     });
 
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      await _authService.updateProfile(
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      );
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Canvis desats localment.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Perfil actualitzat correctament.')),
+      );
 
-    Navigator.pop(context);
-
-    setState(() {
-      _isSaving = false;
-    });
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      _showMessage(e.toString().replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar perfil')),
+      backgroundColor: const Color(0xFFF6F7F2),
+      appBar: AppBar(
+        title: const Text('Editar perfil'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const SizedBox(height: 8),
-
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(22),
               boxShadow: const [
                 BoxShadow(
                   blurRadius: 18,
@@ -117,80 +139,82 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 const Text(
                   'Dades personals',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Modifica la informació bàsica del teu perfil.',
-                  style: TextStyle(fontSize: 14, color: Colors.black54),
+                  'Actualitza la informació bàsica del teu compte. El rol no es pot modificar des d’aquesta pantalla.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                    height: 1.35,
+                  ),
                 ),
                 const SizedBox(height: 24),
-
                 TextField(
-                  controller: _fullNameController,
+                  controller: _firstNameController,
                   enabled: !_isSaving,
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
-                    labelText: 'Nom complet',
+                    labelText: 'Nom',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
+                TextField(
+                  controller: _lastNameController,
+                  enabled: !_isSaving,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Cognoms',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _emailController,
                   enabled: !_isSaving,
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
                   decoration: const InputDecoration(
                     labelText: 'Correu electrònic',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email_outlined),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedRoleLabel,
-                  items: _roleOptions
-                      .map(
-                        (role) => DropdownMenuItem<String>(
-                          value: role,
-                          child: Text(role),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: _isSaving
-                      ? null
-                      : (value) {
-                          if (value == null) return;
-                          setState(() {
-                            _selectedRoleLabel = value;
-                          });
-                        },
+                InputDecorator(
                   decoration: const InputDecoration(
                     labelText: 'Rol',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.badge_outlined),
                   ),
+                  child: Text(
+                    widget.initialRoleLabel,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ),
-
                 const SizedBox(height: 24),
-
                 SizedBox(
                   height: 52,
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: _isSaving ? null : _saveProfile,
-                    child: Text(
+                    icon: _isSaving
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.save_outlined),
+                    label: Text(
                       _isSaving ? 'Desant...' : 'Guardar canvis',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 10),
-
                 OutlinedButton(
                   onPressed: _isSaving ? null : () => Navigator.pop(context),
                   child: const Text('Cancel·lar'),

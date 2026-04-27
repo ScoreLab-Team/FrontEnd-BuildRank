@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _openEditProfile() async {
-    await Navigator.push(
+    final updated = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
         builder: (_) => EditProfileScreen(
@@ -161,8 +161,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    if (mounted) {
-      _loadProfile();
+    if (!mounted) return;
+
+    if (updated == true) {
+      await _loadProfile();
     }
   }
 

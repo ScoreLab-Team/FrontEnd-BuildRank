@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:buildrank_mobile/features/simulation/data/implemented_improvement_model.dart';
 import 'package:buildrank_mobile/features/simulation/data/improvement_model.dart';
+import 'package:buildrank_mobile/features/simulation/data/saved_simulation_model.dart';
 import 'package:buildrank_mobile/features/simulation/data/simulation_result_model.dart';
 import 'package:buildrank_mobile/features/simulation/data/simulation_service.dart';
 
@@ -25,12 +27,18 @@ class SimulationScreen extends StatefulWidget {
 class _SimulationScreenState extends State<SimulationScreen> {
   final _simulationService = SimulationService();
 
+  int _selectedTab = 0;
+
   bool _isLoadingCatalog = true;
+  bool _isLoadingHistory = false;
   bool _isPreviewLoading = false;
   bool _isSaving = false;
   String? _errorText;
 
   List<ImprovementModel> _improvements = [];
+  List<SavedSimulationModel> _savedSimulations = [];
+  List<ImplementedImprovementModel> _implementedImprovements = [];
+
   final Set<int> _selectedIds = {};
   SimulationResultModel? _previewResult;
 
@@ -40,6 +48,14 @@ class _SimulationScreenState extends State<SimulationScreen> {
   void initState() {
     super.initState();
     _loadCatalog();
+    _loadHistory();
+  }
+
+  Future<void> _refreshAll() async {
+    await Future.wait([
+      _loadCatalog(),
+      _loadHistory(),
+    ]);
   }
 
   Future<void> _loadCatalog() async {
@@ -77,6 +93,43 @@ class _SimulationScreenState extends State<SimulationScreen> {
     }
   }
 
+  Future<void> _loadHistory() async {
+    setState(() {
+      _isLoadingHistory = true;
+    });
+
+    try {
+      final saved = await _simulationService.getSavedSimulations(widget.idEdifici);
+      final implemented =
+          await _simulationService.getImplementedImprovements(widget.idEdifici);
+
+      if (!mounted) return;
+
+      setState(() {
+        _savedSimulations = saved;
+        _implementedImprovements = implemented;
+      });
+    } on SimulationApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = 'No s’ha pogut carregar l’historial de simulacions.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingHistory = false;
+        });
+      }
+    }
+  }
+
   List<ImprovementModel> get _selectedImprovements {
     return _improvements
         .where((improvement) => _selectedIds.contains(improvement.idMillora))
@@ -102,7 +155,6 @@ class _SimulationScreenState extends State<SimulationScreen> {
         _selectedIds.add(idMillora);
       }
 
-      // Si canvia la selecció, el preview anterior ja no representa l’escenari actual.
       _previewResult = null;
     });
   }
@@ -172,6 +224,14 @@ class _SimulationScreenState extends State<SimulationScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Simulació guardada correctament.')),
       );
+
+      await _loadHistory();
+
+      if (!mounted) return;
+
+      setState(() {
+        _selectedTab = 1;
+      });
     } on SimulationApiException catch (e) {
       if (!mounted) return;
 
@@ -226,100 +286,36 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedCount = _selectedIds.length;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F2),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: _loadCatalog,
+          onRefresh: _refreshAll,
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
             children: [
               _buildHeader(),
 
-              const SizedBox(height: 18),
+              const SizedBox(height: 16),
+
+              _buildSimulationTabs(),
+
+              const SizedBox(height: 16),
 
               if (_errorText != null) ...[
                 _ErrorBanner(
                   text: _errorText!,
-                  onRetry: _isLoadingCatalog ? null : _loadCatalog,
+                  onRetry: _refreshAll,
                 ),
                 const SizedBox(height: 16),
               ],
 
-              if (_isLoadingCatalog)
-                const Padding(
-                  padding: EdgeInsets.only(top: 60),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              else ...[
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Catàleg de millores',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(999),
-                        border: Border.all(color: const Color(0xFF22C55E)),
-                        color: const Color(0xFFEAF8EE),
-                      ),
-                      child: Text(
-                        '$selectedCount seleccionades',
-                        style: const TextStyle(
-                          color: Color(0xFF16A34A),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-
-                if (_improvements.isEmpty)
-                  const _EmptyCatalogCard()
-                else
-                  ..._improvements.map(
-                    (improvement) {
-                      final selected =
-                          _selectedIds.contains(improvement.idMillora);
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _ImprovementCard(
-                          improvement: improvement,
-                          icon: _iconForImprovement(improvement),
-                          selected: selected,
-                          onTap: () => _toggleImprovement(
-                            improvement.idMillora,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-
-                const SizedBox(height: 12),
-
-                _buildActionButtons(),
-
-                const SizedBox(height: 20),
-
-                if (_previewResult != null)
-                  _SimulationResultCard(result: _previewResult!),
-              ],
+              if (_selectedTab == 0)
+                _buildSimulationTab()
+              else if (_selectedTab == 1)
+                _buildSavedSimulationsTab()
+              else
+                _buildImplementedImprovementsTab(),
             ],
           ),
         ),
@@ -379,6 +375,173 @@ class _SimulationScreenState extends State<SimulationScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSimulationTabs() {
+    return SegmentedButton<int>(
+      segments: const [
+        ButtonSegment(
+          value: 0,
+          label: Text('Simular'),
+          icon: Icon(Icons.analytics_outlined),
+        ),
+        ButtonSegment(
+          value: 1,
+          label: Text('Guardades'),
+          icon: Icon(Icons.save_outlined),
+        ),
+        ButtonSegment(
+          value: 2,
+          label: Text('Aplicades'),
+          icon: Icon(Icons.verified_outlined),
+        ),
+      ],
+      selected: {_selectedTab},
+      onSelectionChanged: (value) {
+        setState(() {
+          _selectedTab = value.first;
+        });
+      },
+    );
+  }
+
+  Widget _buildSimulationTab() {
+    final selectedCount = _selectedIds.length;
+
+    if (_isLoadingCatalog) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 60),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Catàleg de millores',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 8,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: const Color(0xFF22C55E)),
+                color: const Color(0xFFEAF8EE),
+              ),
+              child: Text(
+                '$selectedCount seleccionades',
+                style: const TextStyle(
+                  color: Color(0xFF16A34A),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        if (_improvements.isEmpty)
+          const _EmptyCatalogCard()
+        else
+          ..._improvements.map(
+            (improvement) {
+              final selected = _selectedIds.contains(improvement.idMillora);
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _ImprovementCard(
+                  improvement: improvement,
+                  icon: _iconForImprovement(improvement),
+                  selected: selected,
+                  onTap: () => _toggleImprovement(improvement.idMillora),
+                ),
+              );
+            },
+          ),
+
+        const SizedBox(height: 12),
+
+        _buildActionButtons(),
+
+        const SizedBox(height: 20),
+
+        if (_previewResult != null)
+          _SimulationResultCard(result: _previewResult!),
+      ],
+    );
+  }
+
+  Widget _buildSavedSimulationsTab() {
+    if (_isLoadingHistory) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 60),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_savedSimulations.isEmpty) {
+      return const _InfoCard(
+        text:
+            'Encara no hi ha simulacions guardades per aquest edifici. Calcula un preview i prem “Guardar simulació”.',
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Simulacions guardades',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 12),
+        ..._savedSimulations.map(
+          (simulation) => _SavedSimulationCard(simulation: simulation),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImplementedImprovementsTab() {
+    if (_isLoadingHistory) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 60),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_implementedImprovements.isEmpty) {
+      return const _InfoCard(
+        text:
+            'Encara no hi ha millores aplicades registrades. Les simulacions guardades són escenaris; les aplicades representen actuacions realment executades o en validació.',
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Millores aplicades',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 12),
+        ..._implementedImprovements.map(
+          (improvement) => _ImplementedImprovementCard(improvement: improvement),
+        ),
+      ],
     );
   }
 
@@ -669,6 +832,109 @@ class _SimulationResultCard extends StatelessWidget {
               'Cost total estimat: ${_formatCurrency(result.delta.costTotalEstimat)} · Motor ${result.versioMotor}',
         ),
       ],
+    );
+  }
+}
+
+class _SavedSimulationCard extends StatelessWidget {
+  final SavedSimulationModel simulation;
+
+  const _SavedSimulationCard({required this.simulation});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            simulation.descripcio,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Data: ${simulation.dataSimulacio} · Motor ${simulation.versioMotor}',
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _MiniChip(
+                text:
+                    '-${simulation.reduccioConsumPrevista.toStringAsFixed(0)} kWh',
+              ),
+              _MiniChip(
+                text:
+                    '-${simulation.reduccioEmissionsPrevista.toStringAsFixed(0)} kg CO₂',
+              ),
+              _MiniChip(text: 'Cost ${_formatCurrency(simulation.costEstimat)}'),
+              _MiniChip(
+                text: 'Estalvi ${_formatCurrency(simulation.estalviAnual)}',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImplementedImprovementCard extends StatelessWidget {
+  final ImplementedImprovementModel improvement;
+
+  const _ImplementedImprovementCard({required this.improvement});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            improvement.nom,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Execució: ${improvement.dataExecucio}',
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _MiniChip(text: improvement.estatValidacio),
+              _MiniChip(
+                text: 'Cost real ${_formatCurrency(improvement.costReal)}',
+              ),
+            ],
+          ),
+          if (improvement.observacionsAdmin.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text(
+              improvement.observacionsAdmin,
+              style: const TextStyle(color: Colors.black54),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

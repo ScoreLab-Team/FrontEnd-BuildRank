@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:buildrank_mobile/features/simulation/data/saved_simulation_model.dart';
+import 'package:buildrank_mobile/features/simulation/data/implemented_improvement_model.dart';
 import 'package:buildrank_mobile/core/config/api_config.dart';
 import 'package:buildrank_mobile/features/auth/data/token_storage.dart';
 import 'package:buildrank_mobile/features/simulation/data/improvement_model.dart';
@@ -198,6 +200,94 @@ class SimulationService {
     }
 
     return data.toString();
+  }
+
+  Future<List<SavedSimulationModel>> getSavedSimulations(int idEdifici) async {
+    try {
+      final response = await http
+          .get(
+            ApiConfig.uri(ApiConfig.simulacions(idEdifici)),
+            headers: await _buildHeaders(),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      final decoded = _tryDecodeBody(response.body);
+
+      if (response.statusCode != 200) {
+        throw SimulationApiException(
+          _extractErrorMessage(
+            decoded,
+            fallback: 'No s’han pogut carregar les simulacions guardades.',
+          ),
+          statusCode: response.statusCode,
+          details: decoded,
+        );
+      }
+
+      if (decoded is! List) {
+        throw const SimulationApiException(
+          'Les simulacions guardades no tenen el format esperat.',
+        );
+      }
+
+      return decoded
+          .whereType<Map>()
+          .map((item) => SavedSimulationModel.fromJson(
+                Map<String, dynamic>.from(item),
+              ))
+          .toList();
+    } on SimulationApiException {
+      rethrow;
+    } catch (_) {
+      throw const SimulationApiException(
+        'S’ha produït un error carregant les simulacions guardades.',
+      );
+    }
+  }
+
+  Future<List<ImplementedImprovementModel>> getImplementedImprovements(
+    int idEdifici,
+  ) async {
+    try {
+      final response = await http
+          .get(
+            ApiConfig.uri(ApiConfig.milloresImplementades(idEdifici)),
+            headers: await _buildHeaders(),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      final decoded = _tryDecodeBody(response.body);
+
+      if (response.statusCode != 200) {
+        throw SimulationApiException(
+          _extractErrorMessage(
+            decoded,
+            fallback: 'No s’han pogut carregar les millores aplicades.',
+          ),
+          statusCode: response.statusCode,
+          details: decoded,
+        );
+      }
+
+      if (decoded is! List) {
+        throw const SimulationApiException(
+          'Les millores aplicades no tenen el format esperat.',
+        );
+      }
+
+      return decoded
+          .whereType<Map>()
+          .map((item) => ImplementedImprovementModel.fromJson(
+                Map<String, dynamic>.from(item),
+              ))
+          .toList();
+    } on SimulationApiException {
+      rethrow;
+    } catch (_) {
+      throw const SimulationApiException(
+        'S’ha produït un error carregant les millores aplicades.',
+      );
+    }
   }
 }
 
