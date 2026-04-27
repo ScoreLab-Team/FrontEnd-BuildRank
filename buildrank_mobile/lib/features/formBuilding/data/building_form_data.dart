@@ -36,6 +36,10 @@ class BuildingFormData {
       'numero': numero,
       'codiPostal': codiPostal,
       'barri': barri,
+      if (latitud != null) 'latitud': latitud,
+      if (longitud != null) 'longitud': longitud,
+      if (zonaClimatica != null && zonaClimatica!.trim().isNotEmpty)
+        'zonaClimatica': zonaClimatica,
     };
   }
 

@@ -36,6 +36,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
   Timer? _streetDebounce;
   List<Map<String, dynamic>> _streetSuggestions = [];
   Map<String, dynamic>? _selectedStreetSuggestion;
+  String? _streetSuggestionsMessage;
 
   String _selectedBuildingType = 'Residencial';
   String _selectedOrientation = '';
@@ -147,25 +148,46 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
   }
 
   Future<void> _onStreetChanged(String value) async {
-    _selectedStreetSuggestion = null;
+    setState(() {
+      _selectedStreetSuggestion = null;
+      _streetSuggestionsMessage = null;
+    });
 
     _streetDebounce?.cancel();
 
     final trimmed = value.trim();
+
     if (trimmed.isEmpty) {
       if (!mounted) return;
+
       setState(() {
         _streetSuggestions = [];
         _isLoadingStreetSuggestions = false;
+        _streetSuggestionsMessage = null;
       });
+
       return;
     }
 
-    _streetDebounce = Timer(const Duration(milliseconds: 250), () async {
+    if (trimmed.length < 2) {
+      if (!mounted) return;
+
+      setState(() {
+        _streetSuggestions = [];
+        _isLoadingStreetSuggestions = false;
+        _streetSuggestionsMessage =
+            'Escriu almenys 2 caràcters per cercar el carrer.';
+      });
+
+      return;
+    }
+
+    _streetDebounce = Timer(const Duration(milliseconds: 300), () async {
       if (!mounted) return;
 
       setState(() {
         _isLoadingStreetSuggestions = true;
+        _streetSuggestionsMessage = null;
       });
 
       try {
@@ -175,12 +197,24 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
 
         setState(() {
           _streetSuggestions = suggestions;
+          _streetSuggestionsMessage = suggestions.isEmpty
+              ? 'No s’ha trobat cap carrer amb “$trimmed”.'
+              : null;
+        });
+      } on BuildingApiException catch (e) {
+        if (!mounted) return;
+
+        setState(() {
+          _streetSuggestions = [];
+          _streetSuggestionsMessage = e.message;
         });
       } catch (_) {
         if (!mounted) return;
 
         setState(() {
           _streetSuggestions = [];
+          _streetSuggestionsMessage =
+              'No s’han pogut carregar els suggeriments de carrers.';
         });
       } finally {
         if (mounted) {
@@ -197,6 +231,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
       _selectedStreetSuggestion = suggestion;
       _streetController.text = _streetDisplayName(suggestion);
       _streetSuggestions = [];
+      _streetSuggestionsMessage = null;
     });
 
     _streetFocusNode.unfocus();
@@ -222,6 +257,14 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
 
     if (streetName.isEmpty) {
       return 'El nom del carrer és obligatori.';
+    }
+
+    if (_selectedStreetSuggestion == null) {
+      return 'Selecciona un carrer de la llista de suggeriments.';
+    }
+
+    if (_selectedStreetSuggestion == null) {
+      return 'Selecciona un carrer de la llista de suggeriments perquè el backend el pugui validar.';
     }
 
     if (streetNumber.isEmpty) {
@@ -357,7 +400,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
       Navigator.pop(context, createdBuilding);
     } on BuildingApiException catch (e) {
       if (!mounted) return;
-      _showMessage(e.toString());
+      _showMessage(e.message);
     } catch (_) {
       if (!mounted) return;
       _showMessage('S\'ha produït un error inesperat en desar l\'edifici.');
@@ -524,13 +567,49 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
                         color: isSelected ? Colors.green : Colors.black54,
                       ),
                       title: Text(displayName),
-                      subtitle: rangeText != null ? Text(rangeText) : null,
+                      subtitle: rangeText != null
+                          ? Text(rangeText)
+                          : const Text('Rang de numeració no informat'),
                       trailing: isSelected
                           ? const Icon(Icons.check_circle, color: Colors.green)
-                          : null,
+                          : const Icon(Icons.chevron_right),
                       onTap: () => _selectStreetSuggestion(suggestion),
                     );
                   }).toList(),
+                ),
+              ),
+            ],
+
+            if (_streetSuggestionsMessage != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.orange.shade100),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 18,
+                      color: Colors.orange.shade800,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _streetSuggestionsMessage!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.35,
+                          color: Colors.orange.shade900,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -564,7 +643,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      "El carrer es consulta al backend i, en desar, es crea primer la localització i després l’edifici.",
+                      "Selecciona un carrer de la llista de suggeriments. En desar, BuildRank crearà primer la localització i després l’edifici vinculat al teu compte d’administrador.",
                       style: TextStyle(height: 1.4),
                     ),
                   ),
@@ -785,7 +864,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
               onPressed: _isSubmitting ? null : _submit,
               style: _primaryButtonStyle(),
               child: Text(
-                _isSubmitting ? 'Desant...' : 'Desa i torna al perfil',
+                _isSubmitting ? 'Desant edifici...' : 'Crear edifici',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

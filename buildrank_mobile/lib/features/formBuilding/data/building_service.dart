@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:buildrank_mobile/core/config/api_config.dart';
 import 'package:buildrank_mobile/features/auth/data/token_storage.dart';
 import 'package:http/http.dart' as http;
@@ -73,25 +74,46 @@ class BuildingService {
 
   Future<List<Map<String, dynamic>>> autocompleteCarrers(String query) async {
     final trimmedQuery = query.trim();
-    if (trimmedQuery.isEmpty) return [];
+
+    if (trimmedQuery.length < 2) {
+      return [];
+    }
+
+    final uri = ApiConfig.uri(
+      ApiConfig.carrersAutocomplete,
+      queryParameters: {'q': trimmedQuery},
+    );
 
     try {
+      final headers = await _buildHeaders();
+
+      if (kDebugMode) {
+        debugPrint('[BuildingService] GET $uri');
+        debugPrint(
+          '[BuildingService] Auth header present: ${headers.containsKey('Authorization')}',
+        );
+      }
+
       final response = await http
           .get(
-            ApiConfig.uri(
-              ApiConfig.carrersAutocomplete,
-              queryParameters: {'q': trimmedQuery},
-            ),
-            headers: await _buildHeaders(),
+            uri,
+            headers: headers,
           )
           .timeout(const Duration(seconds: 10));
 
+      if (kDebugMode) {
+        debugPrint('[BuildingService] Status: ${response.statusCode}');
+        debugPrint('[BuildingService] Body: ${response.body}');
+      }
+
       if (response.statusCode != 200) {
         final decoded = _tryDecodeBody(response.body);
+
         throw BuildingApiException(
           _extractErrorMessage(
             decoded,
-            fallback: 'No s\'han pogut carregar els suggeriments de carrers.',
+            fallback:
+                'No s’han pogut carregar els suggeriments de carrers. Codi ${response.statusCode}.',
           ),
           statusCode: response.statusCode,
           details: decoded,
@@ -100,7 +122,11 @@ class BuildingService {
 
       final decoded = jsonDecode(response.body);
 
-      if (decoded is! List) return [];
+      if (decoded is! List) {
+        throw const BuildingApiException(
+          'La resposta del cercador de carrers no és una llista.',
+        );
+      }
 
       return decoded
           .whereType<Map>()
@@ -114,15 +140,19 @@ class BuildingService {
       );
     } on SocketException {
       throw const BuildingApiException(
-        'No s\'ha pogut connectar amb el servidor.',
+        'No s’ha pogut connectar amb el servidor. Revisa la IP configurada al frontend.',
       );
     } on FormatException {
       throw const BuildingApiException(
-        'La resposta del servidor no té el format esperat.',
+        'La resposta del servidor no té format JSON vàlid.',
       );
-    } catch (_) {
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[BuildingService] Error autocompleteCarrers: $e');
+      }
+
       throw const BuildingApiException(
-        'S\'ha produït un error inesperat carregant els carrers.',
+        'S’ha produït un error inesperat carregant els carrers.',
       );
     }
   }
@@ -131,11 +161,13 @@ class BuildingService {
     Map<String, dynamic> payload,
   ) async {
     try {
-      final response = await http.post(
-        ApiConfig.uri(ApiConfig.localitzacions),
-        headers: await _buildHeaders(),
-        body: jsonEncode(payload),
-      );
+      final response = await http
+          .post(
+            ApiConfig.uri(ApiConfig.localitzacions),
+            headers: await _buildHeaders(),
+            body: jsonEncode(payload),
+          )
+          .timeout(const Duration(seconds: 10));
 
       final data = _decodeBody(response);
 
@@ -172,11 +204,13 @@ class BuildingService {
     Map<String, dynamic> payload,
   ) async {
     try {
-      final response = await http.post(
-        ApiConfig.uri(ApiConfig.crearEdifici),
-        headers: await _buildHeaders(),
-        body: jsonEncode(payload),
-      );
+      final response = await http
+          .post(
+            ApiConfig.uri(ApiConfig.crearEdifici),
+            headers: await _buildHeaders(),
+            body: jsonEncode(payload),
+          )
+          .timeout(const Duration(seconds: 10));
 
       final data = _decodeBody(response);
 
@@ -218,12 +252,18 @@ class BuildingService {
     final localitzacioId = _extractId(localitzacio);
     if (localitzacioId == null) {
       throw const BuildingApiException(
-        'La localització s\'ha creat però la resposta no conté cap id reconeixible.',
+        'La localització s’ha creat però la resposta no conté cap id reconeixible.',
       );
     }
 
     final payloadAmbLocalitzacio = {
       ...edificiPayload,
+
+      // Camp nou i explícit acceptat pel serializer backend.
+      'localitzacioId': localitzacioId,
+
+      // Camp mantingut temporalment per compatibilitat si alguna branca antiga
+      // del backend encara el feia servir. Si el serializer no l'utilitza, s'ignora.
       'localitzacio': localitzacioId,
     };
 
@@ -295,8 +335,5 @@ class BuildingApiException implements Exception {
   const BuildingApiException(this.message, {this.statusCode, this.details});
 
   @override
-  String toString() {
-    if (details == null) return message;
-    return '$message Detall: $details';
-  }
+  String toString() => message;
 }
