@@ -6,7 +6,20 @@ import '../../../../shared/widgets/league_info_card.dart';
 import '../../../../shared/widgets/revision_card.dart';
 
 class BuildingDetailScreen extends StatefulWidget {
-  const BuildingDetailScreen({super.key});
+  final int? idEdifici;
+  final Map<String, dynamic>? building;
+  final String? title;
+  final String? address;
+  final int? score;
+
+  const BuildingDetailScreen({
+    super.key,
+    this.idEdifici,
+    this.building,
+    this.title,
+    this.address,
+    this.score,
+  });
 
   @override
   State<BuildingDetailScreen> createState() => _BuildingDetailScreenState();
@@ -115,18 +128,18 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
 
           const SizedBox(height: 10),
 
-          const Text(
-            "Torre Skyline Heights",
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+          Text(
+            _title,
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 6),
 
-          const Row(
+          Row(
             children: [
-              Icon(Icons.location_on_outlined, size: 16),
-              SizedBox(width: 6),
-              Text("450 Grand Avenue, Metropolis"),
+              const Icon(Icons.location_on_outlined, size: 16),
+              const SizedBox(width: 6),
+              Expanded(child: Text(_address)),
             ],
           ),
 
@@ -140,14 +153,14 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                   height: 180,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.green, width: 10),
+                    border: Border.all(color: _scoreColor, width: 10),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "94",
+                          _score.toString(),
                           style: TextStyle(
                             fontSize: 46,
                             fontWeight: FontWeight.bold,
@@ -155,9 +168,9 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                         ),
 
                         Text(
-                          "EXCEL·LENT",
+                          _scoreLabel,
                           style: TextStyle(
-                            color: Colors.green,
+                            color: _scoreColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -315,24 +328,33 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
-        children: const [
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _DetailItem(label: "ANY DE CONSTRUCCIÓ", value: "1998"),
-              _DetailItem(label: "PLANTES", value: "12 plantes"),
+              _DetailItem(
+                label: "ANY DE CONSTRUCCIÓ",
+                value: _value("anyConstruccio"),
+              ),
+              _DetailItem(
+                label: "PLANTES",
+                value: "${_value("nombrePlantes")} plantes",
+              ),
             ],
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _DetailItem(label: "TIPOLOGIA", value: "Complex Residencial"),
               _DetailItem(
-                label: "TIPUS SUBMINISTRAMENT",
-                value: "Mixt (xarxa/gas)",
+                label: "TIPOLOGIA",
+                value: _value("tipologia"),
+              ),
+              _DetailItem(
+                label: "SUPERFÍCIE",
+                value: "${_value("superficieTotal")} m²",
               ),
             ],
           ),
@@ -340,6 +362,34 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
       ),
     );
   }
+
+  int get _score => (widget.score ?? 0).clamp(0, 100);
+
+  String get _title => widget.title ?? 'Edifici';
+
+  String get _address => widget.address ?? 'Localització no disponible';
+
+  String get _scoreLabel {
+    if (_score >= 80) return 'EXCEL·LENT';
+    if (_score >= 65) return 'BO';
+    if (_score >= 50) return 'MILLORABLE';
+    return 'PRIORITARI';
+  }
+
+  Color get _scoreColor {
+    if (_score >= 80) return Colors.green;
+    if (_score >= 65) return Colors.blue;
+    if (_score >= 50) return Colors.orange;
+    return Colors.red;
+  }
+
+  String _value(String key, {String fallback = 'No disponible'}) {
+    final value = widget.building?[key];
+    if (value == null) return fallback;
+    final text = value.toString().trim();
+    return text.isEmpty ? fallback : text;
+  }
+  
 }
 
 class _DetailItem extends StatelessWidget {

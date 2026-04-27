@@ -18,6 +18,59 @@ class BuildingService {
     };
   }
 
+    Future<List<Map<String, dynamic>>> getMyBuildings() async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse(ApiConfig.meEdificis),
+            headers: await _buildHeaders(),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      final decoded = _tryDecodeBody(response.body);
+
+      if (response.statusCode != 200) {
+        throw BuildingApiException(
+          _extractErrorMessage(
+            decoded,
+            fallback: 'No s’han pogut carregar els edificis vinculats.',
+          ),
+          statusCode: response.statusCode,
+          details: decoded,
+        );
+      }
+
+      if (decoded is! List) {
+        throw const BuildingApiException(
+          'La resposta d’edificis no té el format esperat.',
+        );
+      }
+
+      return decoded
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
+    } on BuildingApiException {
+      rethrow;
+    } on TimeoutException {
+      throw const BuildingApiException(
+        'La càrrega d’edificis ha trigat massa. Torna-ho a provar.',
+      );
+    } on SocketException {
+      throw const BuildingApiException(
+        'No s’ha pogut connectar amb el servidor.',
+      );
+    } on FormatException {
+      throw const BuildingApiException(
+        'La resposta del servidor no té el format esperat.',
+      );
+    } catch (_) {
+      throw const BuildingApiException(
+        'S’ha produït un error inesperat carregant els edificis.',
+      );
+    }
+  }
+
   Future<List<Map<String, dynamic>>> autocompleteCarrers(String query) async {
     final trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) return [];
