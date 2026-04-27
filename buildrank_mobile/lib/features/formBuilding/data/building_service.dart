@@ -19,13 +19,10 @@ class BuildingService {
     };
   }
 
-    Future<List<Map<String, dynamic>>> getMyBuildings() async {
+  Future<List<Map<String, dynamic>>> getMyBuildings() async {
     try {
       final response = await http
-          .get(
-            Uri.parse(ApiConfig.meEdificis),
-            headers: await _buildHeaders(),
-          )
+          .get(Uri.parse(ApiConfig.meEdificis), headers: await _buildHeaders())
           .timeout(const Duration(seconds: 10));
 
       final decoded = _tryDecodeBody(response.body);
@@ -139,10 +136,7 @@ class BuildingService {
       }
 
       final response = await http
-          .get(
-            uri,
-            headers: headers,
-          )
+          .get(uri, headers: headers)
           .timeout(const Duration(seconds: 10));
 
       if (kDebugMode) {

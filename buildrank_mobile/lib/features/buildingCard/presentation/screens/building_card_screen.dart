@@ -141,12 +141,19 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
     return text.isEmpty ? fallback : text;
   }
 
-  String _formatDouble(String key, {String suffix = '', String fallback = 'No disponible'}) {
+  String _formatDouble(
+    String key, {
+    String suffix = '',
+    String fallback = 'No disponible',
+  }) {
     final value = _building[key];
 
-    if (value is int) return '$value$suffix';
-    if (value is double) return '${value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1)}$suffix';
-
+    if (value is int) {
+      return '$value$suffix';
+    }
+    if (value is double) {
+      return '${value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1)}$suffix';
+    }
     if (value is String) {
       final parsed = double.tryParse(value);
       if (parsed != null) {
@@ -249,7 +256,10 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
               elevation: 0,
               leadingWidth: 120,
               leading: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
@@ -350,7 +360,10 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
             runSpacing: 8,
             children: [
               _StatusChip(text: _activeStatusLabel(), color: Colors.green),
-              _StatusChip(text: 'ID ${widget.idEdifici}', color: Colors.blueGrey),
+              _StatusChip(
+                text: 'ID ${widget.idEdifici}',
+                color: Colors.blueGrey,
+              ),
             ],
           ),
 
@@ -409,7 +422,10 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                 const SizedBox(height: 16),
 
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.grey.shade300),
@@ -517,7 +533,6 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
               ),
             ),
           ],
-
         ],
       ),
     );
@@ -711,13 +726,10 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
               localitzacio == null
                   ? 'Aquest edifici encara no té localització associada.'
                   : 'Localització: ${localitzacio['carrer'] ?? '-'}, '
-                      '${localitzacio['numero'] ?? '-'} · '
-                      '${localitzacio['barri'] ?? '-'} · '
-                      '${localitzacio['codiPostal'] ?? '-'}',
-              style: TextStyle(
-                height: 1.35,
-                color: Colors.green.shade900,
-              ),
+                        '${localitzacio['numero'] ?? '-'} · '
+                        '${localitzacio['barri'] ?? '-'} · '
+                        '${localitzacio['codiPostal'] ?? '-'}',
+              style: TextStyle(height: 1.35, color: Colors.green.shade900),
             ),
           ),
         ],
@@ -730,10 +742,7 @@ class _StatusChip extends StatelessWidget {
   final String text;
   final Color color;
 
-  const _StatusChip({
-    required this.text,
-    required this.color,
-  });
+  const _StatusChip({required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {

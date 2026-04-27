@@ -194,7 +194,9 @@ class AuthService {
         throw Exception(decoded['detail'].toString());
       }
 
-      final firstEntry = decoded.entries.isNotEmpty ? decoded.entries.first : null;
+      final firstEntry = decoded.entries.isNotEmpty
+          ? decoded.entries.first
+          : null;
       if (firstEntry != null) {
         final value = firstEntry.value;
         if (value is List && value.isNotEmpty) {

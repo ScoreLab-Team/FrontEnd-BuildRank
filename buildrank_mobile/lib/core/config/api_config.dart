@@ -40,8 +40,7 @@ class ApiConfig {
   static const String carrersAutocomplete =
       '$baseUrl/api/buildings/carrers/autocomplete/';
 
-  static const String localitzacions =
-      '$baseUrl/api/buildings/localitzacions/';
+  static const String localitzacions = '$baseUrl/api/buildings/localitzacions/';
 
   static const String edificis = '$baseUrl/api/buildings/edificis/';
 
@@ -64,7 +63,7 @@ class ApiConfig {
       '$baseUrl/api/buildings/edificis/$idEdifici/simulacions/';
 
   static String milloresImplementades(int idEdifici) =>
-    '$baseUrl/api/buildings/edificis/$idEdifici/millores-implementades/';
+      '$baseUrl/api/buildings/edificis/$idEdifici/millores-implementades/';
 
   /// Helper comú per construir Uri amb query params.
   static Uri uri(String endpoint, {Map<String, dynamic>? queryParameters}) {

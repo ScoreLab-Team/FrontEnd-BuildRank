@@ -52,9 +52,10 @@ class SimulationService {
 
       return decoded
           .whereType<Map>()
-          .map((item) => ImprovementModel.fromJson(
-                Map<String, dynamic>.from(item),
-              ))
+          .map(
+            (item) =>
+                ImprovementModel.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList();
     } on SimulationApiException {
       rethrow;
@@ -117,10 +118,7 @@ class SimulationService {
           .post(
             ApiConfig.uri(endpoint),
             headers: await _buildHeaders(),
-            body: jsonEncode({
-              'descripcio': descripcio,
-              'millores': millores,
-            }),
+            body: jsonEncode({'descripcio': descripcio, 'millores': millores}),
           )
           .timeout(const Duration(seconds: 15));
 
@@ -232,9 +230,10 @@ class SimulationService {
 
       return decoded
           .whereType<Map>()
-          .map((item) => SavedSimulationModel.fromJson(
-                Map<String, dynamic>.from(item),
-              ))
+          .map(
+            (item) =>
+                SavedSimulationModel.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList();
     } on SimulationApiException {
       rethrow;
@@ -277,9 +276,11 @@ class SimulationService {
 
       return decoded
           .whereType<Map>()
-          .map((item) => ImplementedImprovementModel.fromJson(
-                Map<String, dynamic>.from(item),
-              ))
+          .map(
+            (item) => ImplementedImprovementModel.fromJson(
+              Map<String, dynamic>.from(item),
+            ),
+          )
           .toList();
     } on SimulationApiException {
       rethrow;
@@ -296,11 +297,7 @@ class SimulationApiException implements Exception {
   final int? statusCode;
   final dynamic details;
 
-  const SimulationApiException(
-    this.message, {
-    this.statusCode,
-    this.details,
-  });
+  const SimulationApiException(this.message, {this.statusCode, this.details});
 
   @override
   String toString() => message;

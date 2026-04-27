@@ -80,7 +80,7 @@ void main() {
             'impactePunts': 13,
             'coberturaPercent': 100,
             'quantitatAplicada': 1,
-          }
+          },
         ],
       });
 

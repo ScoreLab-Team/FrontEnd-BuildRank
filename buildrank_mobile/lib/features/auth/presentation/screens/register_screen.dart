@@ -5,10 +5,7 @@ import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 class RegisterScreen extends StatefulWidget {
   final void Function(String email)? onRegisterSuccess;
 
-  const RegisterScreen({
-    super.key,
-    this.onRegisterSuccess,
-  });
+  const RegisterScreen({super.key, this.onRegisterSuccess});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -100,7 +97,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SnackBar(content: Text('Registre completat correctament.')),
         );
       }
-
     } catch (e) {
       setState(() {
         _errorText = e.toString().replaceFirst('Exception: ', '');

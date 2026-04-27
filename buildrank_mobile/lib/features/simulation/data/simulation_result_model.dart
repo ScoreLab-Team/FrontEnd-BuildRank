@@ -28,11 +28,13 @@ class SimulationResultModel {
       delta: SimulationDelta.fromJson(_readMap(json['delta'])),
       items: rawItems is List
           ? rawItems
-              .whereType<Map>()
-              .map((item) => SimulationItemResult.fromJson(
+                .whereType<Map>()
+                .map(
+                  (item) => SimulationItemResult.fromJson(
                     Map<String, dynamic>.from(item),
-                  ))
-              .toList()
+                  ),
+                )
+                .toList()
           : const [],
       raw: json,
     );
@@ -153,9 +155,7 @@ class SimulationItemResult {
       nom: json['nom']?.toString() ?? 'Millora',
       costEstimat: _readDouble(json['costEstimat']),
       reduccioConsumKwhAny: _readDouble(json['reduccioConsumKwhAny']),
-      reduccioEmissionsKgCO2Any: _readDouble(
-        json['reduccioEmissionsKgCO2Any'],
-      ),
+      reduccioEmissionsKgCO2Any: _readDouble(json['reduccioEmissionsKgCO2Any']),
       impactePunts: _readDouble(json['impactePunts']),
       coberturaPercent: _readDouble(json['coberturaPercent']),
       quantitatAplicada: _readDouble(json['quantitatAplicada']),

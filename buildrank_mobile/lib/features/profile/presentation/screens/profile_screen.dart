@@ -218,36 +218,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorText != null
-              ? _buildErrorState()
-              : RefreshIndicator(
-                  onRefresh: _loadProfile,
-                  child: ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      _buildUserCard(),
+          ? _buildErrorState()
+          : RefreshIndicator(
+              onRefresh: _loadProfile,
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  _buildUserCard(),
 
-                      const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                      _buildRoleActions(),
+                  _buildRoleActions(),
 
-                      const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                      _buildSeasonCard(),
+                  _buildSeasonCard(),
 
-                      const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                      _buildBuildingsHeader(),
+                  _buildBuildingsHeader(),
 
-                      const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                      _buildBuildingsList(),
+                  _buildBuildingsList(),
 
-                      const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                      _buildBadgesSection(),
-                    ],
-                  ),
-                ),
+                  _buildBadgesSection(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -318,10 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           _buildBuildingsSectionTitle(),
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Text(
           "${_buildings.length}",

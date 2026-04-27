@@ -52,10 +52,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
   }
 
   Future<void> _refreshAll() async {
-    await Future.wait([
-      _loadCatalog(),
-      _loadHistory(),
-    ]);
+    await Future.wait([_loadCatalog(), _loadHistory()]);
   }
 
   Future<void> _loadCatalog() async {
@@ -99,9 +96,12 @@ class _SimulationScreenState extends State<SimulationScreen> {
     });
 
     try {
-      final saved = await _simulationService.getSavedSimulations(widget.idEdifici);
-      final implemented =
-          await _simulationService.getImplementedImprovements(widget.idEdifici);
+      final saved = await _simulationService.getSavedSimulations(
+        widget.idEdifici,
+      );
+      final implemented = await _simulationService.getImplementedImprovements(
+        widget.idEdifici,
+      );
 
       if (!mounted) return;
 
@@ -303,10 +303,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
               const SizedBox(height: 16),
 
               if (_errorText != null) ...[
-                _ErrorBanner(
-                  text: _errorText!,
-                  onRetry: _refreshAll,
-                ),
+                _ErrorBanner(text: _errorText!, onRetry: _refreshAll),
                 const SizedBox(height: 16),
               ],
 
@@ -424,17 +421,11 @@ class _SimulationScreenState extends State<SimulationScreen> {
             const Expanded(
               child: Text(
                 'Catàleg de millores',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(999),
                 border: Border.all(color: const Color(0xFF22C55E)),
@@ -457,21 +448,19 @@ class _SimulationScreenState extends State<SimulationScreen> {
         if (_improvements.isEmpty)
           const _EmptyCatalogCard()
         else
-          ..._improvements.map(
-            (improvement) {
-              final selected = _selectedIds.contains(improvement.idMillora);
+          ..._improvements.map((improvement) {
+            final selected = _selectedIds.contains(improvement.idMillora);
 
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _ImprovementCard(
-                  improvement: improvement,
-                  icon: _iconForImprovement(improvement),
-                  selected: selected,
-                  onTap: () => _toggleImprovement(improvement.idMillora),
-                ),
-              );
-            },
-          ),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _ImprovementCard(
+                improvement: improvement,
+                icon: _iconForImprovement(improvement),
+                selected: selected,
+                onTap: () => _toggleImprovement(improvement.idMillora),
+              ),
+            );
+          }),
 
         const SizedBox(height: 12),
 
@@ -539,7 +528,8 @@ class _SimulationScreenState extends State<SimulationScreen> {
         ),
         const SizedBox(height: 12),
         ..._implementedImprovements.map(
-          (improvement) => _ImplementedImprovementCard(improvement: improvement),
+          (improvement) =>
+              _ImplementedImprovementCard(improvement: improvement),
         ),
       ],
     );
@@ -554,8 +544,9 @@ class _SimulationScreenState extends State<SimulationScreen> {
           width: double.infinity,
           height: 52,
           child: ElevatedButton.icon(
-            onPressed:
-                hasSelection && !_isPreviewLoading ? _previewSimulation : null,
+            onPressed: hasSelection && !_isPreviewLoading
+                ? _previewSimulation
+                : null,
             icon: _isPreviewLoading
                 ? const SizedBox(
                     width: 18,
@@ -876,7 +867,9 @@ class _SavedSimulationCard extends StatelessWidget {
                 text:
                     '-${simulation.reduccioEmissionsPrevista.toStringAsFixed(0)} kg CO₂',
               ),
-              _MiniChip(text: 'Cost ${_formatCurrency(simulation.costEstimat)}'),
+              _MiniChip(
+                text: 'Cost ${_formatCurrency(simulation.costEstimat)}',
+              ),
               _MiniChip(
                 text: 'Estalvi ${_formatCurrency(simulation.estalviAnual)}',
               ),
@@ -973,7 +966,10 @@ class _ResultRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   detail,
@@ -1026,10 +1022,7 @@ class _ErrorBanner extends StatelessWidget {
   final String text;
   final VoidCallback? onRetry;
 
-  const _ErrorBanner({
-    required this.text,
-    this.onRetry,
-  });
+  const _ErrorBanner({required this.text, this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -1052,10 +1045,7 @@ class _ErrorBanner extends StatelessWidget {
             ),
           ),
           if (onRetry != null)
-            TextButton(
-              onPressed: onRetry,
-              child: const Text('Reintenta'),
-            ),
+            TextButton(onPressed: onRetry, child: const Text('Reintenta')),
         ],
       ),
     );
