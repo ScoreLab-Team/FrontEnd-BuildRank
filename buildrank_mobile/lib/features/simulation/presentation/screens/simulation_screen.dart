@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'package:buildrank_mobile/features/simulation/data/improvement_model.dart';
+import 'package:buildrank_mobile/features/simulation/data/simulation_result_model.dart';
+import 'package:buildrank_mobile/features/simulation/data/simulation_service.dart';
+
 class SimulationScreen extends StatefulWidget {
+  final int idEdifici;
   final String userRole;
   final String buildingName;
   final int currentPoints;
-  final void Function(List<SimulationImprovement> selectedImprovements)?
-  onPresentToVote;
 
   const SimulationScreen({
     super.key,
+    required this.idEdifici,
     required this.userRole,
-    this.buildingName = 'Edifici A-240',
-    this.currentPoints = 42,
-    this.onPresentToVote,
+    required this.buildingName,
+    required this.currentPoints,
   });
 
   @override
@@ -20,270 +23,302 @@ class SimulationScreen extends StatefulWidget {
 }
 
 class _SimulationScreenState extends State<SimulationScreen> {
-  final List<SimulationImprovement> _improvements = [
-    const SimulationImprovement(
-      id: 'solar_panels',
-      title:
-          'Panell solar fotovoltaic nasdlfasjflasjlfjsdlfjasñfdkjasñldkfjasñldkfjasñldfkjasñlf añsldfkajsñflask ñasdlfkjas dfñalskfdjajs dfñlaskdjfas dñflkasjfd as',
-      subtitle: '10kW teulada',
-      impactPoints: 15,
-      estimatedCost: 12500,
-      annualSavings: 1200,
-      carbonReduction: 1.8,
-      intensityReduction: 2.4,
-      icon: Icons.wb_sunny_outlined,
-    ),
-    const SimulationImprovement(
-      id: 'triple_glazing',
-      title: 'Triple vidre',
-      subtitle: 'Alt rendiment',
-      impactPoints: 8,
-      estimatedCost: 8000,
-      annualSavings: 700,
-      carbonReduction: 0.9,
-      intensityReduction: 1.8,
-      icon: Icons.air_outlined,
-    ),
-    const SimulationImprovement(
-      id: 'wall_insulation',
-      title: 'Aïllament de paret',
-      subtitle: 'Mineral exterior',
-      impactPoints: 12,
-      estimatedCost: 15000,
-      annualSavings: 1100,
-      carbonReduction: 1.5,
-      intensityReduction: 2.6,
-      icon: Icons.layers_outlined,
-    ),
-    const SimulationImprovement(
-      id: 'heat_pump',
-      title: 'Bomba de calor',
-      subtitle: 'Sistema eficient aire-aigua',
-      impactPoints: 20,
-      estimatedCost: 11000,
-      annualSavings: 1400,
-      carbonReduction: 2.1,
-      intensityReduction: 3.5,
-      icon: Icons.thermostat_outlined,
-    ),
-  ];
+  final _simulationService = SimulationService();
 
-  final Set<String> _selectedIds = {};
+  bool _isLoadingCatalog = true;
+  bool _isPreviewLoading = false;
+  bool _isSaving = false;
+  String? _errorText;
 
-  static const double _currentAnnualEnergyCost = 4800;
-  static const double _currentCarbonFootprint = 12.4;
-  static const double _currentEnergyIntensity = 24.5;
+  List<ImprovementModel> _improvements = [];
+  final Set<int> _selectedIds = {};
+  SimulationResultModel? _previewResult;
 
-  bool get _canPresentToVote => widget.userRole == 'admin';
+  bool get _canSaveSimulation => widget.userRole == 'admin';
 
-  List<SimulationImprovement> get _selectedImprovements =>
-      _improvements.where((i) => _selectedIds.contains(i.id)).toList();
-
-  int get _simulatedPoints {
-    final extraPoints = _selectedImprovements.fold<int>(
-      0,
-      (sum, item) => sum + item.impactPoints,
-    );
-    final total = widget.currentPoints + extraPoints;
-    return total > 100 ? 100 : total;
+  @override
+  void initState() {
+    super.initState();
+    _loadCatalog();
   }
 
-  double get _totalInvestment => _selectedImprovements.fold<double>(
-    0,
-    (sum, item) => sum + item.estimatedCost,
-  );
-
-  double get _annualSavings => _selectedImprovements.fold<double>(
-    0,
-    (sum, item) => sum + item.annualSavings,
-  );
-
-  double get _simulatedAnnualEnergyCost {
-    final result = _currentAnnualEnergyCost - _annualSavings;
-    return result < 0 ? 0 : result;
-  }
-
-  double get _simulatedCarbonFootprint {
-    final reduction = _selectedImprovements.fold<double>(
-      0,
-      (sum, item) => sum + item.carbonReduction,
-    );
-    final result = _currentCarbonFootprint - reduction;
-    return result < 0 ? 0 : result;
-  }
-
-  double get _simulatedEnergyIntensity {
-    final reduction = _selectedImprovements.fold<double>(
-      0,
-      (sum, item) => sum + item.intensityReduction,
-    );
-    final result = _currentEnergyIntensity - reduction;
-    return result < 0 ? 0 : result;
-  }
-
-  String get _paybackPeriod {
-    if (_annualSavings <= 0) return '-';
-    final years = _totalInvestment / _annualSavings;
-    return '${years.toStringAsFixed(1)} anys';
-  }
-
-  void _toggleImprovement(String id) {
+  Future<void> _loadCatalog() async {
     setState(() {
-      if (_selectedIds.contains(id)) {
-        _selectedIds.remove(id);
-      } else {
-        _selectedIds.add(id);
+      _isLoadingCatalog = true;
+      _errorText = null;
+    });
+
+    try {
+      final improvements = await _simulationService.getImprovements();
+
+      if (!mounted) return;
+
+      setState(() {
+        _improvements = improvements;
+      });
+    } on SimulationApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = 'No s’ha pogut carregar el catàleg de millores.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingCatalog = false;
+        });
       }
+    }
+  }
+
+  List<ImprovementModel> get _selectedImprovements {
+    return _improvements
+        .where((improvement) => _selectedIds.contains(improvement.idMillora))
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _buildSelectedPayload() {
+    return _selectedImprovements
+        .map(
+          (improvement) => {
+            'milloraId': improvement.idMillora,
+            'coberturaPercent': 100,
+          },
+        )
+        .toList();
+  }
+
+  void _toggleImprovement(int idMillora) {
+    setState(() {
+      if (_selectedIds.contains(idMillora)) {
+        _selectedIds.remove(idMillora);
+      } else {
+        _selectedIds.add(idMillora);
+      }
+
+      // Si canvia la selecció, el preview anterior ja no representa l’escenari actual.
+      _previewResult = null;
     });
   }
 
-  void _presentToVote() {
-    if (!_canPresentToVote || _selectedImprovements.isEmpty) return;
+  Future<void> _previewSimulation() async {
+    if (_selectedIds.isEmpty || _isPreviewLoading) return;
 
-    if (widget.onPresentToVote != null) {
-      widget.onPresentToVote!(_selectedImprovements);
-      return;
+    setState(() {
+      _isPreviewLoading = true;
+      _errorText = null;
+    });
+
+    try {
+      final result = await _simulationService.previewSimulation(
+        idEdifici: widget.idEdifici,
+        descripcio: 'Preview simulació ${widget.buildingName}',
+        millores: _buildSelectedPayload(),
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _previewResult = result;
+      });
+    } on SimulationApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = 'No s’ha pogut calcular la simulació.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPreviewLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _saveSimulation() async {
+    if (_selectedIds.isEmpty || _isSaving) return;
+
+    setState(() {
+      _isSaving = true;
+      _errorText = null;
+    });
+
+    try {
+      final result = await _simulationService.saveSimulation(
+        idEdifici: widget.idEdifici,
+        descripcio: 'Simulació ${widget.buildingName}',
+        millores: _buildSelectedPayload(),
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _previewResult = result;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Simulació guardada correctament.')),
+      );
+    } on SimulationApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorText = 'No s’ha pogut guardar la simulació.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
+  IconData _iconForImprovement(ImprovementModel improvement) {
+    final slug = improvement.slug ?? '';
+
+    if (slug.contains('solar') || improvement.categoria == 'renovables') {
+      return Icons.wb_sunny_outlined;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Simulació preparada per presentar a votació amb ${_selectedImprovements.length} millora/es.',
-        ),
-      ),
-    );
+    if (slug.contains('finestr')) {
+      return Icons.window_outlined;
+    }
+
+    if (slug.contains('aillament') || improvement.categoria == 'envolupant') {
+      return Icons.layers_outlined;
+    }
+
+    if (slug.contains('aerotermia') ||
+        improvement.categoria == 'instal_lacio_termica') {
+      return Icons.thermostat_outlined;
+    }
+
+    if (improvement.categoria == 'electricitat') {
+      return Icons.lightbulb_outline;
+    }
+
+    if (improvement.categoria == 'control_i_monitoratge') {
+      return Icons.sensors_outlined;
+    }
+
+    return Icons.construction_outlined;
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedCount = _selectedImprovements.length;
+    final selectedCount = _selectedIds.length;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F2),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: RefreshIndicator(
+          onRefresh: _loadCatalog,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
             children: [
-              _PredictionCard(
-                currentPoints: widget.currentPoints,
-                simulatedPoints: _simulatedPoints,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Seleccioneu\nactualitzacions',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(999),
-                      border: Border.all(color: const Color(0xFF22C55E)),
-                      color: const Color(0xFFEAF8EE),
-                    ),
-                    child: Text(
-                      '$selectedCount seleccionades',
-                      style: const TextStyle(
-                        color: Color(0xFF16A34A),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
+              _buildHeader(),
 
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _improvements.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                  childAspectRatio: 0.72,
+              const SizedBox(height: 18),
+
+              if (_errorText != null) ...[
+                _ErrorBanner(
+                  text: _errorText!,
+                  onRetry: _isLoadingCatalog ? null : _loadCatalog,
                 ),
-                itemBuilder: (context, index) {
-                  final item = _improvements[index];
-                  final isSelected = _selectedIds.contains(item.id);
+                const SizedBox(height: 16),
+              ],
 
-                  return _ImprovementCard(
-                    improvement: item,
-                    selected: isSelected,
-                    onTap: () => _toggleImprovement(item.id),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 28),
-              const Text(
-                'Impacte detallat',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 14),
-              _OperationalPreviewCard(
-                currentAnnualCost: _currentAnnualEnergyCost,
-                simulatedAnnualCost: _simulatedAnnualEnergyCost,
-                currentCarbon: _currentCarbonFootprint,
-                simulatedCarbon: _simulatedCarbonFootprint,
-                currentIntensity: _currentEnergyIntensity,
-                simulatedIntensity: _simulatedEnergyIntensity,
-              ),
-              const SizedBox(height: 20),
-              _InvestmentSummaryCard(
-                totalInvestment: _totalInvestment,
-                annualSavings: _annualSavings,
-                paybackPeriod: _paybackPeriod,
-              ),
-
-              // NOMÉS ES MOSTRA SI ÉS ADMIN
-              if (_canPresentToVote) ...[
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _selectedImprovements.isNotEmpty
-                        ? _presentToVote
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF22C55E),
-                      disabledBackgroundColor: const Color(0xFFBFC7C2),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+              if (_isLoadingCatalog)
+                const Padding(
+                  padding: EdgeInsets.only(top: 60),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else ...[
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Catàleg de millores',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                      elevation: 0,
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Presentar a votació',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0xFF22C55E)),
+                        color: const Color(0xFFEAF8EE),
+                      ),
+                      child: Text(
+                        '$selectedCount seleccionades',
+                        style: const TextStyle(
+                          color: Color(0xFF16A34A),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                if (_improvements.isEmpty)
+                  const _EmptyCatalogCard()
+                else
+                  ..._improvements.map(
+                    (improvement) {
+                      final selected =
+                          _selectedIds.contains(improvement.idMillora);
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _ImprovementCard(
+                          improvement: improvement,
+                          icon: _iconForImprovement(improvement),
+                          selected: selected,
+                          onTap: () => _toggleImprovement(
+                            improvement.idMillora,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ),
+
+                const SizedBox(height: 12),
+
+                _buildActionButtons(),
+
+                const SizedBox(height: 20),
+
+                if (_previewResult != null)
+                  _SimulationResultCard(result: _previewResult!),
               ],
             ],
           ),
@@ -291,94 +326,163 @@ class _SimulationScreenState extends State<SimulationScreen> {
       ),
     );
   }
-}
 
-class SimulationImprovement {
-  final String id;
-  final String title;
-  final String subtitle;
-  final int impactPoints;
-  final double estimatedCost;
-  final double annualSavings;
-  final double carbonReduction;
-  final double intensityReduction;
-  final IconData icon;
+  Widget _buildHeader() {
+    final preview = _previewResult;
 
-  const SimulationImprovement({
-    required this.id,
-    required this.title,
-    required this.subtitle,
-    required this.impactPoints,
-    required this.estimatedCost,
-    required this.annualSavings,
-    required this.carbonReduction,
-    required this.intensityReduction,
-    required this.icon,
-  });
-}
+    final currentScore = preview?.abans.score.round() ?? widget.currentPoints;
+    final simulatedScore =
+        preview?.despres.score.round() ?? widget.currentPoints;
 
-class _PredictionCard extends StatelessWidget {
-  final int currentPoints;
-  final int simulatedPoints;
-
-  const _PredictionCard({
-    required this.currentPoints,
-    required this.simulatedPoints,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF8EE),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFE8F4EC),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'SIMULACIÓ EN DIRECTE',
-            style: TextStyle(
-              color: Color(0xFF22C55E),
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.3,
-            ),
+            'Simulador de millores',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
           ),
-          const SizedBox(height: 8),
-          const Text(
-            'Rendiment previst',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          const SizedBox(height: 6),
+          Text(
+            widget.buildingName,
+            style: const TextStyle(color: Colors.black54),
           ),
           const SizedBox(height: 18),
           Row(
             children: [
               Expanded(
-                child: _MiniScoreBubble(
+                child: _ScoreBox(
                   label: 'Actual',
-                  points: '$currentPoints pts',
+                  value: currentScore,
+                  color: Colors.black87,
                 ),
               ),
-              Container(
-                width: 42,
-                height: 42,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.arrow_forward,
-                  color: Color(0xFF22C55E),
-                ),
-              ),
+              const SizedBox(width: 12),
               Expanded(
-                child: _MiniScoreBubble(
+                child: _ScoreBox(
                   label: 'Simulat',
-                  points: '$simulatedPoints pts',
-                  highlight: true,
+                  value: simulatedScore,
+                  color: const Color(0xFF16A34A),
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Els resultats són estimacions orientatives. No substitueixen una auditoria energètica professional.',
+            style: TextStyle(fontSize: 12, height: 1.35, color: Colors.black54),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    final hasSelection = _selectedIds.isNotEmpty;
+
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: 52,
+          child: ElevatedButton.icon(
+            onPressed:
+                hasSelection && !_isPreviewLoading ? _previewSimulation : null,
+            icon: _isPreviewLoading
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.analytics_outlined),
+            label: Text(
+              _isPreviewLoading ? 'Calculant preview...' : 'Calcular preview',
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF22C55E),
+              disabledBackgroundColor: const Color(0xFFBFC7C2),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              elevation: 0,
+            ),
+          ),
+        ),
+        if (_canSaveSimulation) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: OutlinedButton.icon(
+              onPressed: hasSelection && !_isSaving ? _saveSimulation : null,
+              icon: _isSaving
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.save_outlined),
+              label: Text(
+                _isSaving ? 'Guardant simulació...' : 'Guardar simulació',
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF16A34A),
+                side: const BorderSide(color: Color(0xFF22C55E)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+            ),
+          ),
+        ] else ...[
+          const SizedBox(height: 10),
+          const _InfoCard(
+            text:
+                'Aquest rol pot consultar el preview, però la gestió formal de simulacions queda reservada a l’administrador de finca.',
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _ScoreBox extends StatelessWidget {
+  final String label;
+  final int value;
+  final Color color;
+
+  const _ScoreBox({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white),
+      ),
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(color: Colors.black54)),
+          const SizedBox(height: 6),
+          Text(
+            '$value',
+            style: TextStyle(
+              color: color,
+              fontSize: 30,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ],
       ),
@@ -386,76 +490,15 @@ class _PredictionCard extends StatelessWidget {
   }
 }
 
-class _MiniScoreBubble extends StatelessWidget {
-  final String label;
-  final String points;
-  final bool highlight;
-
-  const _MiniScoreBubble({
-    required this.label,
-    required this.points,
-    this.highlight = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 82,
-          height: 82,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.75),
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            'C',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-              color: highlight
-                  ? const Color(0xFF22C55E)
-                  : Colors.grey.withValues(alpha: 0.5),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.black54,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          points,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w800,
-            color: highlight ? const Color(0xFF16A34A) : Colors.black87,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _ImprovementCard extends StatelessWidget {
-  final SimulationImprovement improvement;
+  final ImprovementModel improvement;
+  final IconData icon;
   final bool selected;
   final VoidCallback onTap;
 
   const _ImprovementCard({
     required this.improvement,
+    required this.icon,
     required this.selected,
     required this.onTap,
   });
@@ -466,8 +509,8 @@ class _ImprovementCard extends StatelessWidget {
       color: selected ? const Color(0xFFEAF8EE) : Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -479,92 +522,77 @@ class _ImprovementCard extends StatelessWidget {
               width: selected ? 1.8 : 1.2,
             ),
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF3F4F6),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(improvement.icon, color: Colors.black54),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: selected
-                              ? const Color(0xFF22C55E)
-                              : Colors.transparent,
-                          border: Border.all(
-                            color: selected
-                                ? const Color(0xFF22C55E)
-                                : const Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        child: selected
-                            ? const Icon(
-                                Icons.check,
-                                size: 16,
-                                color: Colors.white,
-                              )
-                            : null,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    improvement.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    improvement.subtitle,
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  const Divider(height: 1),
-                  const SizedBox(height: 14),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: _MiniMetric(
-                          label: 'IMPACTE',
-                          value: '+${improvement.impactPoints} pts',
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _MiniMetric(
-                          label: 'COST\nESTIM',
-                          value: _formatCurrency(improvement.estimatedCost),
-                          alignEnd: true,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: Colors.black54),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      improvement.nom,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      improvement.categoriaLabel,
+                      style: const TextStyle(
+                        color: Color(0xFF16A34A),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                    if (improvement.descripcio.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        improvement.descripcio,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          height: 1.25,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 6,
+                      children: [
+                        _MiniChip(
+                          text:
+                              '+${improvement.impactePunts.toStringAsFixed(1)} pts',
+                        ),
+                        _MiniChip(
+                          text:
+                              '${_formatCurrency(improvement.costEstimatBase)} ${improvement.unitatLabel}',
+                        ),
+                        _MiniChip(text: improvement.nivellConfianca),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                selected ? Icons.check_circle : Icons.radio_button_unchecked,
+                color: selected ? const Color(0xFF22C55E) : Colors.black38,
+              ),
+            ],
           ),
         ),
       ),
@@ -572,135 +600,100 @@ class _ImprovementCard extends StatelessWidget {
   }
 }
 
-class _MiniMetric extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool alignEnd;
+class _SimulationResultCard extends StatelessWidget {
+  final SimulationResultModel result;
 
-  const _MiniMetric({
-    required this.label,
-    required this.value,
-    this.alignEnd = false,
-  });
+  const _SimulationResultCard({required this.result});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: alignEnd
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.black45,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            height: 1.1,
+        const Text(
+          'Resultat de la simulació',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+          ),
+          child: Column(
+            children: [
+              _ResultRow(
+                icon: Icons.bolt_outlined,
+                title: 'Consum anual',
+                oldValue:
+                    '${result.abans.consumFinalKwhAny.toStringAsFixed(0)} kWh',
+                newValue:
+                    '${result.despres.consumFinalKwhAny.toStringAsFixed(0)} kWh',
+                detail:
+                    '-${result.delta.reduccioConsumPercent.toStringAsFixed(1)}%',
+              ),
+              _ResultRow(
+                icon: Icons.eco_outlined,
+                title: 'Emissions',
+                oldValue:
+                    '${result.abans.emissionsKgCO2Any.toStringAsFixed(0)} kg CO₂',
+                newValue:
+                    '${result.despres.emissionsKgCO2Any.toStringAsFixed(0)} kg CO₂',
+                detail:
+                    '-${result.delta.reduccioEmissionsPercent.toStringAsFixed(1)}%',
+              ),
+              _ResultRow(
+                icon: Icons.euro_outlined,
+                title: 'Cost anual estimat',
+                oldValue: _formatCurrency(result.abans.costAnualEnergia),
+                newValue: _formatCurrency(result.despres.costAnualEnergia),
+                detail:
+                    'Estalvi ${_formatCurrency(result.delta.estalviAnualEstimatiu)}',
+              ),
+              _ResultRow(
+                icon: Icons.trending_up,
+                title: 'Puntuació',
+                oldValue: result.abans.score.toStringAsFixed(0),
+                newValue: result.despres.score.toStringAsFixed(0),
+                detail:
+                    '+${result.delta.incrementScore.toStringAsFixed(1)} punts',
+                isLast: true,
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 6),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: alignEnd ? Alignment.centerRight : Alignment.centerLeft,
-          child: Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
-          ),
+        const SizedBox(height: 12),
+        _InfoCard(
+          text:
+              'Cost total estimat: ${_formatCurrency(result.delta.costTotalEstimat)} · Motor ${result.versioMotor}',
         ),
       ],
     );
   }
 }
 
-class _OperationalPreviewCard extends StatelessWidget {
-  final double currentAnnualCost;
-  final double simulatedAnnualCost;
-  final double currentCarbon;
-  final double simulatedCarbon;
-  final double currentIntensity;
-  final double simulatedIntensity;
-
-  const _OperationalPreviewCard({
-    required this.currentAnnualCost,
-    required this.simulatedAnnualCost,
-    required this.currentCarbon,
-    required this.simulatedCarbon,
-    required this.currentIntensity,
-    required this.simulatedIntensity,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-            decoration: const BoxDecoration(
-              color: Color(0xFFF8F8F8),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-            ),
-            child: const Text(
-              'PREVISIÓ OPERATIVA',
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 12,
-                color: Colors.black54,
-              ),
-            ),
-          ),
-          _DetailRow(
-            icon: Icons.attach_money,
-            title: 'Cost energètic anual',
-            oldValue: _formatCurrency(currentAnnualCost),
-            newValue: _formatCurrency(simulatedAnnualCost),
-          ),
-          _DetailRow(
-            icon: Icons.eco_outlined,
-            title: 'Petjada de carboni',
-            oldValue: currentCarbon.toStringAsFixed(1),
-            newValue: simulatedCarbon.toStringAsFixed(1),
-          ),
-          _DetailRow(
-            icon: Icons.bolt_outlined,
-            title: 'Intensitat energètica',
-            oldValue: currentIntensity.toStringAsFixed(2),
-            newValue: simulatedIntensity.toStringAsFixed(2),
-            isLast: true,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
+class _ResultRow extends StatelessWidget {
   final IconData icon;
   final String title;
   final String oldValue;
   final String newValue;
+  final String detail;
   final bool isLast;
 
-  const _DetailRow({
+  const _ResultRow({
     required this.icon,
     required this.title,
     required this.oldValue,
     required this.newValue,
+    required this.detail,
     this.isLast = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         border: isLast
             ? null
@@ -708,96 +701,35 @@ class _DetailRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 38,
-            height: 38,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF3F4F6),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.black54),
-          ),
+          Icon(icon, color: const Color(0xFF16A34A)),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(
+                  detail,
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                ),
+              ],
             ),
           ),
-          if (oldValue != newValue) ...[
-            Text(
-              oldValue,
-              style: const TextStyle(
-                color: Colors.black45,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            const SizedBox(width: 8),
-          ],
-          Text(
-            newValue,
-            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InvestmentSummaryCard extends StatelessWidget {
-  final double totalInvestment;
-  final double annualSavings;
-  final String paybackPeriod;
-
-  const _InvestmentSummaryCard({
-    required this.totalInvestment,
-    required this.annualSavings,
-    required this.paybackPeriod,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF6B7280),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'INVERSIÓ TOTAL',
-            style: TextStyle(
-              color: Colors.white70,
-              fontWeight: FontWeight.w700,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            _formatCurrency(totalInvestment),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 24,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Expanded(
-                child: _SummaryMiniCard(
-                  title: 'ESTALVI ANUAL',
-                  value: _formatCurrency(annualSavings),
+              Text(
+                oldValue,
+                style: const TextStyle(
+                  color: Colors.black45,
+                  decoration: TextDecoration.lineThrough,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _SummaryMiniCard(
-                  title: 'PERÍODE DE RETORN',
-                  value: paybackPeriod,
-                ),
+              const SizedBox(height: 2),
+              Text(
+                newValue,
+                style: const TextStyle(fontWeight: FontWeight.w800),
               ),
             ],
           ),
@@ -807,59 +739,102 @@ class _InvestmentSummaryCard extends StatelessWidget {
   }
 }
 
-class _SummaryMiniCard extends StatelessWidget {
-  final String title;
-  final String value;
+class _MiniChip extends StatelessWidget {
+  final String text;
 
-  const _SummaryMiniCard({required this.title, required this.value});
+  const _MiniChip({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Text(text),
+      visualDensity: VisualDensity.compact,
+      backgroundColor: const Color(0xFFF3F4F6),
+      side: BorderSide.none,
+      labelStyle: const TextStyle(fontSize: 12),
+    );
+  }
+}
+
+class _ErrorBanner extends StatelessWidget {
+  final String text;
+  final VoidCallback? onRetry;
+
+  const _ErrorBanner({
+    required this.text,
+    this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white24),
+        color: Colors.red.shade50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.red.shade100),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontWeight: FontWeight.w700,
-              fontSize: 12,
+          Icon(Icons.error_outline, color: Colors.red.shade800),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(color: Colors.red.shade900, height: 1.35),
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 18,
+          if (onRetry != null)
+            TextButton(
+              onPressed: onRetry,
+              child: const Text('Reintenta'),
             ),
-          ),
         ],
       ),
     );
   }
 }
 
-String _formatCurrency(double value) {
-  final rounded = value.round();
-  final text = rounded.toString();
-  final buffer = StringBuffer();
+class _InfoCard extends StatelessWidget {
+  final String text;
 
-  for (int i = 0; i < text.length; i++) {
-    final positionFromEnd = text.length - i;
-    buffer.write(text[i]);
-    if (positionFromEnd > 1 && positionFromEnd % 3 == 1) {
-      buffer.write('.');
-    }
+  const _InfoCard({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.green.shade100),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.green.shade900,
+          height: 1.35,
+          fontSize: 13,
+        ),
+      ),
+    );
   }
+}
 
-  return '${buffer.toString()}€';
+class _EmptyCatalogCard extends StatelessWidget {
+  const _EmptyCatalogCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return const _InfoCard(
+      text:
+          'Encara no hi ha millores actives al catàleg. Carrega el seed de millores al backend.',
+    );
+  }
+}
+
+String _formatCurrency(double value) {
+  return '${value.toStringAsFixed(0)} €';
 }
