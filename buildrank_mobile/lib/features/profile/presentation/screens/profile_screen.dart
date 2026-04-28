@@ -8,6 +8,7 @@ import 'package:buildrank_mobile/features/myChat/my_chats_screen.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:buildrank_mobile/shared/widgets/badge_item.dart';
 import 'package:buildrank_mobile/shared/widgets/building_list_item.dart';
+import 'package:buildrank_mobile/features/profile/presentation/screens/add_existing_building_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -313,18 +314,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildBuildingsHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        Text(
-          _buildBuildingsSectionTitle(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _buildBuildingsSectionTitle(),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "${_buildings.length}",
+              style: const TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ),
-        Text(
-          "${_buildings.length}",
-          style: const TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.w700,
+        const SizedBox(height: 12),
+
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AddExistingBuildingScreen(userRole: _role),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: const Text(
+              "Vincular nou edifici",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
         ),
       ],

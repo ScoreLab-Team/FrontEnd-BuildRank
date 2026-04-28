@@ -15,6 +15,7 @@ class ApiConfig {
   /// Per defecte usa l'emulador. Si vols provar amb mòbil físic:
   ///
   /// flutter run --dart-define=API_BASE_URL=http://192.168.1.13
+  /// flutter run --dart-define=API_BASE_URL=http://192.168.1.103
   ///
   /// Important:
   /// - Amb Docker + Nginx no fem servir :8000.
@@ -43,6 +44,16 @@ class ApiConfig {
   static const String localitzacions = '$baseUrl/api/buildings/localitzacions/';
 
   static const String edificis = '$baseUrl/api/buildings/edificis/';
+
+  static const String searchExistingBuildings =
+      '$baseUrl/api/buildings/search/';
+
+  // Assignacions via accounts
+  static String assignarResident(String refCadastral) =>
+      '$baseUrl/api/accounts/habitatges/$refCadastral/assignar-resident/';
+
+  static String assignarAdminEdifici(int idEdifici) =>
+      '$baseUrl/api/accounts/edificis/$idEdifici/assignar-admin/';
 
   /// Es manté aquest alias perquè el formulari actual encara usa `crearEdifici`.
   /// Internament apunta al mateix endpoint REST real del ViewSet d'edificis.
