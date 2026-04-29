@@ -65,6 +65,60 @@ class ApiConfig {
   static String milloresImplementades(int idEdifici) =>
       '$baseUrl/api/buildings/edificis/$idEdifici/millores-implementades/';
 
+  // =========================
+  // Ranking endpoints
+  // =========================
+  static const String ranking = '$baseUrl/api/buildings/ranking/';
+
+  static Uri rankingGlobal({int page = 1, String? search}) {
+    return uri(
+      ranking,
+      queryParameters: {
+        'page': page,
+        if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
+      },
+    );
+  }
+
+  static Uri rankingLeague({
+    required int idEdifici,
+    int page = 1,
+    String? search,
+  }) {
+    return uri(
+      ranking,
+      queryParameters: {
+        'page': page,
+        'edifici_id': idEdifici,
+        'scope': 'league',
+        if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
+      },
+    );
+  }
+
+  static String rankingPosition(int idEdifici) =>
+      '$baseUrl/api/buildings/ranking/$idEdifici/posicion/';
+
+  // =========================
+  // XEMA Weather API
+  // =========================
+  static const String xemaWeatherBaseUrl =
+      'https://third-party-service-92ob.onrender.com';
+
+  static const String xemaApiKey = String.fromEnvironment('XEMA_API_KEY');
+
+  static Uri xemaCurrentWeather({String city = 'Barcelona'}) {
+    return Uri.parse(
+      '$xemaWeatherBaseUrl/api/weather/current/',
+    ).replace(queryParameters: {'city': city});
+  }
+
+  static Uri xemaDailyWeather({required String city, required String date}) {
+    return Uri.parse(
+      '$xemaWeatherBaseUrl/api/weather/daily/',
+    ).replace(queryParameters: {'city': city, 'date': date});
+  }
+
   /// Helper comú per construir Uri amb query params.
   static Uri uri(String endpoint, {Map<String, dynamic>? queryParameters}) {
     return Uri.parse(endpoint).replace(
