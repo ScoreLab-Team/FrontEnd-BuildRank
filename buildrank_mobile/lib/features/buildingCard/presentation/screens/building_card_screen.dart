@@ -6,6 +6,7 @@ import '../../../../shared/widgets/action_tile.dart';
 import '../../../../shared/widgets/league_info_card.dart';
 import '../../../../shared/widgets/revision_card.dart';
 import 'package:buildrank_mobile/features/buildingRequests/presentation/screens/pending_building_requests_screen.dart';
+import 'package:buildrank_mobile/features/habitatge/presentation/screens/edit_habitatge_screen.dart';
 
 class BuildingDetailScreen extends StatefulWidget {
   final int idEdifici;
@@ -592,6 +593,31 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                     ),
                   ),
                 );
+              },
+            ),
+          ] else if (widget.userRole == 'owner') ...[
+            const SizedBox(height: 10),
+            ActionTile(
+              icon: Icons.home_outlined,
+              title: "Editar el meu habitatge",
+              subtitle: "Completa superfície, reforma i dades energètiques",
+              color: const Color(0xFFFFF7ED),
+              onTap: () async {
+                final updated = await Navigator.push<Map<String, dynamic>?>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditHabitatgeScreen(
+                      idEdifici: widget.idEdifici,
+                      buildingTitle: _title,
+                    ),
+                  ),
+                );
+
+                if (!mounted) return;
+
+                if (updated != null) {
+                  await _loadBuildingDetail();
+                }
               },
             ),
           ],
