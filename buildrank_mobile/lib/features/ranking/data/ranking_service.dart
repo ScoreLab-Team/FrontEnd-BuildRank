@@ -8,11 +8,9 @@ import 'package:buildrank_mobile/features/ranking/data/ranking_model.dart';
 import 'package:http/http.dart' as http;
 
 class RankingService {
-  /// Quan arribi el backend real, canvia-ho a false i adapta els endpoints
-  /// si cal segons el contracte final.
   final bool useMockData;
 
-  const RankingService({this.useMockData = true});
+  const RankingService({this.useMockData = false});
 
   Future<Map<String, String>> _buildHeaders() async {
     final token = await TokenStorage.getAccessToken();
@@ -31,6 +29,7 @@ class RankingService {
     required RankingScope scope,
     String? search,
     int page = 1,
+    int targetTop = 3,
   }) async {
     if (useMockData) {
       return _getMockRanking(
@@ -40,41 +39,47 @@ class RankingService {
         scope: scope,
         search: search,
         page: page,
+        targetTop: targetTop,
       );
     }
 
-    final uri = scope == RankingScope.global
-        ? ApiConfig.rankingGlobal(page: page, search: search)
-        : ApiConfig.rankingLeague(
-            idEdifici: idEdifici,
-            page: page,
-            search: search,
-          );
-
     try {
-      final response = await http
-          .get(uri, headers: await _buildHeaders())
-          .timeout(const Duration(seconds: 10));
+      final context = await _loadRankingContext(idEdifici: idEdifici);
 
-      final decoded = _tryDecodeBody(response.body);
+      final positionJson = await _getJson(
+        ApiConfig.buildingPosition(
+          leagueId: context.leagueId,
+          buildingId: idEdifici,
+          top: targetTop,
+          segment: scope == RankingScope.comparable,
+        ),
+      );
 
-      if (response.statusCode != 200) {
-        throw RankingApiException(
-          'No s’ha pogut carregar el rànquing.',
-          statusCode: response.statusCode,
-          details: decoded,
-        );
-      }
+      final positionData = Map<String, dynamic>.from(positionJson);
+      final groupId = _readInt(positionData['grup_utilitzat']);
 
-      if (decoded is! Map) {
-        throw const RankingApiException(
-          'La resposta del rànquing no té el format esperat.',
-        );
-      }
+      final rankingJson = await _getJson(
+        ApiConfig.leagueRanking(
+          leagueId: context.leagueId,
+          groupId: scope == RankingScope.comparable ? groupId : null,
+          page: page,
+          pageSize: 10,
+          search: search,
+        ),
+      );
+
+      final summary = _buildSummary(
+        context: context,
+        positionData: positionData,
+        fallbackPoints: currentPoints,
+        scope: scope,
+      );
 
       return RankingResponse.fromJson(
-        Map<String, dynamic>.from(decoded),
+        Map<String, dynamic>.from(rankingJson),
         currentBuildingId: idEdifici,
+        summaryOverride: summary,
+        pageOverride: page,
       );
     } on TimeoutException {
       throw const RankingApiException(
@@ -97,6 +102,198 @@ class RankingService {
     }
   }
 
+  Future<_RankingContext> _loadRankingContext({required int idEdifici}) async {
+    final seasonsJson = await _getJson(Uri.parse(ApiConfig.seasons));
+    final leaguesJson = await _getJson(Uri.parse(ApiConfig.leagues));
+    final participationsJson = await _getJson(
+      Uri.parse(ApiConfig.participations),
+    );
+
+    final seasons = _extractList(seasonsJson);
+    final leagues = _extractList(leaguesJson);
+    final participations = _extractList(participationsJson);
+
+    Map<String, dynamic>? activeSeason;
+
+    for (final season in seasons) {
+      if (season['activa'] == true) {
+        activeSeason = season;
+        break;
+      }
+    }
+
+    activeSeason ??= seasons.isNotEmpty ? seasons.first : null;
+
+    if (activeSeason == null) {
+      throw const RankingApiException('No hi ha cap temporada disponible.');
+    }
+
+    final activeSeasonId = _readInt(
+      activeSeason['id_temporada'] ?? activeSeason['id'],
+    );
+
+    if (activeSeasonId == null) {
+      throw const RankingApiException(
+        'La temporada activa no té identificador.',
+      );
+    }
+
+    final leaguesById = <int, Map<String, dynamic>>{};
+    final activeLeagueIds = <int>{};
+
+    for (final league in leagues) {
+      final id = _readInt(league['id']);
+      if (id == null) continue;
+
+      leaguesById[id] = league;
+
+      final seasonId = _readInt(league['temporada']);
+      if (seasonId == activeSeasonId) {
+        activeLeagueIds.add(id);
+      }
+    }
+
+    Map<String, dynamic>? selectedParticipation;
+
+    for (final participation in participations) {
+      final buildingId = _readInt(participation['edifici']);
+      final leagueId = _readInt(participation['lliga']);
+
+      if (buildingId == idEdifici &&
+          leagueId != null &&
+          activeLeagueIds.contains(leagueId)) {
+        selectedParticipation = participation;
+        break;
+      }
+    }
+
+    if (selectedParticipation == null) {
+      for (final participation in participations) {
+        if (_readInt(participation['edifici']) == idEdifici) {
+          selectedParticipation = participation;
+          break;
+        }
+      }
+    }
+
+    if (selectedParticipation == null) {
+      throw const RankingApiException(
+        'Aquest edifici encara no té participació assignada a cap lliga.',
+      );
+    }
+
+    final leagueId = _readInt(selectedParticipation['lliga']);
+    if (leagueId == null) {
+      throw const RankingApiException('La participació no té lliga assignada.');
+    }
+
+    final league = leaguesById[leagueId];
+    if (league == null) {
+      throw const RankingApiException(
+        'No s’ha trobat la lliga de la participació.',
+      );
+    }
+
+    return _RankingContext(
+      seasonId: activeSeasonId,
+      seasonName: _readString(activeSeason['nom']) ?? 'Temporada activa',
+      seasonEndDate: _readDate(activeSeason['dataFi']),
+      leagueId: leagueId,
+      leagueName:
+          _readString(league['nom']) ??
+          _readString(league['divisio']) ??
+          'La meva lliga',
+      leagueDivision: _readString(league['divisio']),
+      participation: selectedParticipation,
+    );
+  }
+
+  RankingSummary _buildSummary({
+    required _RankingContext context,
+    required Map<String, dynamic> positionData,
+    required int fallbackPoints,
+    required RankingScope scope,
+  }) {
+    final currentPoints =
+        _readInt(positionData['puntuacion_actual']) ??
+        _readInt(context.participation['puntuacio']) ??
+        fallbackPoints;
+
+    final pointsToTop = _readInt(positionData['punt_per_top']) ?? 0;
+    final targetPoints = pointsToTop <= 0
+        ? currentPoints
+        : currentPoints + pointsToTop;
+    final isInTop = positionData['esta_en_top'] == true;
+    final topTarget = _readInt(positionData['top_objetivo']) ?? 3;
+    final position =
+        _readInt(positionData['posicion']) ??
+        _readInt(context.participation['posicio']) ??
+        0;
+
+    final daysRemaining = _daysRemaining(context.seasonEndDate);
+    final segmentText = scope == RankingScope.comparable
+        ? ' entre edificis similars'
+        : ' de la lliga';
+
+    final promotionText = isInTop
+        ? 'Ja formes part del Top $topTarget$segmentText.'
+        : pointsToTop > 0
+        ? 'Et falten $pointsToTop punts per entrar al Top $topTarget$segmentText.'
+        : 'Segueix millorant per pujar posicions$segmentText.';
+
+    return RankingSummary(
+      seasonName: context.seasonName,
+      leagueName: context.leagueName,
+      currentPoints: currentPoints,
+      targetPoints: targetPoints,
+      progress: targetPoints <= 0
+          ? 0.0
+          : (currentPoints / targetPoints).clamp(0.0, 1.0).toDouble(),
+      daysRemaining: daysRemaining,
+      promotionText: promotionText,
+      currentPosition: position,
+    );
+  }
+
+  Future<Map<String, dynamic>> _getJson(Uri uri) async {
+    final response = await http
+        .get(uri, headers: await _buildHeaders())
+        .timeout(const Duration(seconds: 10));
+
+    final decoded = _tryDecodeBody(response.body);
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw RankingApiException(
+        'No s’ha pogut carregar el rànquing.',
+        statusCode: response.statusCode,
+        details: decoded,
+      );
+    }
+
+    if (decoded is Map) {
+      return Map<String, dynamic>.from(decoded);
+    }
+
+    if (decoded is List) {
+      return {'results': decoded};
+    }
+
+    throw const RankingApiException(
+      'La resposta del rànquing no té el format esperat.',
+    );
+  }
+
+  List<Map<String, dynamic>> _extractList(dynamic decoded) {
+    final raw = decoded is Map ? decoded['results'] : decoded;
+
+    if (raw is! List) return const [];
+
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
+
   Future<RankingResponse> _getMockRanking({
     required int idEdifici,
     required String buildingName,
@@ -104,6 +301,7 @@ class RankingService {
     required RankingScope scope,
     required String? search,
     required int page,
+    int targetTop = 3,
   }) async {
     await Future.delayed(const Duration(milliseconds: 500));
 
@@ -133,9 +331,9 @@ class RankingService {
         idEdifici: idEdifici,
         position: 4,
         name: buildingName,
-        address: scope == RankingScope.global
-            ? 'El teu edifici · Rànquing global'
-            : 'El teu edifici · Lliga comparable',
+        address: scope == RankingScope.league
+            ? 'El teu edifici · La meva lliga'
+            : 'El teu edifici · Edificis similars',
         points: currentPoints,
         isCurrentBuilding: true,
       ),
@@ -206,6 +404,57 @@ class RankingService {
       return body;
     }
   }
+
+  String? _readString(dynamic value) {
+    if (value == null) return null;
+    final text = value.toString().trim();
+    return text.isEmpty ? null : text;
+  }
+
+  int? _readInt(dynamic value) {
+    if (value is int) return value;
+    if (value is double) return value.round();
+    if (value is String) {
+      final normalized = value.replaceAll(',', '').trim();
+      return int.tryParse(normalized) ?? double.tryParse(normalized)?.round();
+    }
+    return null;
+  }
+
+  DateTime? _readDate(dynamic value) {
+    if (value == null) return null;
+    return DateTime.tryParse(value.toString());
+  }
+
+  int _daysRemaining(DateTime? endDate) {
+    if (endDate == null) return 0;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final end = DateTime(endDate.year, endDate.month, endDate.day);
+
+    return end.difference(today).inDays.clamp(0, 9999).toInt();
+  }
+}
+
+class _RankingContext {
+  final int seasonId;
+  final String seasonName;
+  final DateTime? seasonEndDate;
+  final int leagueId;
+  final String leagueName;
+  final String? leagueDivision;
+  final Map<String, dynamic> participation;
+
+  const _RankingContext({
+    required this.seasonId,
+    required this.seasonName,
+    required this.seasonEndDate,
+    required this.leagueId,
+    required this.leagueName,
+    required this.leagueDivision,
+    required this.participation,
+  });
 }
 
 class RankingApiException implements Exception {

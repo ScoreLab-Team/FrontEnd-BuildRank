@@ -10,12 +10,18 @@ class RankingScreen extends StatefulWidget {
   final int idEdifici;
   final String buildingName;
   final int currentPoints;
+  final RankingService rankingService;
+  final bool showBadges;
+  final ImageProvider<Object>? avatarImage;
 
   const RankingScreen({
     super.key,
     required this.idEdifici,
     required this.buildingName,
     required this.currentPoints,
+    this.rankingService = const RankingService(),
+    this.showBadges = true,
+    this.avatarImage,
   });
 
   @override
@@ -23,12 +29,12 @@ class RankingScreen extends StatefulWidget {
 }
 
 class _RankingScreenState extends State<RankingScreen> {
-  final RankingService _rankingService = const RankingService();
   final TextEditingController _searchController = TextEditingController();
 
   Timer? _searchDebounce;
 
-  RankingScope _scope = RankingScope.global;
+  RankingScope _scope = RankingScope.league;
+  int _targetTop = 3;
   RankingResponse? _ranking;
 
   bool _isLoading = true;
@@ -59,13 +65,14 @@ class _RankingScreenState extends State<RankingScreen> {
     }
 
     try {
-      final result = await _rankingService.getRanking(
+      final result = await widget.rankingService.getRanking(
         idEdifici: widget.idEdifici,
         buildingName: widget.buildingName,
         currentPoints: widget.currentPoints,
         scope: _scope,
         search: _searchController.text,
         page: reset ? 1 : _page,
+        targetTop: _targetTop,
       );
 
       if (!mounted) return;
@@ -102,13 +109,14 @@ class _RankingScreenState extends State<RankingScreen> {
     });
 
     try {
-      final nextPage = await _rankingService.getRanking(
+      final nextPage = await widget.rankingService.getRanking(
         idEdifici: widget.idEdifici,
         buildingName: widget.buildingName,
         currentPoints: widget.currentPoints,
         scope: _scope,
         search: _searchController.text,
         page: _page,
+        targetTop: _targetTop,
       );
 
       if (!mounted) return;
@@ -206,10 +214,12 @@ class _RankingScreenState extends State<RankingScreen> {
                         )
                       : const Icon(Icons.refresh),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 16),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage("https://i.pravatar.cc/100"),
+                    backgroundImage:
+                        widget.avatarImage ??
+                        const NetworkImage("https://i.pravatar.cc/100"),
                   ),
                 ),
               ],
@@ -232,9 +242,13 @@ class _RankingScreenState extends State<RankingScreen> {
                   child: Column(
                     children: [
                       _buildLeagueCard(),
+                      const SizedBox(height: 12),
+                      _buildTopSelector(),
                       const SizedBox(height: 20),
-                      _buildBadges(),
-                      const SizedBox(height: 20),
+                      if (widget.showBadges) ...[
+                        _buildBadges(),
+                        const SizedBox(height: 20),
+                      ],
                       _buildToggle(),
                       const SizedBox(height: 12),
                       _buildSearch(),
@@ -259,30 +273,36 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 
   Widget _buildErrorState() {
-    return ListView(
+    return Padding(
       padding: const EdgeInsets.all(24),
-      children: [
-        const SizedBox(height: 120),
-        const Icon(Icons.leaderboard_outlined, size: 48, color: Colors.black45),
-        const SizedBox(height: 16),
-        const Text(
-          'No s’ha pogut carregar el rànquing',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          _errorText ?? 'Error desconegut.',
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.black54, height: 1.35),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton.icon(
-          onPressed: _loadRanking,
-          icon: const Icon(Icons.refresh),
-          label: const Text('Torna-ho a provar'),
-        ),
-      ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.leaderboard_outlined,
+            size: 48,
+            color: Colors.black45,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'No s’ha pogut carregar el rànquing',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _errorText ?? 'Error desconegut.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.black54, height: 1.35),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton.icon(
+            onPressed: _loadRanking,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Torna-ho a provar'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -321,9 +341,9 @@ class _RankingScreenState extends State<RankingScreen> {
             style: const TextStyle(color: Colors.white70, height: 1.3),
           ),
           const SizedBox(height: 14),
-          const Text(
-            'Progrés cap a la següent lliga',
-            style: TextStyle(color: Colors.white70),
+          Text(
+            'Progrés cap al Top $_targetTop',
+            style: const TextStyle(color: Colors.white70),
           ),
           const SizedBox(height: 6),
           Text(
@@ -409,22 +429,66 @@ class _RankingScreenState extends State<RankingScreen> {
     );
   }
 
+  Widget _buildTopSelector() {
+    const options = [3, 5, 10];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Comparar posició amb:',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final option in options)
+                ChoiceChip(
+                  label: Text('Top $option'),
+                  selected: _targetTop == option,
+                  onSelected: (selected) {
+                    if (!selected || _targetTop == option) return;
+
+                    setState(() {
+                      _targetTop = option;
+                    });
+
+                    _loadRanking();
+                  },
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildToggle() {
     return Row(
       children: [
         Expanded(
           child: _ToggleButton(
-            text: 'Rànquing global',
-            selected: _scope == RankingScope.global,
-            onTap: () => _changeScope(RankingScope.global),
+            text: 'La meva lliga',
+            selected: _scope == RankingScope.league,
+            onTap: () => _changeScope(RankingScope.league),
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _ToggleButton(
-            text: 'Lliga comparable',
-            selected: _scope == RankingScope.league,
-            onTap: () => _changeScope(RankingScope.league),
+            text: 'Edificis similars',
+            selected: _scope == RankingScope.comparable,
+            onTap: () => _changeScope(RankingScope.comparable),
           ),
         ),
       ],
@@ -436,7 +500,7 @@ class _RankingScreenState extends State<RankingScreen> {
       controller: _searchController,
       onChanged: _onSearchChanged,
       decoration: InputDecoration(
-        hintText: 'Cerca un edifici o administrador...',
+        hintText: 'Cerca un edifici...',
         prefixIcon: const Icon(Icons.search),
         suffixIcon: _searchController.text.isEmpty
             ? null

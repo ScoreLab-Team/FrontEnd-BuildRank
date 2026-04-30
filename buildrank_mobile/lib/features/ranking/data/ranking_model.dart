@@ -1,21 +1,21 @@
-enum RankingScope { global, league }
+enum RankingScope { league, comparable }
 
 extension RankingScopeLabel on RankingScope {
   String get label {
     switch (this) {
-      case RankingScope.global:
-        return 'Rànquing global';
       case RankingScope.league:
-        return 'Lliga comparable';
+        return 'La meva lliga';
+      case RankingScope.comparable:
+        return 'Edificis similars';
     }
   }
 
   String get apiValue {
     switch (this) {
-      case RankingScope.global:
-        return 'global';
       case RankingScope.league:
         return 'league';
+      case RankingScope.comparable:
+        return 'comparable';
     }
   }
 }
@@ -36,11 +36,15 @@ class RankingResponse {
   factory RankingResponse.fromJson(
     Map<String, dynamic> json, {
     required int currentBuildingId,
+    RankingSummary? summaryOverride,
+    int? pageOverride,
   }) {
     final rawEntries = json['results'] ?? json['entries'] ?? json['ranking'];
 
     return RankingResponse(
-      summary: RankingSummary.fromJson(_readMap(json['summary']) ?? json),
+      summary:
+          summaryOverride ??
+          RankingSummary.fromJson(_readMap(json['summary']) ?? json),
       entries: rawEntries is List
           ? rawEntries
                 .whereType<Map>()
@@ -52,7 +56,7 @@ class RankingResponse {
                 )
                 .toList()
           : const [],
-      page: _readInt(json['page']) ?? 1,
+      page: pageOverride ?? _readInt(json['page']) ?? 1,
       hasMore: json['next'] != null || json['hasMore'] == true,
     );
   }
@@ -99,6 +103,8 @@ class RankingSummary {
           json['currentPoints'] ??
               json['current_points'] ??
               json['puntsActuals'] ??
+              json['puntuacion_actual'] ??
+              json['puntuacio'] ??
               json['points'],
         ) ??
         0;
@@ -124,9 +130,10 @@ class RankingSummary {
             json['leagueName'] ??
                 json['league_name'] ??
                 json['lliga'] ??
+                json['liga'] ??
                 json['league'],
           ) ??
-          'Lliga comparable',
+          'La meva lliga',
       currentPoints: currentPoints,
       targetPoints: targetPoints,
       progress:
@@ -148,11 +155,12 @@ class RankingSummary {
                 json['promotion_text'] ??
                 json['missatgePromocio'],
           ) ??
-          'Segueix millorant per pujar de lliga.',
+          'Segueix millorant per pujar posicions.',
       currentPosition:
           _readInt(
             json['currentPosition'] ??
                 json['current_position'] ??
+                json['posicion'] ??
                 json['posicio'],
           ) ??
           0,
@@ -208,9 +216,18 @@ class RankingEntry {
               json['id_edifici'] ??
               json['edificiId'] ??
               json['edifici_id'] ??
+              json['edifici'] ??
               json['id'],
         ) ??
         0;
+
+    final explicitName = _readString(
+      json['name'] ??
+          json['nom'] ??
+          json['title'] ??
+          json['buildingName'] ??
+          json['building_name'],
+    );
 
     return RankingEntry(
       idEdifici: id,
@@ -218,19 +235,12 @@ class RankingEntry {
           _readInt(
             json['position'] ??
                 json['posicio'] ??
+                json['posicion'] ??
                 json['rank'] ??
                 json['ranking'],
           ) ??
           0,
-      name:
-          _readString(
-            json['name'] ??
-                json['nom'] ??
-                json['title'] ??
-                json['edifici'] ??
-                json['buildingName'],
-          ) ??
-          'Edifici #$id',
+      name: explicitName ?? 'Edifici #$id',
       address: _readString(
         json['address'] ?? json['adreca'] ?? json['localitzacio'],
       ),
@@ -239,10 +249,12 @@ class RankingEntry {
             json['points'] ??
                 json['punts'] ??
                 json['score'] ??
+                json['puntuacio'] ??
+                json['puntuacion'] ??
                 json['puntuacioBase'],
           ) ??
           0,
-      league: _readString(json['league'] ?? json['lliga']),
+      league: _readString(json['league'] ?? json['lliga'] ?? json['liga']),
       scoreDelta: _readInt(
         json['scoreDelta'] ?? json['score_delta'] ?? json['diferencia'],
       ),
