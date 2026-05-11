@@ -58,6 +58,12 @@ class ApiConfig {
   }) =>
       '$baseUrl/api/buildings/edificis/$idEdifici/habitatges/$referenciaCadastral/';
 
+  static String meHabitatgeUpdate({
+    required int idEdifici,
+    required String referenciaCadastral,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/me/habitatge/$referenciaCadastral/';
+
   static String habitatgeDetail(String referenciaCadastral) =>
       '$baseUrl/api/buildings/habitatges/$referenciaCadastral/';
 

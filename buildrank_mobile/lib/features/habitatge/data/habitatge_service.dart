@@ -155,55 +155,21 @@ class HabitatgeService {
       );
     }
 
-    final basicPayload = {
+    final payload = {
       'planta': formData.planta,
       'porta': formData.porta,
       'superficie': formData.superficie,
       'anyReforma': formData.anyReforma,
+      if (formData.dadesEnergetiques != null)
+        'dadesEnergetiques': formData.dadesEnergetiques!.toJson(),
     };
 
-    final updatedHabitatge = await _patchHabitatgeBasicData(
-      referenciaCadastral: referencia,
-      payload: basicPayload,
+    final uri = Uri.parse(
+      ApiConfig.meHabitatgeUpdate(
+        idEdifici: formData.idEdifici,
+        referenciaCadastral: referencia,
+      ),
     );
-
-    final energyPayload = formData.dadesEnergetiques?.toJson();
-
-    if (energyPayload == null) {
-      return updatedHabitatge;
-    }
-
-    final existingEnergy = updatedHabitatge['dadesEnergetiques'];
-
-    if (existingEnergy is Map && existingEnergy['id'] != null) {
-      final energyId = _readInt(existingEnergy['id']);
-
-      if (energyId == null) {
-        throw const HabitatgeApiException(
-          'Les dades energètiques existents no tenen un identificador vàlid.',
-        );
-      }
-
-      final updatedEnergy = await _patchDadesEnergetiques(
-        id: energyId,
-        payload: energyPayload,
-      );
-
-      return {...updatedHabitatge, 'dadesEnergetiques': updatedEnergy};
-    }
-
-    throw const HabitatgeApiException(
-      'Aquest habitatge encara no té dades energètiques vinculades. '
-      'El backend actual permet editar-les si ja existeixen, però encara no permet '
-      'crear-les i vincular-les des d’aquesta pantalla.',
-    );
-  }
-
-  Future<Map<String, dynamic>> _patchHabitatgeBasicData({
-    required String referenciaCadastral,
-    required Map<String, dynamic> payload,
-  }) async {
-    final uri = Uri.parse(ApiConfig.habitatgeDetail(referenciaCadastral));
 
     try {
       final response = await http
@@ -246,61 +212,6 @@ class HabitatgeService {
         'S’ha produït un error inesperat actualitzant l’habitatge.',
       );
     }
-  }
-
-  Future<Map<String, dynamic>> _patchDadesEnergetiques({
-    required int id,
-    required Map<String, dynamic> payload,
-  }) async {
-    final uri = Uri.parse(ApiConfig.dadesEnergetiquesDetail(id));
-
-    try {
-      final response = await http
-          .patch(uri, headers: await _buildHeaders(), body: jsonEncode(payload))
-          .timeout(const Duration(seconds: 10));
-
-      final decoded = _tryDecodeBody(response.body);
-
-      if (response.statusCode != 200) {
-        throw HabitatgeApiException(
-          'No s’han pogut actualitzar les dades energètiques.',
-          statusCode: response.statusCode,
-          details: decoded,
-        );
-      }
-
-      if (decoded is! Map) {
-        throw const HabitatgeApiException(
-          'La resposta d’actualització de dades energètiques no té el format esperat.',
-        );
-      }
-
-      return Map<String, dynamic>.from(decoded);
-    } on TimeoutException {
-      throw const HabitatgeApiException(
-        'L’actualització de dades energètiques ha trigat massa.',
-      );
-    } on SocketException {
-      throw const HabitatgeApiException(
-        'No s’ha pogut connectar amb el servidor.',
-      );
-    } on FormatException {
-      throw const HabitatgeApiException(
-        'La resposta del servidor no té el format esperat.',
-      );
-    } on HabitatgeApiException {
-      rethrow;
-    } catch (_) {
-      throw const HabitatgeApiException(
-        'S’ha produït un error inesperat actualitzant les dades energètiques.',
-      );
-    }
-  }
-
-  int? _readInt(dynamic value) {
-    if (value is int) return value;
-    if (value is String) return int.tryParse(value);
-    return null;
   }
 
   dynamic _tryDecodeBody(String body) {
