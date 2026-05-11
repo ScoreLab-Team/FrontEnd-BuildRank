@@ -8,6 +8,7 @@ import 'package:buildrank_mobile/features/myChat/my_chats_screen.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:buildrank_mobile/shared/widgets/badge_item.dart';
 import 'package:buildrank_mobile/shared/widgets/building_list_item.dart';
+import 'package:buildrank_mobile/features/weather/presentation/widgets/weather_alert_card.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/add_existing_building_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,6 +21,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _authService = AuthService();
   final _buildingService = BuildingService();
+
+  bool _showWeatherAlert = true;
 
   bool _isLoading = true;
   bool _isLoggingOut = false;
@@ -226,6 +229,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _buildUserCard(),
+
+                  if (_showWeatherAlert) ...[
+                    const SizedBox(height: 16),
+                    WeatherAlertCard(
+                      onDismiss: () {
+                        setState(() {
+                          _showWeatherAlert = false;
+                        });
+                      },
+                    ),
+                  ],
 
                   const SizedBox(height: 16),
 
