@@ -55,8 +55,9 @@ String _notificationBody(Map<String, dynamic> data) {
       data['sender_name'] as String? ?? data['message_sender_name'] as String?;
   final text =
       data['message'] as String? ?? data['message_text'] as String? ?? '';
-  if (sender != null && sender.isNotEmpty && text.isNotEmpty)
+  if (sender != null && sender.isNotEmpty && text.isNotEmpty) {
     return '$sender: $text';
+  }
   if (text.isNotEmpty) return text;
   return 'Has rebut un missatge nou';
 }
