@@ -41,7 +41,11 @@ class StreamService {
   }
 
   static Future<void> registerFcmToken(String token) async {
-    await client.addDevice(token, PushProvider.firebase, pushProviderName: 'buildrank-push');
+    await client.addDevice(
+      token,
+      PushProvider.firebase,
+      pushProviderName: 'buildrank-push',
+    );
   }
 
   static Future<void> disconnectUser() async {

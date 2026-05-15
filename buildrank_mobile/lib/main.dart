@@ -10,16 +10,22 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   if (message.data['sender'] == 'stream.chat') {
     final plugin = FlutterLocalNotificationsPlugin();
-    await plugin.initialize(const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-    ));
-    final androidPlugin = plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    await androidPlugin?.createNotificationChannel(const AndroidNotificationChannel(
-      'stream_chat_notifications',
-      'Notificacions de xat',
-      importance: Importance.high,
-    ));
+    await plugin.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      ),
+    );
+    final androidPlugin = plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    await androidPlugin?.createNotificationChannel(
+      const AndroidNotificationChannel(
+        'stream_chat_notifications',
+        'Notificacions de xat',
+        importance: Importance.high,
+      ),
+    );
     await plugin.show(
       message.hashCode,
       _notificationTitle(message.data),
@@ -45,9 +51,12 @@ String _notificationTitle(Map<String, dynamic> data) {
 
 String _notificationBody(Map<String, dynamic> data) {
   // v2 format uses 'sender_name' and 'message'; legacy uses 'message_sender_name' and 'message_text'
-  final sender = data['sender_name'] as String? ?? data['message_sender_name'] as String?;
-  final text = data['message'] as String? ?? data['message_text'] as String? ?? '';
-  if (sender != null && sender.isNotEmpty && text.isNotEmpty) return '$sender: $text';
+  final sender =
+      data['sender_name'] as String? ?? data['message_sender_name'] as String?;
+  final text =
+      data['message'] as String? ?? data['message_text'] as String? ?? '';
+  if (sender != null && sender.isNotEmpty && text.isNotEmpty)
+    return '$sender: $text';
   if (text.isNotEmpty) return text;
   return 'Has rebut un missatge nou';
 }
@@ -65,20 +74,19 @@ const AndroidNotificationChannel _streamChannel = AndroidNotificationChannel(
   importance: Importance.high,
 );
 
-const AndroidNotificationChannel _fcmDefaultChannel = AndroidNotificationChannel(
-  'fcm_fallback_notification_channel',
-  'Notificacions generals',
-  importance: Importance.high,
-);
+const AndroidNotificationChannel _fcmDefaultChannel =
+    AndroidNotificationChannel(
+      'fcm_fallback_notification_channel',
+      'Notificacions generals',
+      importance: Importance.high,
+    );
 
 final FlutterLocalNotificationsPlugin _localNotifications =
     FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await _localNotifications.initialize(
@@ -88,7 +96,9 @@ void main() async {
   );
 
   final androidPlugin = _localNotifications
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
   await androidPlugin?.createNotificationChannel(_channel);
   await androidPlugin?.createNotificationChannel(_streamChannel);
   await androidPlugin?.createNotificationChannel(_fcmDefaultChannel);

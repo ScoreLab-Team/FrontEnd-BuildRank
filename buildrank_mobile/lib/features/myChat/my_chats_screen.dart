@@ -62,8 +62,11 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.chat_bubble_outline,
-                size: 64, color: Colors.grey.shade400),
+            Icon(
+              Icons.chat_bubble_outline,
+              size: 64,
+              color: Colors.grey.shade400,
+            ),
             const SizedBox(height: 16),
             const Text(
               'No s\'ha pogut connectar al xat.',
@@ -169,7 +172,9 @@ class _ChannelListState extends State<_ChannelList> {
             trailing: unread > 0
                 ? Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(20),
@@ -202,9 +207,7 @@ class _ChannelListState extends State<_ChannelList> {
           ),
         );
       },
-      emptyBuilder: (_) => const Center(
-        child: Text('No tens cap xat actiu.'),
-      ),
+      emptyBuilder: (_) => const Center(child: Text('No tens cap xat actiu.')),
       errorBuilder: (context, error) => Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -214,8 +217,7 @@ class _ChannelListState extends State<_ChannelList> {
           ),
         ),
       ),
-      loadingBuilder: (_) =>
-          const Center(child: CircularProgressIndicator()),
+      loadingBuilder: (_) => const Center(child: CircularProgressIndicator()),
     );
   }
 }

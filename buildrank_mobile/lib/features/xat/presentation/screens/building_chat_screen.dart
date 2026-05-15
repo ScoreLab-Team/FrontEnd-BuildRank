@@ -33,7 +33,9 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
         await StreamService.reconnect();
       }
       if (StreamService.client.state.currentUser == null) {
-        setState(() => _error = 'Usuari no connectat. Tanca sessió i torna a entrar.');
+        setState(
+          () => _error = 'Usuari no connectat. Tanca sessió i torna a entrar.',
+        );
         return;
       }
       final userId = StreamService.client.state.currentUser!.id;
@@ -44,9 +46,8 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
       );
       await channel.watch();
       // Asegura que el usuario actual es miembro (para que aparezca en "Els meus xats")
-      final isMember = channel.state?.members
-              .any((m) => m.userId == userId) ??
-          false;
+      final isMember =
+          channel.state?.members.any((m) => m.userId == userId) ?? false;
       if (!isMember) await channel.addMembers([userId]);
       if (mounted) setState(() => _channel = channel);
     } catch (e) {
@@ -68,9 +69,7 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     }
 
     if (_channel == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return StreamChannel(

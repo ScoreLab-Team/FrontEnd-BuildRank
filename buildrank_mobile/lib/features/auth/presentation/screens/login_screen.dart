@@ -45,8 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // Connectar a GetStream com el nou usuari
       try {
         final userId = 'user_${me['id']}';
-        final userName =
-            '${me['first_name'] ?? ''} ${me['last_name'] ?? ''}'.trim();
+        final userName = '${me['first_name'] ?? ''} ${me['last_name'] ?? ''}'
+            .trim();
         await StreamService.connectUser(
           userId: userId,
           userName: userName.isNotEmpty ? userName : userId,
