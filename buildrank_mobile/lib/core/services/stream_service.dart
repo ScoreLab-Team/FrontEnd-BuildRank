@@ -18,9 +18,15 @@ class StreamService {
     _lastUserId = userId;
     _lastUserName = userName;
 
-    if (client.state.currentUser != null &&
+    // Ja connectat com el mateix usuari
+    if (client.state.currentUser?.id == userId &&
         client.wsConnectionStatus == ConnectionStatus.connected) {
       return;
+    }
+
+    // Connectat com un altre usuari — desconnectar primer
+    if (client.state.currentUser != null) {
+      await client.disconnectUser();
     }
 
     await client.connectUser(

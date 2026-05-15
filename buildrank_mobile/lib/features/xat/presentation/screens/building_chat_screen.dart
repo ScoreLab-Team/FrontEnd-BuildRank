@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -31,12 +29,12 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
 
   Future<void> _initChannel() async {
     try {
-      final currentUser = StreamService.client.state.currentUser;
-      if (currentUser == null) {
-        // Stream encara no ha connectat — esperar fins 10 segons
-        await StreamService.client.wsConnectionStatusStream
-            .firstWhere((s) => s == ConnectionStatus.connected)
-            .timeout(const Duration(seconds: 10));
+      if (StreamService.client.state.currentUser == null) {
+        await StreamService.reconnect();
+      }
+      if (StreamService.client.state.currentUser == null) {
+        setState(() => _error = 'Usuari no connectat. Tanca sessió i torna a entrar.');
+        return;
       }
       final userId = StreamService.client.state.currentUser!.id;
       final channel = StreamService.client.channel(
@@ -78,6 +76,7 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     return StreamChannel(
       channel: _channel!,
       child: Scaffold(
+        backgroundColor: const Color(0xFFF0F2EF),
         appBar: AppBar(
           backgroundColor: Colors.white,
           leadingWidth: 120,

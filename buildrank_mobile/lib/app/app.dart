@@ -21,9 +21,21 @@ class BuildRankApp extends StatelessWidget {
           colorTheme: StreamColorTheme.light(
             accentPrimary: Colors.green,
           ),
-          ownMessageTheme: const StreamMessageThemeData(
+          ownMessageTheme: StreamMessageThemeData(
             messageBackgroundColor: Colors.green,
-            messageTextStyle: TextStyle(color: Colors.white),
+            messageTextStyle: const TextStyle(color: Colors.white, fontSize: 15),
+            createdAtStyle: const TextStyle(color: Colors.white70, fontSize: 11),
+            reactionsBackgroundColor: Colors.green.shade700,
+          ),
+          otherMessageTheme: StreamMessageThemeData(
+            messageBackgroundColor: Colors.white,
+            messageTextStyle: const TextStyle(color: Colors.black87, fontSize: 15),
+            messageAuthorStyle: TextStyle(
+              color: Colors.green.shade700,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+            createdAtStyle: const TextStyle(color: Colors.black45, fontSize: 11),
           ),
         ),
         child: child!,
