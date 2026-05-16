@@ -65,12 +65,12 @@ class _SessionGateScreenState extends State<SessionGateScreen> {
     await StreamService.connectUser(userId: userId, userName: userName);
 
     try {
-      await FirebaseMessaging.instance
-          .requestPermission()
-          .timeout(const Duration(seconds: 5));
-      final token = await FirebaseMessaging.instance
-          .getToken()
-          .timeout(const Duration(seconds: 5));
+      await FirebaseMessaging.instance.requestPermission().timeout(
+        const Duration(seconds: 5),
+      );
+      final token = await FirebaseMessaging.instance.getToken().timeout(
+        const Duration(seconds: 5),
+      );
       if (token != null) await StreamService.registerFcmToken(token);
     } catch (_) {}
   }
