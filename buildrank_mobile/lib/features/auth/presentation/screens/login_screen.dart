@@ -51,7 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
           userId: userId,
           userName: userName.isNotEmpty ? userName : userId,
         );
-        final token = await FirebaseMessaging.instance.getToken();
+        final token = await FirebaseMessaging.instance
+            .getToken()
+            .timeout(const Duration(seconds: 5));
         if (token != null) await StreamService.registerFcmToken(token);
       } catch (_) {}
 
