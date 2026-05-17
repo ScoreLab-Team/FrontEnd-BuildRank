@@ -56,11 +56,8 @@ class _SessionGateScreenState extends State<SessionGateScreen> {
 
   Future<void> _connectStreamUser(Map<String, dynamic> me) async {
     final userId = 'user_${me['id']}';
-    final firstName = me['first_name'] as String? ?? '';
-    final lastName = me['last_name'] as String? ?? '';
-    final userName = '$firstName $lastName'.trim().isNotEmpty
-        ? '$firstName $lastName'.trim()
-        : userId;
+    final email = me['email'] as String? ?? '';
+    final userName = email.isNotEmpty ? email.split('@').first : userId;
 
     await StreamService.connectUser(userId: userId, userName: userName);
 
