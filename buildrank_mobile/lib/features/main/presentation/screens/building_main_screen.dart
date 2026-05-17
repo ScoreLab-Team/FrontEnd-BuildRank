@@ -64,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
       BuildingChatScreen(
         idEdifici: widget.idEdifici,
         buildingName: widget.title,
+        userRole: widget.userRole,
       ),
       const VotacionsScreen(),
     ];

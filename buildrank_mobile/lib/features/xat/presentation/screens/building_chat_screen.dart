@@ -6,11 +6,13 @@ import '../../../../core/services/stream_service.dart';
 class BuildingChatScreen extends StatefulWidget {
   final int idEdifici;
   final String buildingName;
+  final String? userRole;
 
   const BuildingChatScreen({
     super.key,
     required this.idEdifici,
     required this.buildingName,
+    this.userRole,
   });
 
   @override
