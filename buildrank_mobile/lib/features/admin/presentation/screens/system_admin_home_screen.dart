@@ -1,3 +1,6 @@
+import 'package:buildrank_mobile/core/services/stream_service.dart';
+import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
+import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../auth/data/auth_service.dart';
@@ -30,6 +33,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   _AdminTab _selectedTab = _AdminTab.tasks;
   String _search = '';
+  final _authService = AuthService();
   bool _isLoggingOut = false;
 
   @override
@@ -51,20 +55,35 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Future<void> _handleLogout() async {
-    setState(() => _isLoggingOut = true);
+    if (_isLoggingOut) return;
+
+    setState(() {
+      _isLoggingOut = true;
+    });
+
     try {
-      await AuthService().logout();
+      try {
+        await StreamService.disconnectUser();
+      } catch (_) {}
+
+      await _authService.logout();
+
       if (!mounted) return;
+
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const AuthBaseScreen()),
-        (route) => false,
+        (_) => false,
       );
     } catch (e) {
       if (!mounted) return;
-      setState(() => _isLoggingOut = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-      );
+
+      _showSnackBar(e.toString().replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoggingOut = false;
+        });
+      }
     }
   }
 
@@ -134,6 +153,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF19C463),
             foregroundColor: Colors.white,
+            disabledBackgroundColor: const Color(0xFFB7E8CB),
+            disabledForegroundColor: Colors.white,
             elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             shape: RoundedRectangleBorder(
@@ -150,9 +171,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 )
               : const Icon(Icons.logout, size: 18),
-          label: const Text(
-            'Tanca sessió',
-            style: TextStyle(fontWeight: FontWeight.w700),
+          label: Text(
+            _isLoggingOut ? 'Sortint...' : 'Tanca sessió',
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
         const Spacer(),

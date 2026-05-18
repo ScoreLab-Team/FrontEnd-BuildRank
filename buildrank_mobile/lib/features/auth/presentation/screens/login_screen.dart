@@ -42,21 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
       final me = await _authService.getMe();
       final isSystemAdmin = me['is_system_admin'] == true;
 
-      // Connectar a GetStream com el nou usuari
-      try {
-        final userId = 'user_${me['id']}';
-        final email = me['email'] as String? ?? '';
-        final userName = email.isNotEmpty ? email.split('@').first : userId;
-        await StreamService.connectUser(
-          userId: userId,
-          userName: userName,
-        );
-        final token = await FirebaseMessaging.instance.getToken().timeout(
-          const Duration(seconds: 5),
-        );
-        if (token != null) await StreamService.registerFcmToken(token);
-      } catch (_) {}
-
       if (!mounted) return;
 
       if (isSystemAdmin) {
@@ -78,6 +63,37 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _finishAuthenticatedNavigation() async {
+    final me = await _authService.getMe();
+    final isSystemAdmin = me['is_system_admin'] == true;
+
+    try {
+      final userId = 'user_${me['id']}';
+      final userName = '${me['first_name'] ?? ''} ${me['last_name'] ?? ''}'
+          .trim();
+
+      await StreamService.connectUser(
+        userId: userId,
+        userName: userName.isNotEmpty ? userName : userId,
+      );
+
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token != null) await StreamService.registerFcmToken(token);
+    } catch (_) {}
+
+    if (!mounted) return;
+
+    if (isSystemAdmin) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const AdminPanelScreen()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+      );
     }
   }
 
@@ -192,9 +208,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.person_outline),
-                    label: const Text('Continuar amb un altre mètode'),
+                    onPressed: _isLoading ? null : _handleGoogleLogin,
+                    icon: const Icon(Icons.g_mobiledata),
+                    label: const Text('Continuar amb Google'),
                   ),
                 ],
               ),
