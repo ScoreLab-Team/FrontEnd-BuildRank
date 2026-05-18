@@ -3,27 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:buildrank_mobile/core/config/api_config.dart';
-import 'package:buildrank_mobile/features/auth/data/token_storage.dart';
+import 'package:buildrank_mobile/core/services/api_client.dart';
 import 'package:buildrank_mobile/features/vots/data/votacions_model.dart';
-import 'package:http/http.dart' as http;
 
 class VotacionsService {
-  Future<Map<String, String>> _buildHeaders() async {
-    final token = await TokenStorage.getAccessToken();
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
-    };
-  }
-
   Future<List<VotacioResumModel>> getVotacions({required int idEdifici}) async {
     try {
-      final headers = await _buildHeaders();
-      final response = await http
-          .get(ApiConfig.votacionsEdifici(idEdifici: idEdifici), headers: headers)
-          .timeout(const Duration(seconds: 10));
-
+      final response = await ApiClient.get(ApiConfig.votacionsEdifici(idEdifici: idEdifici));
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -53,11 +39,7 @@ class VotacionsService {
 
   Future<VotacioDetallModel> getVotacioDetall({required int id}) async {
     try {
-      final headers = await _buildHeaders();
-      final response = await http
-          .get(Uri.parse(ApiConfig.votacioDetall(id)), headers: headers)
-          .timeout(const Duration(seconds: 10));
-
+      final response = await ApiClient.get(Uri.parse(ApiConfig.votacioDetall(id)));
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -91,7 +73,6 @@ class VotacionsService {
     required List<String> opcions,
   }) async {
     try {
-      final headers = await _buildHeaders();
       final bodyMap = <String, dynamic>{
         'edifici': idEdifici,
         'titol': titol,
@@ -100,14 +81,10 @@ class VotacionsService {
         if (dataLimit != null) 'dataLimit': dataLimit.toUtc().toIso8601String(),
       };
 
-      final response = await http
-          .post(
-            Uri.parse(ApiConfig.votacions),
-            headers: headers,
-            body: jsonEncode(bodyMap),
-          )
-          .timeout(const Duration(seconds: 10));
-
+      final response = await ApiClient.post(
+        Uri.parse(ApiConfig.votacions),
+        body: jsonEncode(bodyMap),
+      );
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode != 201) {
@@ -135,15 +112,10 @@ class VotacionsService {
 
   Future<void> votar({required int idVotacio, required int opcioId}) async {
     try {
-      final headers = await _buildHeaders();
-      final response = await http
-          .post(
-            Uri.parse(ApiConfig.votacioVotar(idVotacio)),
-            headers: headers,
-            body: jsonEncode({'opcio_id': opcioId}),
-          )
-          .timeout(const Duration(seconds: 10));
-
+      final response = await ApiClient.post(
+        Uri.parse(ApiConfig.votacioVotar(idVotacio)),
+        body: jsonEncode({'opcio_id': opcioId}),
+      );
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode != 201) {
@@ -172,7 +144,6 @@ class VotacionsService {
     String? estat,
   }) async {
     try {
-      final headers = await _buildHeaders();
       final bodyMap = <String, dynamic>{
         'titol': ?titol,
         'descripcio': ?descripcio,
@@ -182,14 +153,10 @@ class VotacionsService {
         'estat': ?estat,
       };
 
-      final response = await http
-          .patch(
-            Uri.parse(ApiConfig.votacioDetall(id)),
-            headers: headers,
-            body: jsonEncode(bodyMap),
-          )
-          .timeout(const Duration(seconds: 10));
-
+      final response = await ApiClient.patch(
+        Uri.parse(ApiConfig.votacioDetall(id)),
+        body: jsonEncode(bodyMap),
+      );
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -217,10 +184,7 @@ class VotacionsService {
 
   Future<void> eliminarVotacio({required int id}) async {
     try {
-      final headers = await _buildHeaders();
-      final response = await http
-          .delete(Uri.parse(ApiConfig.votacioDetall(id)), headers: headers)
-          .timeout(const Duration(seconds: 10));
+      final response = await ApiClient.delete(Uri.parse(ApiConfig.votacioDetall(id)));
 
       if (response.statusCode != 204) {
         final body = _tryDecodeBody(response.body);
@@ -242,11 +206,7 @@ class VotacionsService {
 
   Future<ResultatsVotacioModel> getResultats({required int id}) async {
     try {
-      final headers = await _buildHeaders();
-      final response = await http
-          .get(Uri.parse(ApiConfig.votacioResultats(id)), headers: headers)
-          .timeout(const Duration(seconds: 10));
-
+      final response = await ApiClient.get(Uri.parse(ApiConfig.votacioResultats(id)));
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
