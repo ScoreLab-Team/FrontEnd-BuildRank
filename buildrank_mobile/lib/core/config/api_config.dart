@@ -207,6 +207,18 @@ class ApiConfig {
   }
 
   // =========================
+  // Community / Votacions endpoints
+  // =========================
+  static const String votacions = '$baseUrl/api/community/votacions/';
+
+  static Uri votacionsEdifici({required int idEdifici}) =>
+      uri(votacions, queryParameters: {'edifici': idEdifici});
+
+  static String votacioDetall(int id) => '$votacions$id/';
+  static String votacioVotar(int id) => '${votacioDetall(id)}votar/';
+  static String votacioResultats(int id) => '${votacioDetall(id)}resultats/';
+
+  // =========================
   // XEMA Weather API
   // =========================
   static const String xemaWeatherBaseUrl =

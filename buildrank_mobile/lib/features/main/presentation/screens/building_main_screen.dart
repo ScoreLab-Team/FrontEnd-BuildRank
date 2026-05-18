@@ -66,7 +66,10 @@ class _MainScreenState extends State<MainScreen> {
         buildingName: widget.title,
         userRole: widget.userRole,
       ),
-      const VotacionsScreen(),
+      VotacionsScreen(
+        idEdifici: widget.idEdifici,
+        userRole: widget.userRole,
+      ),
     ];
   }
 
