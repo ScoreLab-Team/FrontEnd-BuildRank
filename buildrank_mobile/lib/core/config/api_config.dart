@@ -219,6 +219,14 @@ class ApiConfig {
   static String votacioResultats(int id) => '${votacioDetall(id)}resultats/';
 
   // =========================
+  // Notifications endpoints
+  // =========================
+  static const String notifications = '$baseUrl/api/notifications/';
+  static const String notificationsNoLlegides = '${notifications}no-llegides/';
+  static const String notificationsLlegirTotes = '${notifications}llegir-totes/';
+  static String notificationLlegir(int id) => '$notifications$id/llegir/';
+
+  // =========================
   // XEMA Weather API
   // =========================
   static const String xemaWeatherBaseUrl =
