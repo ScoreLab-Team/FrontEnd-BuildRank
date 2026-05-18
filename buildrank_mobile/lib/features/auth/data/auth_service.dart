@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:buildrank_mobile/core/config/api_config.dart';
+import 'package:buildrank_mobile/core/services/api_client.dart';
 import 'package:buildrank_mobile/features/auth/data/token_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,19 +70,7 @@ class AuthService {
 
   // Me: devuelve datos del usuario autenticado.
   Future<Map<String, dynamic>> getMe() async {
-    final accessToken = await TokenStorage.getAccessToken();
-
-    if (accessToken == null || accessToken.isEmpty) {
-      throw Exception('No hi ha sessió guardada.');
-    }
-
-    final response = await http.get(
-      Uri.parse(ApiConfig.me),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+    final response = await ApiClient.get(Uri.parse(ApiConfig.me));
 
     final data = _decodeBody(response);
 
@@ -93,32 +82,28 @@ class AuthService {
   }
 
   // Logout: invalida refresh en backend y limpia tokens locales.
+  // Sempre neteja la sessió local independentment de la resposta del backend.
   Future<void> logout() async {
-    final accessToken = await TokenStorage.getAccessToken();
     final refreshToken = await TokenStorage.getRefreshToken();
-
-    if (refreshToken == null || refreshToken.isEmpty) {
+    try {
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        final accessToken = await TokenStorage.getAccessToken();
+        await http.post(
+          Uri.parse(ApiConfig.logout),
+          headers: {
+            'Content-Type': 'application/json',
+            if (accessToken != null && accessToken.isNotEmpty)
+              'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode({'refresh': refreshToken}),
+        ).timeout(const Duration(seconds: 8));
+      }
+    } catch (_) {
+      // Ignorem errors de xarxa o token caducat: el que importa és netejar
+      // la sessió local perquè l'usuari pugui tornar a fer login.
+    } finally {
       await TokenStorage.clearTokens();
-      return;
     }
-
-    final response = await http.post(
-      Uri.parse(ApiConfig.logout),
-      headers: {
-        'Content-Type': 'application/json',
-        if (accessToken != null && accessToken.isNotEmpty)
-          'Authorization': 'Bearer $accessToken',
-      },
-      body: jsonEncode({'refresh': refreshToken}),
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      await TokenStorage.clearTokens();
-      return;
-    }
-
-    final data = _decodeBody(response);
-    throw Exception(_extractErrorMessage(data));
   }
 
   // Comprueba si hay token guardado.
@@ -163,19 +148,8 @@ class AuthService {
     required String lastName,
     required String email,
   }) async {
-    final accessToken = await TokenStorage.getAccessToken();
-
-    if (accessToken == null || accessToken.isEmpty) {
-      throw Exception('No hi ha sessió guardada.');
-    }
-
-    final response = await http.patch(
+    final response = await ApiClient.patch(
       Uri.parse(ApiConfig.me),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
       body: jsonEncode({
         'first_name': firstName.trim(),
         'last_name': lastName.trim(),
