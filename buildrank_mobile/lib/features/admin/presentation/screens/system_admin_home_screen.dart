@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../auth/data/auth_service.dart';
+import '../../../auth/presentation/screens/auth_base_screen.dart';
+import '../../../myChat/my_chats_screen.dart';
+
 class AdminPanelScreen extends StatefulWidget {
   final String adminName;
   final int seasonNumber;
@@ -26,6 +30,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   _AdminTab _selectedTab = _AdminTab.tasks;
   String _search = '';
+  bool _isLoggingOut = false;
 
   @override
   void initState() {
@@ -43,6 +48,24 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   Future<void> _refresh() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
+  }
+
+  Future<void> _handleLogout() async {
+    setState(() => _isLoggingOut = true);
+    try {
+      await AuthService().logout();
+      if (!mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AuthBaseScreen()),
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoggingOut = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+      );
+    }
   }
 
   @override
@@ -91,6 +114,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               const SizedBox(height: 16),
               _buildSelectedPanel(),
               const SizedBox(height: 24),
+              _buildChatModerationCard(),
+              const SizedBox(height: 22),
               _buildIntegrityAlert(),
               const SizedBox(height: 36),
               _buildFooter(),
@@ -105,7 +130,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     return Row(
       children: [
         ElevatedButton.icon(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: _isLoggingOut ? null : _handleLogout,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF19C463),
             foregroundColor: Colors.white,
@@ -115,9 +140,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          icon: const Icon(Icons.arrow_back, size: 18),
+          icon: _isLoggingOut
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : const Icon(Icons.logout, size: 18),
           label: const Text(
-            'Torna',
+            'Tanca sessió',
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
@@ -390,6 +424,80 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           onTap: _showRolesSnackBar,
         ),
       ],
+    );
+  }
+
+  Widget _buildChatModerationCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFDDE2E8)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x09000000),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE5F9ED),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.forum_outlined,
+                    color: Color(0xFF19C463),
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Moderació de xats',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Accedeix als xats dels edificis i aplica accions de moderació.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: Color(0xFFE2E6EA)),
+          _PanelActionButton(
+            label: 'Accedir als xats dels edificis',
+            icon: Icons.chat_bubble_outline,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MyChatsScreen()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

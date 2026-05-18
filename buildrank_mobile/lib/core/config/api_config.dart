@@ -219,6 +219,45 @@ class ApiConfig {
   static String votacioResultats(int id) => '${votacioDetall(id)}resultats/';
 
   // =========================
+  // Chat core endpoints
+  // =========================
+  static const String chatToken = '$baseUrl/api/chat/token/';
+  static const String chatProvision = '$baseUrl/api/chat/channels/provision/';
+
+  // =========================
+  // Chat moderation endpoints
+  // =========================
+  static String moderationFlagMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/flag/';
+  static String moderationHideMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/hide/';
+  static String moderationDeleteMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/';
+  static String moderationRestoreMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/restore/';
+  static String moderationDismissFlag(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/dismiss-flag/';
+
+  static String moderationWarnUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/warn/';
+  static String moderationMuteUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/mute/';
+  static String moderationUnmuteUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/unmute/';
+  static String moderationBanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/ban/';
+  static String moderationUnbanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/unban/';
+  static String moderationGlobalBanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/global-ban/';
+  static String moderationGlobalUnbanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/global-unban/';
+  static String moderationShadowBanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/shadow-ban/';
+  static String moderationShadowUnbanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/shadow-unban/';
+
+  // =========================
   // XEMA Weather API
   // =========================
   static const String xemaWeatherBaseUrl =
