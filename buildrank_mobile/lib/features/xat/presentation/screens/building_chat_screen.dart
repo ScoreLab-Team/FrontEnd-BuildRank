@@ -39,8 +39,9 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     AuthService()
         .getMe()
         .then((me) {
-          if (mounted)
+          if (mounted) {
             setState(() => _isSuperuser = me['is_system_admin'] == true);
+          }
         })
         .catchError((_) {});
   }

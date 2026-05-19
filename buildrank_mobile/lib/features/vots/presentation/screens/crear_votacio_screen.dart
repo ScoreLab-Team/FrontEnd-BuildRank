@@ -154,10 +154,12 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: _inputDecoration('Escriu el títol de la votació'),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty)
+                  if (v == null || v.trim().isEmpty) {
                     return 'El títol és obligatori.';
-                  if (v.trim().length < 4)
+                  }
+                  if (v.trim().length < 4) {
                     return 'El títol ha de tenir almenys 4 caràcters.';
+                  }
                   return null;
                 },
               ),
@@ -315,8 +317,9 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
               textCapitalization: TextCapitalization.sentences,
               decoration: _inputDecoration('Opció ${index + 1}'),
               validator: (v) {
-                if (v == null || v.trim().isEmpty)
+                if (v == null || v.trim().isEmpty) {
                   return 'Aquesta opció no pot estar buida.';
+                }
                 return null;
               },
             ),

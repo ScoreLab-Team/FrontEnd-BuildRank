@@ -29,11 +29,12 @@ class _UsersPanelState extends State<UsersPanel> {
     });
     try {
       final users = await _service.getUsers();
-      if (mounted)
+      if (mounted) {
         setState(() {
           _users = users;
           _loading = false;
         });
+      }
     } catch (e) {
       if (mounted) {
         setState(() {

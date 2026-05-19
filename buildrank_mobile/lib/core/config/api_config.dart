@@ -55,18 +55,16 @@ class ApiConfig {
     String? toDate,
     int page = 1,
   }) {
-    return uri(
-      '$baseUrl/api/audit/logs/',
-      queryParameters: {
-        if (userId != null) 'user_id': userId,
-        if (method?.isNotEmpty ?? false) 'method': method!,
-        if (resourceType?.isNotEmpty ?? false) 'resource_type': resourceType!,
-        if (statusCode != null) 'status_code': statusCode,
-        if (fromDate?.isNotEmpty ?? false) 'from_date': fromDate!,
-        if (toDate?.isNotEmpty ?? false) 'to_date': toDate!,
-        'page': page,
-      },
-    );
+    final params = <String, dynamic>{'page': page};
+    if (userId != null) params['user_id'] = userId;
+    if (method?.isNotEmpty ?? false) params['method'] = method;
+    if (resourceType?.isNotEmpty ?? false) {
+      params['resource_type'] = resourceType;
+    }
+    if (statusCode != null) params['status_code'] = statusCode;
+    if (fromDate?.isNotEmpty ?? false) params['from_date'] = fromDate;
+    if (toDate?.isNotEmpty ?? false) params['to_date'] = toDate;
+    return uri('$baseUrl/api/audit/logs/', queryParameters: params);
   }
 
   // =========================

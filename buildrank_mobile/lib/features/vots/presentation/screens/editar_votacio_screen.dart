@@ -147,10 +147,12 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: _inputDecoration('Títol de la votació'),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty)
+                  if (v == null || v.trim().isEmpty) {
                     return 'El títol és obligatori.';
-                  if (v.trim().length < 4)
+                  }
+                  if (v.trim().length < 4) {
                     return 'El títol ha de tenir almenys 4 caràcters.';
+                  }
                   return null;
                 },
               ),

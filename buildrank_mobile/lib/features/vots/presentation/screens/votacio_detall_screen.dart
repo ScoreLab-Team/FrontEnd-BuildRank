@@ -60,11 +60,12 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
         });
       }
     } on VotacionsApiException catch (e) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _errorText = e.message;
           _isLoading = false;
         });
+      }
     }
   }
 
@@ -103,11 +104,12 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
   Future<void> _loadResultats() async {
     try {
       final resultats = await widget.service.getResultats(id: widget.idVotacio);
-      if (mounted)
+      if (mounted) {
         setState(() {
           _resultats = resultats;
           _showResults = true;
         });
+      }
     } on VotacionsApiException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
