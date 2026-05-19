@@ -18,6 +18,14 @@ class ApiClient {
   /// cannot be recovered (refresh token also expired).
   static void Function()? onSessionExpired;
 
+  /// Set once from app.dart. Called when the backend returns 401 with
+  /// code: "account_blocked". Tokens are cleared before this fires.
+  static void Function()? onAccountBlocked;
+
+  /// Set once from app.dart. Called when the backend returns 401 with
+  /// code: "account_suspended". Tokens are cleared before this fires.
+  static void Function()? onAccountSuspended;
+
   static bool _isRefreshing = false;
   static Completer<bool>? _refreshCompleter;
 
@@ -91,6 +99,22 @@ class ApiClient {
     final response = await request(headers);
 
     if (response.statusCode != 401) return response;
+
+    // Distinguish account blocked/suspended from expired token — don't refresh.
+    try {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final code = body['code'] as String?;
+      if (code == 'account_blocked') {
+        await TokenStorage.clearTokens();
+        onAccountBlocked?.call();
+        return response;
+      }
+      if (code == 'account_suspended') {
+        await TokenStorage.clearTokens();
+        onAccountSuspended?.call();
+        return response;
+      }
+    } catch (_) {}
 
     final refreshed = await _tryRefresh();
     if (!refreshed) {

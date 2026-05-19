@@ -37,6 +37,14 @@ class ApiConfig {
 
   static const String googleOAuth = '$baseUrl/api/accounts/oauth/google/';
 
+  // Admin user management (requires is_superuser)
+  static const String adminUsers = '$baseUrl/api/accounts/users/';
+  static String adminUser(int id) => '$adminUsers$id/';
+  static String adminBlockUser(int id) => '$adminUsers$id/block/';
+  static String adminUnblockUser(int id) => '$adminUsers$id/unblock/';
+  static String adminSuspendUser(int id) => '$adminUsers$id/suspend/';
+  static String adminUnsuspendUser(int id) => '$adminUsers$id/unsuspend/';
+
   // =========================
   // Buildings endpoints
   // =========================
