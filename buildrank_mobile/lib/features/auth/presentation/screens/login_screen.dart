@@ -38,21 +38,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       await _authService.login(email: email, password: password);
-
-      final me = await _authService.getMe();
-      final isSystemAdmin = me['is_system_admin'] == true;
-
-      if (!mounted) return;
-
-      if (isSystemAdmin) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AdminPanelScreen()),
-        );
-      } else {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const ProfileScreen()),
-        );
+      await _finishAuthenticatedNavigation();
+    } catch (e) {
+      setState(() {
+        _errorText = e.toString().replaceFirst('Exception: ', '');
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
       }
+    }
+  }
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+
+    try {
+      await _authService.loginWithGoogle();
+      await _finishAuthenticatedNavigation();
     } catch (e) {
       setState(() {
         _errorText = e.toString().replaceFirst('Exception: ', '');
@@ -80,7 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
         userName: userName.isNotEmpty ? userName : userId,
       );
 
-      final token = await FirebaseMessaging.instance.getToken();
+      final token = await FirebaseMessaging.instance
+          .getToken()
+          .timeout(const Duration(seconds: 5));
       if (token != null) await StreamService.registerFcmToken(token);
     } catch (_) {}
 
