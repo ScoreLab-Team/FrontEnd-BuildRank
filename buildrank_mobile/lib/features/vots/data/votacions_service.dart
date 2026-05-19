@@ -167,6 +167,7 @@ class VotacionsService {
     DateTime? dataLimit,
     bool clearDataLimit = false,
     String? estat,
+    List<String>? opcions,
   }) async {
     try {
       final bodyMap = <String, dynamic>{
@@ -176,6 +177,7 @@ class VotacionsService {
         if (!clearDataLimit && dataLimit != null)
           'dataLimit': dataLimit.toUtc().toIso8601String(),
         'estat': ?estat,
+        'opcions': ?opcions,
       };
 
       final response = await ApiClient.patch(

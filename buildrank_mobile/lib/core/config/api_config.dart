@@ -30,12 +30,14 @@ class ApiConfig {
   // =========================
   static const String register = '$baseUrl/api/accounts/register/';
   static const String login = '$baseUrl/api/accounts/login/';
+  static const String googleOAuth = '$baseUrl/api/accounts/oauth/google/';
   static const String refresh = '$baseUrl/api/accounts/refresh/';
   static const String logout = '$baseUrl/api/accounts/logout/';
   static const String me = '$baseUrl/api/accounts/me/';
   static const String meEdificis = '$baseUrl/api/accounts/me/edificis/';
-
-  static const String googleOAuth = '$baseUrl/api/accounts/oauth/google/';
+  static const String passwordReset = '$baseUrl/api/accounts/password-reset/';
+  static const String passwordResetConfirm =
+      '$baseUrl/api/accounts/password-reset-confirm/';
 
   // Admin user management (requires is_superuser)
   static const String adminUsers = '$baseUrl/api/accounts/users/';
@@ -254,7 +256,6 @@ class ApiConfig {
     );
   }
 
-  // =========================
   // Community / Votacions endpoints
   // =========================
   static const String votacions = '$baseUrl/api/community/votacions/';
@@ -267,6 +268,30 @@ class ApiConfig {
   static String votacioResultats(int id) => '${votacioDetall(id)}resultats/';
 
   // =========================
+  // Votacions de simulacions
+  // =========================
+  static String votacionsSimulacions(int idEdifici) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/votacions-simulacions/';
+
+  static String votarSimulacio({
+    required int idEdifici,
+    required int votacioId,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/votacions-simulacions/$votacioId/votar/';
+
+  static String sotmetreSimulacioVotacio({
+    required int idEdifici,
+    required int simulacioId,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/simulacions/$simulacioId/sotmetre-votacio/';
+
+  static String acreditarSimulacioImplementacio({
+    required int idEdifici,
+    required int simulacioId,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/simulacions/$simulacioId/acreditar-implementacio/';
+
+  // =========================
   // Notifications endpoints
   // =========================
   static const String notifications = '$baseUrl/api/notifications/';
@@ -276,10 +301,19 @@ class ApiConfig {
   static String notificationLlegir(int id) => '$notifications$id/llegir/';
 
   // =========================
-  // Chat core endpoints
+  // Chat core & Twin Building endpoints
   // =========================
   static const String chatToken = '$baseUrl/api/chat/token/';
   static const String chatProvision = '$baseUrl/api/chat/channels/provision/';
+  static const String chatChannels = '$baseUrl/api/chat/channels/';
+  static const String chatChannelsProvision =
+      '$baseUrl/api/chat/channels/provision/';
+
+  static String twinBuildingAdmins(int idEdifici) =>
+      '$baseUrl/api/chat/twin-buildings/$idEdifici/admins/';
+
+  static String twinBuildingChannel(int idEdifici) =>
+      '$baseUrl/api/chat/twin-buildings/$idEdifici/channels/';
 
   // =========================
   // Chat moderation endpoints

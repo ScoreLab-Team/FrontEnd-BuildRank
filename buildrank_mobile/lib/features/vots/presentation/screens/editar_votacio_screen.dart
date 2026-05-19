@@ -21,6 +21,7 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _titolController;
   late final TextEditingController _descripcioController;
+  late final List<TextEditingController> _opcionsControllers;
 
   DateTime? _dataLimit;
   bool _clearDataLimit = false;
@@ -43,6 +44,12 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
     _descripcioController = TextEditingController(
       text: widget.votacio.descripcio ?? '',
     );
+    _opcionsControllers = widget.votacio.opcions
+        .map((o) => TextEditingController(text: o.text))
+        .toList();
+    while (_opcionsControllers.length < 2) {
+      _opcionsControllers.add(TextEditingController());
+    }
     _dataLimit = widget.votacio.dataLimit;
     _estat = widget.votacio.estat;
   }
@@ -51,7 +58,35 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
   void dispose() {
     _titolController.dispose();
     _descripcioController.dispose();
+    for (final c in _opcionsControllers) {
+      c.dispose();
+    }
     super.dispose();
+  }
+
+  void _addOpcio() {
+    if (_opcionsControllers.length >= 8) return;
+    setState(() => _opcionsControllers.add(TextEditingController()));
+  }
+
+  void _removeOpcio(int index) {
+    if (_opcionsControllers.length <= 2) return;
+    final controller = _opcionsControllers.removeAt(index);
+    controller.dispose();
+    setState(() {});
+  }
+
+  bool _opcionsHanCanviat() {
+    final original = widget.votacio.opcions.map((o) => o.text).toList();
+    final current = _opcionsControllers
+        .map((c) => c.text.trim())
+        .where((t) => t.isNotEmpty)
+        .toList();
+    if (original.length != current.length) return true;
+    for (int i = 0; i < original.length; i++) {
+      if (original[i] != current[i]) return true;
+    }
+    return false;
   }
 
   Future<void> _pickDate() async {
@@ -82,6 +117,28 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
     final titol = _titolController.text.trim();
     final descripcio = _descripcioController.text.trim();
 
+    final opcionsNoves = _opcionsControllers
+        .map((c) => c.text.trim())
+        .where((t) => t.isNotEmpty)
+        .toList();
+
+    if (opcionsNoves.length < 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cal un mínim de 2 opcions.')),
+      );
+      setState(() => _isSubmitting = false);
+      return;
+    }
+
+    final duplicats = opcionsNoves.toSet().length != opcionsNoves.length;
+    if (duplicats) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Hi ha opcions duplicades. Revisa\'ls.')),
+      );
+      setState(() => _isSubmitting = false);
+      return;
+    }
+
     try {
       final updated = await widget.service.editarVotacio(
         id: widget.votacio.id,
@@ -92,6 +149,7 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
         dataLimit: _clearDataLimit ? null : _dataLimit,
         clearDataLimit: _clearDataLimit,
         estat: _estat != widget.votacio.estat ? _estat : null,
+        opcions: _opcionsHanCanviat() ? opcionsNoves : null,
       );
       if (mounted) Navigator.of(context).pop(updated);
     } on VotacionsApiException catch (e) {
@@ -220,6 +278,46 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Text(
+                  'Opcions',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black54,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  'Mínim 2 · Màxim 8',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            if (widget.votacio.numVotsTotal > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Atenció: modificar les opcions pot afectar els vots existents.',
+                  style: TextStyle(fontSize: 12, color: Colors.orange[700]),
+                ),
+              ),
+            ...List.generate(
+              _opcionsControllers.length,
+              (i) => _buildOpcioField(i),
+            ),
+            if (_opcionsControllers.length < 8)
+              TextButton.icon(
+                onPressed: _addOpcio,
+                icon: Icon(Icons.add, color: Colors.green[700]),
+                label: Text(
+                  'Afegir opció',
+                  style: TextStyle(color: Colors.green[700]),
+                ),
+              ),
             const SizedBox(height: 12),
             _buildSection(
               'Estat',
@@ -267,6 +365,38 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
             const SizedBox(height: 32),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildOpcioField(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: _opcionsControllers[index],
+              textCapitalization: TextCapitalization.sentences,
+              decoration: _inputDecoration('Opció ${index + 1}'),
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) {
+                  return 'Aquesta opció no pot estar buida.';
+                }
+                return null;
+              },
+            ),
+          ),
+          if (_opcionsControllers.length > 2) ...[
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: () => _removeOpcio(index),
+              icon: Icon(Icons.remove_circle_outline, color: Colors.red[400]),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ],
+        ],
       ),
     );
   }

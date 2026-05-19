@@ -4,18 +4,19 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import '../../../../core/services/stream_service.dart';
 import '../../../auth/data/auth_service.dart';
 import '../../data/moderation_service.dart';
+import 'twin_building_admins_screen.dart';
 
 class BuildingChatScreen extends StatefulWidget {
   final int idEdifici;
   final String buildingName;
-  final String? userRole;
+  final String userRole;
   final bool isSuperuser;
 
   const BuildingChatScreen({
     super.key,
     required this.idEdifici,
     required this.buildingName,
-    this.userRole,
+    this.userRole = '',
     this.isSuperuser = false,
   });
 
@@ -640,6 +641,27 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
             "Parla amb els membres d'aquest edifici sobre millores, incidències i propostes.",
             style: TextStyle(color: Colors.black54, height: 1.35),
           ),
+          if (widget.userRole == 'admin') ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TwinBuildingAdminsScreen(
+                        idEdifici: widget.idEdifici,
+                        buildingName: widget.buildingName,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.apartment_outlined),
+                label: const Text('Contactar admins similars'),
+              ),
+            ),
+          ],
         ],
       ),
     );

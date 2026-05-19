@@ -1,19 +1,21 @@
+import 'package:buildrank_mobile/features/vots/data/votacions_model.dart';
+import 'package:buildrank_mobile/features/vots/data/votacions_service.dart';
+import 'package:buildrank_mobile/features/vots/data/votation_model.dart';
+import 'package:buildrank_mobile/features/vots/data/votation_service.dart';
+import 'package:buildrank_mobile/features/vots/presentation/screens/crear_votacio_screen.dart';
+import 'package:buildrank_mobile/features/vots/presentation/screens/votacio_detall_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../../data/votacions_model.dart';
-import '../../data/votacions_service.dart';
-import 'crear_votacio_screen.dart';
-import 'editar_votacio_screen.dart';
-import 'votacio_detall_screen.dart';
 
 class VotacionsScreen extends StatefulWidget {
   final int idEdifici;
   final String userRole;
+  final String buildingName;
 
   const VotacionsScreen({
     super.key,
     required this.idEdifici,
     required this.userRole,
+    required this.buildingName,
   });
 
   @override
@@ -21,16 +23,17 @@ class VotacionsScreen extends StatefulWidget {
 }
 
 class _VotacionsScreenState extends State<VotacionsScreen> {
-  final _service = VotacionsService();
+  final _service = VotationService();
+  final _legacyService = VotacionsService();
 
-  List<VotacioResumModel> _votacions = [];
-  bool _isLoading = true;
-  String? _errorText;
+  bool _loading = true;
+  bool _voting = false;
+  String? _error;
+  int _tab = 0;
+  List<VotationModel> _votacions = [];
+  List<VotacioResumModel> _comunitats = [];
 
-  bool get _canCreate =>
-      widget.userRole == 'admin' || widget.userRole == 'owner';
-
-  bool get _canManage => _canCreate;
+  bool get _isAdmin => widget.userRole == 'admin';
 
   @override
   void initState() {
@@ -40,294 +43,151 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
 
   Future<void> _load() async {
     setState(() {
-      _isLoading = true;
-      _errorText = null;
+      _loading = true;
+      _error = null;
     });
+
     try {
-      final result = await _service.getVotacions(idEdifici: widget.idEdifici);
-      if (mounted) {
-        setState(() {
-          _votacions = result;
-          _isLoading = false;
-        });
-      }
-    } on VotacionsApiException catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorText = e.message;
-          _isLoading = false;
-        });
-      }
+      final simsFuture = _service.getVotacions(widget.idEdifici);
+      final comsFuture = _legacyService
+          .getVotacions(idEdifici: widget.idEdifici)
+          .catchError((_) => <VotacioResumModel>[]);
+
+      final sims = await simsFuture;
+      final coms = await comsFuture;
+
+      if (!mounted) return;
+      setState(() {
+        _votacions = sims;
+        _comunitats = coms;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _error = e.toString());
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
   }
 
-  Future<void> _editarVotacio(VotacioResumModel resum) async {
-    VotacioDetallModel detall;
-    try {
-      detall = await _service.getVotacioDetall(id: resum.id);
-    } on VotacionsApiException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.message)));
-      }
-      return;
+  List<VotationModel> get _filtered {
+    switch (_tab) {
+      case 0:
+        return _votacions.where((v) => v.isActive).toList();
+      case 1:
+        return _votacions.where((v) => v.isCompleted).toList();
+      case 2:
+        return _votacions.where((v) => _isAdmin || v.potVotar).toList();
+      default:
+        return _votacions;
     }
-    if (!mounted) return;
-    final updated = await Navigator.push<VotacioDetallModel>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EditarVotacioScreen(votacio: detall, service: _service),
-      ),
-    );
-    if (updated != null && mounted) _load();
   }
 
-  Future<void> _eliminarVotacio(VotacioResumModel votacio) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Eliminar votació'),
-        content: Text(
-          'Segur que vols eliminar "${votacio.titol}"? S\'esborraran totes les opcions i vots emesos.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel·lar'),
+  List<VotacioResumModel> get _filteredComunitats {
+    switch (_tab) {
+      case 0:
+        return _comunitats.where((v) => v.estat == 'oberta').toList();
+      case 1:
+        return _comunitats.where((v) => v.estat != 'oberta').toList();
+      case 2:
+        return _isAdmin ? _comunitats : [];
+      default:
+        return _comunitats;
+    }
+  }
+
+  Future<void> _vote(VotationModel votacio, String sentit) async {
+    if (_voting) return;
+
+    setState(() => _voting = true);
+
+    try {
+      final updated = await _service.votar(
+        idEdifici: widget.idEdifici,
+        votacioId: votacio.id,
+        sentit: sentit,
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _votacions = _votacions
+            .map((v) => v.id == updated.id ? updated : v)
+            .toList();
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            sentit == 'favor'
+                ? 'Vot a favor registrat.'
+                : 'Vot en contra registrat.',
           ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red[700]),
-            child: const Text('Eliminar'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted) return;
-    try {
-      await _service.eliminarVotacio(id: votacio.id);
-      if (mounted) _load();
-    } on VotacionsApiException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.message)));
-      }
-    }
-  }
-
-  Future<void> _openCrear() async {
-    final nova = await Navigator.push<VotacioDetallModel>(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>
-            CrearVotacioScreen(idEdifici: widget.idEdifici, service: _service),
-      ),
-    );
-    if (nova != null && mounted) {
-      _load();
-    }
-  }
-
-  Future<void> _openDetall(VotacioResumModel resum) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => VotacioDetallScreen(
-          idVotacio: resum.id,
-          service: _service,
-          userRole: widget.userRole,
         ),
-      ),
-    );
-    _load();
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _voting = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text(
-          'Votacions',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        elevation: 0,
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1),
-        ),
-      ),
-      floatingActionButton: _canCreate
-          ? FloatingActionButton.extended(
-              heroTag: 'vots_fab',
-              onPressed: _openCrear,
-              backgroundColor: Colors.green[700],
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text(
-                'Nova votació',
-                style: TextStyle(color: Colors.white),
-              ),
+      backgroundColor: const Color(0xFFF6F7F5),
+      floatingActionButton: _isAdmin
+          ? FloatingActionButton(
+              onPressed: _createVotacio,
+              backgroundColor: Colors.green,
+              child: const Icon(Icons.add, color: Colors.white),
             )
           : null,
-      body: _buildBody(),
-    );
-  }
-
-  Widget _buildBody() {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (_errorText != null) {
-      return _buildError();
-    }
-    if (_votacions.isEmpty) {
-      return _buildEmpty();
-    }
-    return RefreshIndicator(
-      onRefresh: _load,
-      child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-        itemCount: _votacions.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
-        itemBuilder: (_, i) => _buildCard(_votacions[i]),
-      ),
-    );
-  }
-
-  Widget _buildError() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
-            const SizedBox(height: 12),
-            Text(
-              _errorText!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.black54),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _load,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[700],
-              ),
-              child: const Text(
-                'Torna-ho a provar',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmpty() {
-    return RefreshIndicator(
-      onRefresh: _load,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.how_to_vote_outlined,
-                  size: 64,
-                  color: Colors.grey[300],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Encara no hi ha votacions',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[500]),
-                ),
-                if (_canCreate) ...[
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _load,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 18, 16, 24),
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 14),
+              _buildTabs(),
+              const SizedBox(height: 16),
+              if (_loading)
+                const Padding(
+                  padding: EdgeInsets.only(top: 80),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (_error != null)
+                _buildError()
+              else if (_filtered.isEmpty && _filteredComunitats.isEmpty)
+                _buildEmpty()
+              else ...[
+                if (_filteredComunitats.isNotEmpty) ...[
+                  _buildSectionLabel('VOTACIONS GENERALS'),
                   const SizedBox(height: 8),
-                  Text(
-                    'Crea\'n una per consultar als veïns.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[400]),
+                  for (final v in _filteredComunitats) ...[
+                    _ComunityCard(votacio: v, onTap: () => _openDetall(v)),
+                    const SizedBox(height: 10),
+                  ],
+                  if (_filtered.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    _buildSectionLabel('VOTACIONS DE SIMULACIÓ'),
+                    const SizedBox(height: 8),
+                  ],
+                ],
+                for (final votacio in _filtered) ...[
+                  _VotationCard(
+                    votacio: votacio,
+                    voting: _voting,
+                    onVote: (sentit) => _vote(votacio, sentit),
                   ),
+                  const SizedBox(height: 14),
                 ],
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCard(VotacioResumModel votacio) {
-    return GestureDetector(
-      onTap: () => _openDetall(votacio),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.grey[200]!),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      votacio.titol,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  _estatBadge(votacio.estat),
-                ],
-              ),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.how_to_vote_outlined,
-                    size: 14,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${votacio.numVotsTotal} vot${votacio.numVotsTotal == 1 ? '' : 's'}',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                  ),
-                  if (votacio.dataLimit != null) ...[
-                    const SizedBox(width: 12),
-                    Icon(Icons.schedule, size: 14, color: Colors.grey[400]),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Fins al ${_formatDate(votacio.dataLimit!)}',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                    ),
-                  ],
-                  const Spacer(),
-                  if (_canManage)
-                    _buildCardMenu(votacio)
-                  else
-                    Icon(
-                      Icons.chevron_right,
-                      size: 18,
-                      color: Colors.grey[400],
-                    ),
-                ],
-              ),
+              _buildInfoBox(),
             ],
           ),
         ),
@@ -335,32 +195,39 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
     );
   }
 
-  Widget _buildCardMenu(VotacioResumModel votacio) {
-    return PopupMenuButton<String>(
-      padding: EdgeInsets.zero,
-      icon: Icon(Icons.more_vert, size: 18, color: Colors.grey[500]),
-      onSelected: (value) {
-        if (value == 'editar') _editarVotacio(votacio);
-        if (value == 'eliminar') _eliminarVotacio(votacio);
-      },
-      itemBuilder: (_) => [
-        const PopupMenuItem(
-          value: 'editar',
-          child: Row(
-            children: [
-              Icon(Icons.edit_outlined, size: 18),
-              SizedBox(width: 10),
-              Text('Editar'),
-            ],
-          ),
+  Widget _buildSectionLabel(String label) {
+    return Text(
+      label,
+      style: const TextStyle(
+        color: Colors.black54,
+        fontSize: 11,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 1.1,
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Votació interna',
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
         ),
-        PopupMenuItem(
-          value: 'eliminar',
-          child: Row(
+        const SizedBox(height: 4),
+        Text.rich(
+          TextSpan(
+            text: 'Presa de decisions per ',
+            style: const TextStyle(color: Colors.black54, fontSize: 15),
             children: [
-              Icon(Icons.delete_outline, size: 18, color: Colors.red[700]),
-              const SizedBox(width: 10),
-              Text('Eliminar', style: TextStyle(color: Colors.red[700])),
+              TextSpan(
+                text: widget.buildingName,
+                style: TextStyle(
+                  color: Colors.green.shade700,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ],
           ),
         ),
@@ -368,40 +235,622 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
     );
   }
 
-  Widget _estatBadge(String estat) {
-    Color color;
-    String label;
-    switch (estat) {
-      case 'oberta':
-        color = Colors.green[700]!;
-        label = 'Oberta';
-        break;
-      case 'tancada':
-        color = Colors.grey[600]!;
-        label = 'Tancada';
-        break;
-      default:
-        color = Colors.red[600]!;
-        label = 'Cancel·lada';
-    }
+  Future<void> _createVotacio() async {
+    final result = await Navigator.push<Object>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CrearVotacioScreen(
+          idEdifici: widget.idEdifici,
+          service: _legacyService,
+        ),
+      ),
+    );
+    if (result != null && mounted) _load();
+  }
+
+  void _openDetall(VotacioResumModel v) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VotacioDetallScreen(
+          idVotacio: v.id,
+          service: _legacyService,
+          userRole: widget.userRole,
+        ),
+      ),
+    ).then((_) => _load());
+  }
+
+  Widget _buildTabs() {
+    final activeCount =
+        _votacions.where((v) => v.isActive).length +
+        _comunitats.where((v) => v.estat == 'oberta').length;
+    final completedCount =
+        _votacions.where((v) => v.isCompleted).length +
+        _comunitats.where((v) => v.estat != 'oberta').length;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          _TabChip(
+            selected: _tab == 0,
+            label: 'Actiu ($activeCount)',
+            onTap: () => setState(() => _tab = 0),
+          ),
+          const SizedBox(width: 8),
+          _TabChip(
+            selected: _tab == 1,
+            label: 'Completat ($completedCount)',
+            onTap: () => setState(() => _tab = 1),
+          ),
+          const SizedBox(width: 8),
+          _TabChip(
+            selected: _tab == 2,
+            label: _isAdmin ? 'Les meves propostes' : 'Les meves votacions',
+            onTap: () => setState(() => _tab = 2),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildError() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: Colors.red.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.red.shade100),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.error_outline, color: Colors.red.shade700),
+          const SizedBox(height: 8),
+          Text(
+            _error!,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.red.shade800),
+          ),
+          const SizedBox(height: 10),
+          OutlinedButton(
+            onPressed: _load,
+            child: const Text('Torna-ho a provar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmpty() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE5E7E3)),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.how_to_vote_outlined,
+            size: 46,
+            color: Colors.grey.shade500,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            _tab == 0
+                ? 'No hi ha votacions actives ara mateix.'
+                : 'No hi ha votacions en aquesta secció.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Quan l\'administrador sotmeti una simulació a votació, apareixerà aquí.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black54, height: 1.35),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoBox() {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE5E7E3)),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.info_outline, size: 34, color: Colors.grey.shade600),
+          const SizedBox(height: 10),
+          const Text(
+            'Només els propietaris i administradors poden votar propostes de millora.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.black54,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VotationCard extends StatelessWidget {
+  final VotationModel votacio;
+  final bool voting;
+  final ValueChanged<String> onVote;
+
+  const _VotationCard({
+    required this.votacio,
+    required this.voting,
+    required this.onVote,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final simulation = votacio.simulacio;
+    final days = votacio.diesRestants;
+    final participation = votacio.participacioPercent.clamp(0, 100).toDouble();
+    final favor = votacio.favorPercent.clamp(0, 100).toDouble();
+    final contra = (100 - favor).clamp(0, 100).toDouble();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFFE5E7E3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _StatusPill(label: votacio.estatLabel),
+                    const Spacer(),
+                    Icon(
+                      votacio.isActive
+                          ? Icons.schedule
+                          : Icons.check_circle_outline,
+                      size: 17,
+                      color: Colors.black54,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      votacio.isActive
+                          ? days == null
+                                ? 'Activa'
+                                : days == 0
+                                ? 'Finalitza avui'
+                                : '$days dies restants'
+                          : votacio.estatLabel,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  votacio.titol,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  votacio.descripcio.isNotEmpty
+                      ? votacio.descripcio
+                      : simulation?.descripcio ??
+                            'Proposta de millora energètica.',
+                  style: const TextStyle(color: Colors.black54, height: 1.35),
+                ),
+                const SizedBox(height: 14),
+                _ProgressBox(
+                  title: 'Progrés del quòrum',
+                  valueLabel:
+                      '${participation.toStringAsFixed(0)}% / ${votacio.quorumPercent.toStringAsFixed(0)}%',
+                  value: participation / 100,
+                  helper: votacio.participacioPercent >= votacio.quorumPercent
+                      ? 'Quòrum assolit'
+                      : 'Cal més participació',
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'VOTA',
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _VoteOption(
+                  title: 'A favor',
+                  percent: favor,
+                  selected: votacio.elMeuVot == 'favor',
+                  enabled: votacio.isActive && votacio.potVotar && !voting,
+                  onTap: () => onVote('favor'),
+                  subtitle: simulation == null
+                      ? null
+                      : 'Cost estimat ${_money(simulation.costEstimat)} · +${simulation.estalviAnual.toStringAsFixed(0)} €/any',
+                ),
+                const SizedBox(height: 10),
+                _VoteOption(
+                  title: 'En contra',
+                  percent: contra,
+                  selected: votacio.elMeuVot == 'contra',
+                  enabled: votacio.isActive && votacio.potVotar && !voting,
+                  onTap: () => onVote('contra'),
+                  subtitle: 'Mantenir l\'estat actual',
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: Color(0xFFE5E7E3))),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.how_to_vote_outlined,
+                  size: 18,
+                  color: Colors.black54,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${votacio.totalVots} vots',
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  votacio.hasVoted
+                      ? 'El teu vot: ${votacio.elMeuVot}'
+                      : 'Pendent de vot',
+                  style: TextStyle(
+                    color: votacio.hasVoted
+                        ? Colors.green.shade700
+                        : Colors.black45,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _money(double value) {
+    if (value <= 0) return 'no informat';
+    return '${value.toStringAsFixed(0)} €';
+  }
+}
+
+class _ProgressBox extends StatelessWidget {
+  final String title;
+  final String valueLabel;
+  final double value;
+  final String helper;
+
+  const _ProgressBox({
+    required this.title,
+    required this.valueLabel,
+    required this.value,
+    required this.helper,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAFBFA),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5E7E3)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.groups_2_outlined,
+                size: 18,
+                color: Colors.black54,
+              ),
+              const SizedBox(width: 8),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+              const Spacer(),
+              Text(
+                valueLabel,
+                style: const TextStyle(fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: LinearProgressIndicator(
+              value: value.clamp(0, 1),
+              minHeight: 7,
+              backgroundColor: Colors.green.shade100,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade600),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              helper,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VoteOption extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final double percent;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  const _VoteOption({
+    required this.title,
+    required this.percent,
+    required this.selected,
+    required this.enabled,
+    required this.onTap,
+    this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: enabled ? onTap : null,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: selected ? Colors.green.shade50 : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected ? Colors.green.shade300 : const Color(0xFFE5E7E3),
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                Text(
+                  '${percent.toStringAsFixed(0)}%',
+                  style: TextStyle(
+                    color: Colors.green.shade700,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            if (subtitle != null) ...[
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  subtitle!,
+                  style: TextStyle(color: Colors.green.shade700, fontSize: 12),
+                ),
+              ),
+            ],
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: LinearProgressIndicator(
+                value: (percent / 100).clamp(0, 1),
+                minHeight: 6,
+                backgroundColor: const Color(0xFFE9ECE9),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.green.shade300,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusPill extends StatelessWidget {
+  final String label;
+
+  const _StatusPill({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 11,
-          color: color,
-          fontWeight: FontWeight.w600,
+          color: Colors.green.shade700,
+          fontWeight: FontWeight.w900,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+}
+
+class _ComunityCard extends StatelessWidget {
+  final VotacioResumModel votacio;
+  final VoidCallback onTap;
+
+  const _ComunityCard({required this.votacio, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final isOberta = votacio.estat == 'oberta';
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFE5E7E3)),
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.04),
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: isOberta ? Colors.green.shade50 : Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                isOberta ? 'Oberta' : _formatEstat(votacio.estat),
+                style: TextStyle(
+                  color: isOberta
+                      ? Colors.green.shade700
+                      : Colors.grey.shade600,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                votacio.titol,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${votacio.numVotsTotal} vots',
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Icon(
+                  Icons.chevron_right,
+                  color: Colors.black38,
+                  size: 20,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  String _formatEstat(String estat) {
+    switch (estat) {
+      case 'tancada':
+        return 'Tancada';
+      case 'arxivada':
+        return 'Arxivada';
+      default:
+        return estat;
+    }
+  }
+}
+
+class _TabChip extends StatelessWidget {
+  final bool selected;
+  final String label;
+  final VoidCallback onTap;
+
+  const _TabChip({
+    required this.selected,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? Colors.green : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? Colors.green : const Color(0xFFDADDD8),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? Colors.white : Colors.black87,
+            fontWeight: FontWeight.w800,
+            fontSize: 13,
+          ),
+        ),
+      ),
+    );
   }
 }
