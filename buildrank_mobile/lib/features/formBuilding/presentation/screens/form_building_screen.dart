@@ -920,10 +920,7 @@ class _BuildingFormScreenState extends State<BuildingFormScreen> {
               style: _primaryButtonStyle(),
               child: const Text(
                 'Continua →',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ],
