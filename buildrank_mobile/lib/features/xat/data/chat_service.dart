@@ -31,7 +31,8 @@ class ChatService {
           ? jsonDecode(tokenResponse.body) as Map<String, dynamic>
           : <String, dynamic>{};
       throw Exception(
-        data['detail'] ?? 'Error obtenint token de xat (${tokenResponse.statusCode})',
+        data['detail'] ??
+            'Error obtenint token de xat (${tokenResponse.statusCode})',
       );
     }
     final tokenData = jsonDecode(tokenResponse.body) as Map<String, dynamic>;

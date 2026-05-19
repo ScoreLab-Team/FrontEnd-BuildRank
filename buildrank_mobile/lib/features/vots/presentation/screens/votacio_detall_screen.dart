@@ -44,7 +44,9 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
       _errorText = null;
     });
     try {
-      final votacio = await widget.service.getVotacioDetall(id: widget.idVotacio);
+      final votacio = await widget.service.getVotacioDetall(
+        id: widget.idVotacio,
+      );
       ResultatsVotacioModel? resultats;
       if (votacio.haVotat || votacio.estat != 'oberta') {
         resultats = await widget.service.getResultats(id: widget.idVotacio);
@@ -58,7 +60,11 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
         });
       }
     } on VotacionsApiException catch (e) {
-      if (mounted) setState(() { _errorText = e.message; _isLoading = false; });
+      if (mounted)
+        setState(() {
+          _errorText = e.message;
+          _isLoading = false;
+        });
     }
   }
 
@@ -87,9 +93,9 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
     } on VotacionsApiException catch (e) {
       if (mounted) {
         setState(() => _isVoting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -97,10 +103,16 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
   Future<void> _loadResultats() async {
     try {
       final resultats = await widget.service.getResultats(id: widget.idVotacio);
-      if (mounted) setState(() { _resultats = resultats; _showResults = true; });
+      if (mounted)
+        setState(() {
+          _resultats = resultats;
+          _showResults = true;
+        });
     } on VotacionsApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -111,7 +123,8 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
     final updated = await Navigator.push<VotacioDetallModel>(
       context,
       MaterialPageRoute(
-        builder: (_) => EditarVotacioScreen(votacio: votacio, service: widget.service),
+        builder: (_) =>
+            EditarVotacioScreen(votacio: votacio, service: widget.service),
       ),
     );
     if (updated != null && mounted) {
@@ -158,7 +171,9 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
       if (mounted) Navigator.of(context).pop(true);
     } on VotacionsApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -201,9 +216,16 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
                   value: 'eliminar',
                   child: Row(
                     children: [
-                      Icon(Icons.delete_outline, size: 18, color: Colors.red[700]),
+                      Icon(
+                        Icons.delete_outline,
+                        size: 18,
+                        color: Colors.red[700],
+                      ),
                       const SizedBox(width: 10),
-                      Text('Eliminar', style: TextStyle(color: Colors.red[700])),
+                      Text(
+                        'Eliminar',
+                        style: TextStyle(color: Colors.red[700]),
+                      ),
                     ],
                   ),
                 ),
@@ -257,12 +279,21 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
           children: [
             Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
             const SizedBox(height: 12),
-            Text(_errorText!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.black54)),
+            Text(
+              _errorText!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black54),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _load,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green[700]),
-              child: const Text('Torna-ho a provar', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[700],
+              ),
+              child: const Text(
+                'Torna-ho a provar',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -345,15 +376,23 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[700],
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: _isVoting
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
                     )
-                  : const Text('Votar', style: TextStyle(fontSize: 16, color: Colors.white)),
+                  : const Text(
+                      'Votar',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
             ),
           ),
         ],
@@ -362,7 +401,10 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
           TextButton.icon(
             onPressed: _loadResultats,
             icon: Icon(Icons.bar_chart, color: Colors.green[700]),
-            label: Text('Veure resultats', style: TextStyle(color: Colors.green[700])),
+            label: Text(
+              'Veure resultats',
+              style: TextStyle(color: Colors.green[700]),
+            ),
           ),
         ],
       ],
@@ -389,7 +431,9 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
           children: [
             if (canVote)
               Icon(
-                isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
                 color: isSelected ? Colors.green[700] : Colors.grey[400],
                 size: 20,
               ),
@@ -412,7 +456,9 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
-        ...resultats.opcions.map((opcio) => _buildResultatBar(opcio, resultats.numVotsTotal)),
+        ...resultats.opcions.map(
+          (opcio) => _buildResultatBar(opcio, resultats.numVotsTotal),
+        ),
         const SizedBox(height: 8),
         Text(
           'Total: ${resultats.numVotsTotal} vot${resultats.numVotsTotal == 1 ? '' : 's'}',
@@ -424,9 +470,13 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
 
   Widget _buildResultatBar(OpcioResultatModel opcio, int total) {
     final pct = total > 0 ? opcio.percentatge / 100.0 : 0.0;
-    final isWinner = total > 0 &&
+    final isWinner =
+        total > 0 &&
         opcio.numVots > 0 &&
-        opcio.numVots == _resultats!.opcions.map((o) => o.numVots).reduce((a, b) => a > b ? a : b);
+        opcio.numVots ==
+            _resultats!.opcions
+                .map((o) => o.numVots)
+                .reduce((a, b) => a > b ? a : b);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -498,7 +548,14 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(label, style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w600)),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 

@@ -40,7 +40,9 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
   void initState() {
     super.initState();
     _titolController = TextEditingController(text: widget.votacio.titol);
-    _descripcioController = TextEditingController(text: widget.votacio.descripcio ?? '');
+    _descripcioController = TextEditingController(
+      text: widget.votacio.descripcio ?? '',
+    );
     _dataLimit = widget.votacio.dataLimit;
     _estat = widget.votacio.estat;
   }
@@ -95,9 +97,9 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
     } on VotacionsApiException catch (e) {
       if (mounted) {
         setState(() => _isSubmitting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -145,8 +147,10 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: _inputDecoration('Títol de la votació'),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty) return 'El títol és obligatori.';
-                  if (v.trim().length < 4) return 'El títol ha de tenir almenys 4 caràcters.';
+                  if (v == null || v.trim().isEmpty)
+                    return 'El títol és obligatori.';
+                  if (v.trim().length < 4)
+                    return 'El títol ha de tenir almenys 4 caràcters.';
                   return null;
                 },
               ),
@@ -168,7 +172,10 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
               GestureDetector(
                 onTap: _pickDate,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.grey[300]!),
@@ -176,7 +183,11 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 18, color: Colors.grey[500]),
+                      Icon(
+                        Icons.calendar_today,
+                        size: 18,
+                        color: Colors.grey[500],
+                      ),
                       const SizedBox(width: 10),
                       Text(
                         _clearDataLimit || _dataLimit == null
@@ -196,7 +207,11 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
                             _clearDataLimit = true;
                             _dataLimit = null;
                           }),
-                          child: Icon(Icons.close, size: 18, color: Colors.grey[500]),
+                          child: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: Colors.grey[500],
+                          ),
                         ),
                     ],
                   ),
@@ -228,13 +243,18 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[700],
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: _isSubmitting
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Text(
                         'Desar canvis',
@@ -268,7 +288,9 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
         child: Row(
           children: [
             Icon(
-              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+              isSelected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
               color: isSelected ? Colors.green[700] : Colors.grey[400],
               size: 20,
             ),
@@ -310,7 +332,11 @@ class _EditarVotacioScreenState extends State<EditarVotacioScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black54),
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.black54,
+          ),
         ),
         const SizedBox(height: 6),
         child,

@@ -30,7 +30,10 @@ class BuildingMapService {
     );
 
     try {
-      final response = await ApiClient.get(uri, timeout: const Duration(seconds: 12));
+      final response = await ApiClient.get(
+        uri,
+        timeout: const Duration(seconds: 12),
+      );
 
       final decoded = _tryDecodeBody(response.body);
 

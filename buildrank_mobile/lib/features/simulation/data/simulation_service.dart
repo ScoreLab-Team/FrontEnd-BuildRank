@@ -183,7 +183,9 @@ class SimulationService {
 
   Future<List<SavedSimulationModel>> getSavedSimulations(int idEdifici) async {
     try {
-      final response = await ApiClient.get(ApiConfig.uri(ApiConfig.simulacions(idEdifici)));
+      final response = await ApiClient.get(
+        ApiConfig.uri(ApiConfig.simulacions(idEdifici)),
+      );
 
       final decoded = _tryDecodeBody(response.body);
 

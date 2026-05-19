@@ -130,9 +130,7 @@ class ApiClient {
     Uri uri, {
     Duration timeout = const Duration(seconds: 10),
   }) {
-    return _execute(
-      (h) => http.get(uri, headers: h).timeout(timeout),
-    );
+    return _execute((h) => http.get(uri, headers: h).timeout(timeout));
   }
 
   static Future<http.Response> post(
@@ -159,8 +157,6 @@ class ApiClient {
     Uri uri, {
     Duration timeout = const Duration(seconds: 10),
   }) {
-    return _execute(
-      (h) => http.delete(uri, headers: h).timeout(timeout),
-    );
+    return _execute((h) => http.delete(uri, headers: h).timeout(timeout));
   }
 }

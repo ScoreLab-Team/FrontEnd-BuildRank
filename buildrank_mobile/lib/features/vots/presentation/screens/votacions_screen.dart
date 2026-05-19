@@ -67,7 +67,9 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
       detall = await _service.getVotacioDetall(id: resum.id);
     } on VotacionsApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
       return;
     }
@@ -108,7 +110,9 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
       if (mounted) _load();
     } on VotacionsApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -117,10 +121,8 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
     final nova = await Navigator.push<VotacioDetallModel>(
       context,
       MaterialPageRoute(
-        builder: (_) => CrearVotacioScreen(
-          idEdifici: widget.idEdifici,
-          service: _service,
-        ),
+        builder: (_) =>
+            CrearVotacioScreen(idEdifici: widget.idEdifici, service: _service),
       ),
     );
     if (nova != null && mounted) {
@@ -165,7 +167,10 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
               onPressed: _openCrear,
               backgroundColor: Colors.green[700],
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('Nova votació', style: TextStyle(color: Colors.white)),
+              label: const Text(
+                'Nova votació',
+                style: TextStyle(color: Colors.white),
+              ),
             )
           : null,
       body: _buildBody(),
@@ -210,8 +215,13 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _load,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green[700]),
-              child: const Text('Torna-ho a provar', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[700],
+              ),
+              child: const Text(
+                'Torna-ho a provar',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -230,7 +240,11 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.how_to_vote_outlined, size: 64, color: Colors.grey[300]),
+                Icon(
+                  Icons.how_to_vote_outlined,
+                  size: 64,
+                  color: Colors.grey[300],
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'Encara no hi ha votacions',
@@ -284,7 +298,11 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Icon(Icons.how_to_vote_outlined, size: 14, color: Colors.grey[400]),
+                  Icon(
+                    Icons.how_to_vote_outlined,
+                    size: 14,
+                    color: Colors.grey[400],
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${votacio.numVotsTotal} vot${votacio.numVotsTotal == 1 ? '' : 's'}',
@@ -303,7 +321,11 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
                   if (_canManage)
                     _buildCardMenu(votacio)
                   else
-                    Icon(Icons.chevron_right, size: 18, color: Colors.grey[400]),
+                    Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: Colors.grey[400],
+                    ),
                 ],
               ),
             ],
@@ -370,7 +392,11 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          fontSize: 11,
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

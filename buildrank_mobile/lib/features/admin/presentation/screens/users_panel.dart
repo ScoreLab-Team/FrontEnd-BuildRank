@@ -29,7 +29,11 @@ class _UsersPanelState extends State<UsersPanel> {
     });
     try {
       final users = await _service.getUsers();
-      if (mounted) setState(() { _users = users; _loading = false; });
+      if (mounted)
+        setState(() {
+          _users = users;
+          _loading = false;
+        });
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -103,9 +107,7 @@ class _UsersPanelState extends State<UsersPanel> {
                           const Duration(days: 7),
                         ),
                         firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(
-                          const Duration(days: 365),
-                        ),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
                       );
                       if (picked != null) {
                         setDialogState(() => selectedDate = picked);
@@ -233,9 +235,7 @@ class _UsersPanelState extends State<UsersPanel> {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    _loading
-                        ? '...'
-                        : '${_users?.length ?? 0} usuaris',
+                    _loading ? '...' : '${_users?.length ?? 0} usuaris',
                     style: const TextStyle(
                       fontSize: 11,
                       color: Color(0xFF4B5563),
@@ -470,20 +470,16 @@ class _AccountStatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final (bg, fg, label) = switch (status) {
       'blocked' => (
-          const Color(0xFFFEE2E2),
-          const Color(0xFF991B1B),
-          'BLOQUEJAT',
-        ),
+        const Color(0xFFFEE2E2),
+        const Color(0xFF991B1B),
+        'BLOQUEJAT',
+      ),
       'suspended' => (
-          const Color(0xFFFEF3C7),
-          const Color(0xFF92400E),
-          'SUSPÈS',
-        ),
-      _ => (
-          const Color(0xFFD1FAE5),
-          const Color(0xFF065F46),
-          'ACTIU',
-        ),
+        const Color(0xFFFEF3C7),
+        const Color(0xFF92400E),
+        'SUSPÈS',
+      ),
+      _ => (const Color(0xFFD1FAE5), const Color(0xFF065F46), 'ACTIU'),
     };
 
     return Container(

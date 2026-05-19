@@ -45,6 +45,30 @@ class ApiConfig {
   static String adminSuspendUser(int id) => '$adminUsers$id/suspend/';
   static String adminUnsuspendUser(int id) => '$adminUsers$id/unsuspend/';
 
+  // Audit logs (requires is_superuser)
+  static Uri auditLogs({
+    int? userId,
+    String? method,
+    String? resourceType,
+    int? statusCode,
+    String? fromDate,
+    String? toDate,
+    int page = 1,
+  }) {
+    return uri(
+      '$baseUrl/api/audit/logs/',
+      queryParameters: {
+        if (userId != null) 'user_id': userId,
+        if (method?.isNotEmpty ?? false) 'method': method!,
+        if (resourceType?.isNotEmpty ?? false) 'resource_type': resourceType!,
+        if (statusCode != null) 'status_code': statusCode,
+        if (fromDate?.isNotEmpty ?? false) 'from_date': fromDate!,
+        if (toDate?.isNotEmpty ?? false) 'to_date': toDate!,
+        'page': page,
+      },
+    );
+  }
+
   // =========================
   // Buildings endpoints
   // =========================
@@ -249,7 +273,8 @@ class ApiConfig {
   // =========================
   static const String notifications = '$baseUrl/api/notifications/';
   static const String notificationsNoLlegides = '${notifications}no-llegides/';
-  static const String notificationsLlegirTotes = '${notifications}llegir-totes/';
+  static const String notificationsLlegirTotes =
+      '${notifications}llegir-totes/';
   static String notificationLlegir(int id) => '$notifications$id/llegir/';
 
   // =========================

@@ -1,4 +1,5 @@
 import 'package:buildrank_mobile/core/services/stream_service.dart';
+import 'package:buildrank_mobile/features/admin/presentation/screens/audit_logs_screen.dart';
 import 'package:buildrank_mobile/features/admin/presentation/screens/user_management_screen.dart';
 import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
@@ -589,9 +590,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             icon: Icons.manage_accounts,
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => const UserManagementScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const UserManagementScreen()),
             ),
           ),
         ],
@@ -719,8 +718,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-  void _showAuditSnackBar() =>
-      _showSnackBar('S’ha iniciat l’auditoria d’integritat.');
+  void _showAuditSnackBar() => Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => const AuditLogsScreen()),
+  );
 
   void _showFiltersSnackBar() =>
       _showSnackBar('Filtres avançats pendents d’integració.');

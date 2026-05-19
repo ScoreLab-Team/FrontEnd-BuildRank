@@ -14,7 +14,8 @@ class NotificacionsService {
 
       if (response.statusCode != 200) {
         throw NotificacionsApiException(
-          _extractError(decoded) ?? 'No s\'han pogut carregar les notificacions.',
+          _extractError(decoded) ??
+              'No s\'han pogut carregar les notificacions.',
           statusCode: response.statusCode,
         );
       }
@@ -30,9 +31,13 @@ class NotificacionsService {
     } on TimeoutException {
       throw const NotificacionsApiException('La connexió ha trigat massa.');
     } on SocketException {
-      throw const NotificacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const NotificacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } catch (_) {
-      throw const NotificacionsApiException('S\'ha produït un error inesperat.');
+      throw const NotificacionsApiException(
+        'S\'ha produït un error inesperat.',
+      );
     }
   }
 
@@ -68,7 +73,9 @@ class NotificacionsService {
     } on NotificacionsApiException {
       rethrow;
     } catch (_) {
-      throw const NotificacionsApiException('S\'ha produït un error inesperat.');
+      throw const NotificacionsApiException(
+        'S\'ha produït un error inesperat.',
+      );
     }
   }
 
@@ -81,14 +88,17 @@ class NotificacionsService {
       if (response.statusCode != 204) {
         final decoded = _tryDecode(response.body);
         throw NotificacionsApiException(
-          _extractError(decoded) ?? 'No s\'han pogut marcar totes com a llegides.',
+          _extractError(decoded) ??
+              'No s\'han pogut marcar totes com a llegides.',
           statusCode: response.statusCode,
         );
       }
     } on NotificacionsApiException {
       rethrow;
     } catch (_) {
-      throw const NotificacionsApiException('S\'ha produït un error inesperat.');
+      throw const NotificacionsApiException(
+        'S\'ha produït un error inesperat.',
+      );
     }
   }
 

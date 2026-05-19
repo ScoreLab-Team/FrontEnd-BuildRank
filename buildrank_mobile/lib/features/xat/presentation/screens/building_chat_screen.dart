@@ -36,9 +36,13 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
   void initState() {
     super.initState();
     _initChannel();
-    AuthService().getMe().then((me) {
-      if (mounted) setState(() => _isSuperuser = me['is_system_admin'] == true);
-    }).catchError((_) {});
+    AuthService()
+        .getMe()
+        .then((me) {
+          if (mounted)
+            setState(() => _isSuperuser = me['is_system_admin'] == true);
+        })
+        .catchError((_) {});
   }
 
   Future<void> _initChannel() async {
@@ -78,8 +82,7 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor:
-            isError ? Colors.red.shade700 : Colors.green.shade700,
+        backgroundColor: isError ? Colors.red.shade700 : Colors.green.shade700,
         duration: const Duration(seconds: 3),
       ),
     );
@@ -168,9 +171,7 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: controller,
-                decoration: const InputDecoration(
-                  hintText: 'Motiu (opcional)',
-                ),
+                decoration: const InputDecoration(hintText: 'Motiu (opcional)'),
                 maxLines: 2,
               ),
             ],
@@ -231,11 +232,7 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     final ok = await _confirm('Segur que vols eliminar el teu missatge?');
     if (!ok) return;
     try {
-      await ModerationService.deleteMessage(
-        msg.id,
-        _channelId,
-        isOwn: true,
-      );
+      await ModerationService.deleteMessage(msg.id, _channelId, isOwn: true);
       _showFeedback('Missatge eliminat.');
     } catch (e) {
       _showFeedback(e.toString(), isError: true);
@@ -246,11 +243,7 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     final ok = await _confirm('Eliminar el missatge d\'aquest usuari?');
     if (!ok) return;
     try {
-      await ModerationService.deleteMessage(
-        msg.id,
-        _channelId,
-        isOwn: false,
-      );
+      await ModerationService.deleteMessage(msg.id, _channelId, isOwn: false);
       _showFeedback('Missatge eliminat.');
     } catch (e) {
       _showFeedback(e.toString(), isError: true);
@@ -538,7 +531,10 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
         ),
         if (!isOwn)
           StreamMessageAction(
-            leading: Icon(Icons.delete_forever_outlined, color: Colors.red.shade700),
+            leading: Icon(
+              Icons.delete_forever_outlined,
+              color: Colors.red.shade700,
+            ),
             title: Text(
               'Eliminar missatge',
               style: TextStyle(color: Colors.red.shade700),

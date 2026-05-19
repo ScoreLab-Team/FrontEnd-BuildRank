@@ -87,9 +87,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       widget.onBadgeUpdate?.call();
     } on NotificacionsApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
     } finally {
       if (mounted) setState(() => _markingAll = false);
     }
@@ -105,7 +105,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final id = notificacio.objecteId;
     if (id == null) return;
 
-    const tipusVotacio = {'nova_votacio', 'votacio_tancada', 'votacio_cancellada'};
+    const tipusVotacio = {
+      'nova_votacio',
+      'votacio_tancada',
+      'votacio_cancellada',
+    };
 
     if (tipusVotacio.contains(notificacio.tipus)) {
       Navigator.of(context).push(
@@ -173,10 +177,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           children: [
             Icon(Icons.notifications_none, size: 48, color: Colors.grey),
             SizedBox(height: 12),
-            Text(
-              'No tens notificacions',
-              style: TextStyle(color: Colors.grey),
-            ),
+            Text('No tens notificacions', style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
