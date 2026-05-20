@@ -327,6 +327,676 @@ class AppLocalizationsCa extends AppLocalizations {
       'L\'usuari ha d\'evitar pujar informació innecessària o documents de tercers sense autorització. Les claus, tokens i credencials no s\'han de compartir ni introduir fora dels formularis previstos per l\'aplicació.';
 
   @override
+  String get commonRetry => 'Torna-ho a provar';
+
+  @override
+  String get commonCancel => 'Cancel·lar';
+
+  @override
+  String get commonConfirm => 'Confirmar';
+
+  @override
+  String get commonBack => 'Torna';
+
+  @override
+  String get commonRefresh => 'Refrescar';
+
+  @override
+  String commonErrorWithValue(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get adminUserManagementTitle => 'Gestió d\'usuaris';
+
+  @override
+  String get notificationsTitle => 'Notificacions';
+
+  @override
+  String get notificationsMarkAll => 'Marcar totes';
+
+  @override
+  String get notificationsLoadError =>
+      'No s\'han pogut carregar les notificacions.';
+
+  @override
+  String get notificationsEmpty => 'No tens notificacions';
+
+  @override
+  String get notificationsNow => 'Ara mateix';
+
+  @override
+  String notificationsMinutesAgo(int count) {
+    return 'Fa $count min';
+  }
+
+  @override
+  String notificationsHoursAgo(int count) {
+    return 'Fa $count h';
+  }
+
+  @override
+  String notificationsDaysAgo(int count) {
+    return 'Fa $count dies';
+  }
+
+  @override
+  String get myChatsTitle => 'Els meus xats';
+
+  @override
+  String get myChatsConnectionError => 'No s\'ha pogut connectar al xat.';
+
+  @override
+  String get myChatsReconnect => 'Reconnectar';
+
+  @override
+  String get myChatsNoMessages => 'Sense missatges';
+
+  @override
+  String get myChatsEmpty => 'No tens cap xat actiu.';
+
+  @override
+  String get myChatsDirectDescription =>
+      'Conversa directa o canal compartit entre administradors.';
+
+  @override
+  String get chatFallbackName => 'Xat';
+
+  @override
+  String get chatDirectDescription =>
+      'Conversa directa entre administradors de finca.';
+
+  @override
+  String get chatUserNotConnectedError =>
+      'Usuari no connectat. Tanca sessió i torna a entrar.';
+
+  @override
+  String chatConnectionError(String error) {
+    return 'Error al connectar el xat:\n$error';
+  }
+
+  @override
+  String get homeRankingTitle => 'Rànquing';
+
+  @override
+  String get homeProfileTitle => 'Perfil';
+
+  @override
+  String get homeGreeting => 'Bon dia';
+
+  @override
+  String get homeSummaryTitle => 'Resum del teu edifici';
+
+  @override
+  String get homeSummarySubtitle =>
+      'Consulta l\'estat energètic actual, la teva posició a la lliga i les properes accions recomanades.';
+
+  @override
+  String get homeDemoBuildingName => 'Biblioteca Central';
+
+  @override
+  String get homeDemoBuildingSubtitle => 'Edifici monitoritzat aquesta setmana';
+
+  @override
+  String get homeMetricConsumption => 'Consum';
+
+  @override
+  String get homeMetricPosition => 'Posició';
+
+  @override
+  String get homeMetricImprovement => 'Millora';
+
+  @override
+  String get homeKeyIndicatorsTitle => 'Indicadors clau';
+
+  @override
+  String get homeTodayConsumptionTitle => 'Consum estimat d\'avui';
+
+  @override
+  String get homeTodayConsumptionSubtitle => '18 kWh · un 6% menys que ahir';
+
+  @override
+  String get homeLeaguePositionTitle => 'Posició a la lliga';
+
+  @override
+  String get homeLeaguePositionSubtitle => '3a posició de 12 edificis';
+
+  @override
+  String get homeRecommendationTitle => 'Recomanació principal';
+
+  @override
+  String get homeRecommendationSubtitle => 'Reduir la climatització a la tarda';
+
+  @override
+  String get homeQuickActionsTitle => 'Accions ràpides';
+
+  @override
+  String get homeBuildingTitle => 'Edifici';
+
+  @override
+  String get homeImprovementsTitle => 'Millores';
+
+  @override
+  String get homeCommunityTitle => 'Comunitat';
+
+  @override
+  String get homeWeeklyGoalTitle => 'Objectiu setmanal';
+
+  @override
+  String get homeWeeklyGoalBody =>
+      'Manteniu el consum per sota de 130 kWh per consolidar-vos dins del top 3.';
+
+  @override
+  String get twinTitle => 'Twin Building';
+
+  @override
+  String get twinIntroTitle => 'Administradors d\'edificis comparables';
+
+  @override
+  String twinIntroBody(String buildingName) {
+    return 'Contacta amb administradors de finca d\'edificis similars a $buildingName per compartir experiències sobre millores energètiques, votacions i gestió comunitària.';
+  }
+
+  @override
+  String get twinEmptyTitle =>
+      'No hi ha administradors comparables disponibles.';
+
+  @override
+  String get twinEmptyBody =>
+      'Pot ser que l\'edifici encara no tingui grup comparable o que no hi hagi altres edificis administrats dins del mateix grup.';
+
+  @override
+  String twinChannelName(String address) {
+    return 'Twin Building amb $address';
+  }
+
+  @override
+  String twinChannelDescription(String adminName, String address) {
+    return 'Conversa amb $adminName, administrador de $address.';
+  }
+
+  @override
+  String twinPoints(String points) {
+    return '$points pts';
+  }
+
+  @override
+  String get twinTypologyFallback => 'Tipologia';
+
+  @override
+  String twinClimateZone(String zone) {
+    return 'Zona $zone';
+  }
+
+  @override
+  String twinAdminLine(String adminName) {
+    return 'Admin: $adminName';
+  }
+
+  @override
+  String get twinOpenChat => 'Obrir xat';
+
+  @override
+  String get editProfileTitle => 'Editar perfil';
+
+  @override
+  String get editProfilePersonalDataTitle => 'Dades personals';
+
+  @override
+  String get editProfilePersonalDataSubtitle =>
+      'Actualitza la informació bàsica del teu compte. El rol no es pot modificar des d\'aquesta pantalla.';
+
+  @override
+  String get editProfileRoleLabel => 'Rol';
+
+  @override
+  String get editProfileSaving => 'Desant...';
+
+  @override
+  String get editProfileSaveChanges => 'Guardar canvis';
+
+  @override
+  String get editProfileFirstNameRequired => 'El nom és obligatori.';
+
+  @override
+  String get editProfileLastNameRequired => 'Els cognoms són obligatoris.';
+
+  @override
+  String get editProfileEmailRequired => 'El correu electrònic és obligatori.';
+
+  @override
+  String get editProfileEmailInvalid =>
+      'Introdueix un correu electrònic vàlid.';
+
+  @override
+  String get editProfileSuccess => 'Perfil actualitzat correctament.';
+
+  @override
+  String get votesCreateTitle => 'Nova votació';
+
+  @override
+  String get votesCreateAction => 'Crear';
+
+  @override
+  String get votesTitleLabel => 'Títol';
+
+  @override
+  String get votesTitleHint => 'Escriu el títol de la votació';
+
+  @override
+  String get votesTitleRequiredError => 'El títol és obligatori.';
+
+  @override
+  String get votesTitleMinLengthError =>
+      'El títol ha de tenir almenys 4 caràcters.';
+
+  @override
+  String get votesDescriptionOptionalLabel => 'Descripció (opcional)';
+
+  @override
+  String get votesDescriptionHint => 'Explica el context de la votació...';
+
+  @override
+  String get votesDeadlineOptionalLabel => 'Data límit (opcional)';
+
+  @override
+  String get votesNoDeadline => 'Sense data límit';
+
+  @override
+  String get votesOptionsLabel => 'Opcions';
+
+  @override
+  String get votesOptionsLimitHint => 'Mínim 2 · Màxim 8';
+
+  @override
+  String get votesAddOption => 'Afegir opció';
+
+  @override
+  String votesOptionHint(int number) {
+    return 'Opció $number';
+  }
+
+  @override
+  String get votesOptionRequiredError => 'Aquesta opció no pot estar buida.';
+
+  @override
+  String get votesDuplicateOptionsError =>
+      'Hi ha opcions duplicades. Revisa-les.';
+
+  @override
+  String get pendingRequestsTitle => 'Sol·licituds pendents';
+
+  @override
+  String pendingRequestsIntro(String buildingTitle) {
+    return 'Aquí pots revisar i validar les sol·licituds d\'unió com a resident per a $buildingTitle.';
+  }
+
+  @override
+  String pendingRequestsCount(int count) {
+    return '$count pendents';
+  }
+
+  @override
+  String get pendingRequestsEmptyTitle => 'No hi ha sol·licituds pendents';
+
+  @override
+  String get pendingRequestsEmptyBody =>
+      'Quan altres usuaris demanin unir-se a aquest edifici, apareixeran aquí.';
+
+  @override
+  String get pendingRequestsUnexpectedError =>
+      'S\'ha produït un error inesperat.';
+
+  @override
+  String get pendingRequestsForbidden =>
+      'Només l\'administrador de finca pot gestionar les sol·licituds pendents.';
+
+  @override
+  String pendingRequestsAccepted(String name) {
+    return 'S\'ha acceptat la sol·licitud de $name.';
+  }
+
+  @override
+  String pendingRequestsRejected(String name) {
+    return 'S\'ha rebutjat la sol·licitud de $name.';
+  }
+
+  @override
+  String get pendingRequestsResidentChip => 'Resident';
+
+  @override
+  String get pendingRequestsRequestTypeLabel => 'Tipus de sol·licitud';
+
+  @override
+  String get pendingRequestsResidentJoinType => 'Unió com a resident';
+
+  @override
+  String get pendingRequestsDateLabel => 'Data';
+
+  @override
+  String get pendingRequestsCadastralReferenceLabel => 'Referència cadastral';
+
+  @override
+  String get pendingRequestsHomeLabel => 'Habitatge';
+
+  @override
+  String get pendingRequestsSurfaceLabel => 'Superfície';
+
+  @override
+  String get pendingRequestsReject => 'Rebutjar';
+
+  @override
+  String get pendingRequestsAccept => 'Acceptar';
+
+  @override
+  String get pendingRequestsNotSpecified => 'No especificat';
+
+  @override
+  String pendingRequestsFloorDoor(String floor, String door) {
+    return 'Planta $floor · Porta $door';
+  }
+
+  @override
+  String pendingRequestsFloor(String floor) {
+    return 'Planta $floor';
+  }
+
+  @override
+  String pendingRequestsDoor(String door) {
+    return 'Porta $door';
+  }
+
+  @override
+  String get chatReasonOptionalHint => 'Motiu (opcional)';
+
+  @override
+  String get chatConfirmActionTitle => 'Confirmar acció';
+
+  @override
+  String get chatDurationLabel => 'Durada';
+
+  @override
+  String get chatDurationIndefinite => 'Indefinit';
+
+  @override
+  String get chatDuration30Minutes => '30 minuts';
+
+  @override
+  String get chatDuration1Hour => '1 hora';
+
+  @override
+  String get chatDuration6Hours => '6 hores';
+
+  @override
+  String get chatDuration24Hours => '24 hores';
+
+  @override
+  String get chatReportMessage => 'Reportar missatge';
+
+  @override
+  String get chatHideMessage => 'Ocultar missatge';
+
+  @override
+  String get chatDeleteMyMessage => 'Eliminar el meu missatge';
+
+  @override
+  String get chatDeleteMessage => 'Eliminar missatge';
+
+  @override
+  String get chatRestoreMessage => 'Restaurar missatge';
+
+  @override
+  String get chatDismissReport => 'Desestimar report';
+
+  @override
+  String get chatDeleteOwnMessageConfirm =>
+      'Segur que vols eliminar el teu missatge?';
+
+  @override
+  String get chatDeleteOtherMessageConfirm =>
+      'Eliminar el missatge d\'aquest usuari?';
+
+  @override
+  String get chatMessageReported => 'Missatge reportat.';
+
+  @override
+  String get chatMessageHidden => 'Missatge ocult.';
+
+  @override
+  String get chatMessageDeleted => 'Missatge eliminat.';
+
+  @override
+  String get chatMessageRestored => 'Missatge restaurat.';
+
+  @override
+  String get chatReportDismissed => 'Report desestimat.';
+
+  @override
+  String get chatWarnUser => 'Advertir usuari';
+
+  @override
+  String get chatMuteUser => 'Silenciar usuari';
+
+  @override
+  String get chatBanFromChannel => 'Expulsar del canal';
+
+  @override
+  String get chatGlobalBan => 'Expulsió global';
+
+  @override
+  String get chatShadowBan => 'Shadow ban';
+
+  @override
+  String get chatWarn => 'Advertir';
+
+  @override
+  String get chatMute => 'Silenciar';
+
+  @override
+  String get chatUnmute => 'Dessilenciar';
+
+  @override
+  String get chatReadmitToChannel => 'Readmetre al canal';
+
+  @override
+  String get chatLiftGlobalBan => 'Aixecar expulsió global';
+
+  @override
+  String get chatLiftShadowBan => 'Aixecar shadow ban';
+
+  @override
+  String get chatWarningSent => 'Advertència enviada.';
+
+  @override
+  String get chatUserMuted => 'Usuari silenciat.';
+
+  @override
+  String get chatUserUnmuted => 'Usuari dessilenciat.';
+
+  @override
+  String get chatUserBannedFromChannel => 'Usuari expulsat del canal.';
+
+  @override
+  String get chatUserUnbannedFromChannel => 'Usuari readmès al canal.';
+
+  @override
+  String get chatUserGloballyBanned => 'Usuari expulsat globalment.';
+
+  @override
+  String get chatGlobalUnbanConfirm =>
+      'Aixecar l\'expulsió global d\'aquest usuari?';
+
+  @override
+  String get chatGlobalBanLifted => 'Expulsió global aixecada.';
+
+  @override
+  String get chatShadowBanApplied => 'Shadow ban aplicat.';
+
+  @override
+  String get chatShadowUnbanConfirm =>
+      'Aixecar el shadow ban d\'aquest usuari?';
+
+  @override
+  String get chatShadowBanLifted => 'Shadow ban aixecat.';
+
+  @override
+  String chatCommunityTitle(String buildingName) {
+    return 'Comunitat de $buildingName';
+  }
+
+  @override
+  String get chatCommunitySubtitle =>
+      'Parla amb els membres d\'aquest edifici sobre millores, incidències i propostes.';
+
+  @override
+  String get chatContactSimilarAdmins => 'Contactar admins similars';
+
+  @override
+  String get mapTitle => 'Mapa d\'edificis';
+
+  @override
+  String get mapSearchHint => 'Cerca per carrer, barri o codi postal';
+
+  @override
+  String get mapSearchTooltip => 'Cercar';
+
+  @override
+  String get mapFilterAll => 'Tots';
+
+  @override
+  String mapFilterMinScore(int score) {
+    return '≥ $score';
+  }
+
+  @override
+  String get mapNoValidCoordinates =>
+      'No hi ha edificis amb coordenades vàlides per mostrar.';
+
+  @override
+  String mapShownOfCount(int shown, int count) {
+    return '$shown de $count edificis mostrats';
+  }
+
+  @override
+  String mapShownCount(int shown) {
+    return '$shown edificis al mapa';
+  }
+
+  @override
+  String get mapLoadError => 'No s\'ha pogut carregar el mapa.';
+
+  @override
+  String get profileUserFallback => 'Usuari';
+
+  @override
+  String get profileRoleAdmin => 'Administrador de finca';
+
+  @override
+  String get profileRoleOwner => 'Propietari';
+
+  @override
+  String get profileRoleTenant => 'Llogater';
+
+  @override
+  String get profileAdminBuildingsTitle => 'Edificis administrats';
+
+  @override
+  String get profileOwnerBuildingsTitle => 'Edificis dels meus habitatges';
+
+  @override
+  String get profileTenantBuildingsTitle => 'Edificis vinculats';
+
+  @override
+  String get profileAccessibleBuildingsTitle => 'Edificis accessibles';
+
+  @override
+  String get profileEmptyAdminBuildings =>
+      'Encara no tens cap edifici assignat com a administrador de finca. Pots crear-ne un amb el formulari d\'alta.';
+
+  @override
+  String get profileEmptyOwnerBuildings =>
+      'Encara no tens habitatges vinculats al teu compte. Quan un administrador t\'assigni un habitatge, aquí veuràs l\'edifici corresponent.';
+
+  @override
+  String get profileEmptyTenantBuildings =>
+      'Encara no tens cap habitatge vinculat al teu compte. Quan siguis assignat a un habitatge, aquí veuràs l\'edifici corresponent.';
+
+  @override
+  String get profileEmptyAccessibleBuildings =>
+      'Encara no hi ha edificis disponibles per a aquest compte.';
+
+  @override
+  String get profileBuildingCreated => 'Edifici creat correctament.';
+
+  @override
+  String get profileLogoutTooltip => 'Tancar sessió';
+
+  @override
+  String get profileReportsSoon =>
+      'Els informes per a juntes encara no estan disponibles en aquest MVP.';
+
+  @override
+  String get profileCreateBuilding => 'Crear edifici';
+
+  @override
+  String get profileReports => 'Informes';
+
+  @override
+  String get profileNonAdminInfo =>
+      'Aquest compte pot consultar els edificis vinculats als seus habitatges. La creació i administració d\'edificis queda reservada als administradors de finca.';
+
+  @override
+  String get profileMapSubtitle =>
+      'Visualitza els edificis registrats i consulta\'n les estadístiques principals.';
+
+  @override
+  String get profileLinkNewBuilding => 'Vincular nou edifici';
+
+  @override
+  String get profileLoadError => 'No s\'ha pogut carregar el perfil.';
+
+  @override
+  String get profileMetricBuildings => 'EDIFICIS';
+
+  @override
+  String get profileMetricLinks => 'VINCLES';
+
+  @override
+  String get profileMetricAvgRanking => 'RÀNQUING MITJÀ';
+
+  @override
+  String get profileMetricProgress => 'PROGRÉS';
+
+  @override
+  String get profileSeasonRestart => 'Proper reinici de temporada';
+
+  @override
+  String profileSeasonDaysLeft(int days) {
+    return 'Queden $days dies';
+  }
+
+  @override
+  String get profileBadgesTitle => 'Insígnies d\'edificis';
+
+  @override
+  String get profileBadgesBody =>
+      'Les insígnies reals es mostren dins de la fitxa de cada edifici. Quan un edifici compleixi criteris de puntuació, qualitat de dades o millora, apareixeran en el seu detall.';
+
+  @override
+  String profileBuildingNumber(int id) {
+    return 'Edifici #$id';
+  }
+
+  @override
+  String get profileLocationUnavailable => 'Localització no disponible';
+
+  @override
+  String get profileInactive => 'Inactiu';
+
+  @override
+  String get profileActive => 'Actiu';
+
+  @override
   String get accountBlockedTitle => 'Compte bloquejat';
 
   @override
@@ -342,4 +1012,832 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get accountBackToLogin => 'Torna a l\'inici de sessió';
+
+  @override
+  String get appName => 'BuildRank';
+
+  @override
+  String get commonUnavailable => 'No disponible';
+
+  @override
+  String get commonUnknownError => 'Error desconegut.';
+
+  @override
+  String get commonRequiredField => 'Camp obligatori';
+
+  @override
+  String get commonInvalidNumber => 'Introdueix un número vàlid';
+
+  @override
+  String get commonGreaterThanZero => 'Ha de ser superior a 0';
+
+  @override
+  String get commonContinue => 'Continua →';
+
+  @override
+  String get mainNavHome => 'Inici';
+
+  @override
+  String get mainNavLeagues => 'Lligues';
+
+  @override
+  String get mainNavSimulate => 'Simula';
+
+  @override
+  String get mainNavChat => 'Xat';
+
+  @override
+  String get mainNavVotes => 'Votacions';
+
+  @override
+  String get habitatgeCadastralReference => 'Referència cadastral';
+
+  @override
+  String get habitatgeFloor => 'Planta';
+
+  @override
+  String get habitatgeDoor => 'Porta';
+
+  @override
+  String get habitatgeSurface => 'Superfície (m²)';
+
+  @override
+  String get addExistingAppBarTitle => 'Vincular edifici';
+
+  @override
+  String get addExistingTitle => 'Vincula\'t a un edifici ja existent';
+
+  @override
+  String get addExistingAdminSubtitle =>
+      'Quan seleccionis un edifici, s\'enviarà una sol·licitud per vincular-te com a administrador de finca.';
+
+  @override
+  String get addExistingResidentSubtitle =>
+      'Quan seleccionis un edifici, s\'enviarà una sol·licitud d\'unió a l\'administrador de finca perquè et pugui validar com a resident.';
+
+  @override
+  String get addExistingLocationSection => 'Localització';
+
+  @override
+  String get addExistingSearchHint => 'Escriu el carrer del teu edifici...';
+
+  @override
+  String get addExistingMinSearch =>
+      'Introdueix almenys 3 caràcters per començar la cerca.';
+
+  @override
+  String get addExistingResultsTitle => 'Resultats';
+
+  @override
+  String get addExistingNoResults =>
+      'No s\'ha trobat cap edifici amb aquesta adreça.';
+
+  @override
+  String addExistingSelectedBuilding(String buildingName, String role) {
+    return 'Seleccionat: $buildingName · Rol sol·licitat: $role';
+  }
+
+  @override
+  String get addExistingClosedRequests =>
+      'Aquest edifici no admet noves sol·licituds d’unió en aquest moment.';
+
+  @override
+  String get addExistingHabitatgeTitle => 'Dades de l’habitatge';
+
+  @override
+  String get addExistingHabitatgeSubtitle =>
+      'Completa les dades del teu habitatge per enviar la sol·licitud d’unió.';
+
+  @override
+  String get addExistingSubmit => 'Enviar sol·licitud';
+
+  @override
+  String get addExistingAdminRequestSent =>
+      'S\'ha enviat la sol·licitud per vincular-te com a administrador de finca.';
+
+  @override
+  String get addExistingResidentRequestSent =>
+      'S\'ha enviat la sol·licitud d\'unió a l\'administrador de finca.';
+
+  @override
+  String get rankingLoadError => 'No s’ha pogut carregar el rànquing.';
+
+  @override
+  String get rankingLoadMoreError => 'No s’han pogut carregar més competidors.';
+
+  @override
+  String get rankingProgressLoadError =>
+      'No s’ha pogut carregar l’evolució de progrés.';
+
+  @override
+  String get rankingScopeLeague => 'La meva lliga';
+
+  @override
+  String get rankingScopeComparableLeague => 'Similars lliga';
+
+  @override
+  String get rankingScopeComparableSeason => 'Similars temporada';
+
+  @override
+  String get rankingUnavailableTitle => 'Rànquing no disponible';
+
+  @override
+  String get rankingLoadErrorTitle => 'No s’ha pogut carregar el rànquing';
+
+  @override
+  String rankingActiveSeason(String seasonName) {
+    return 'Temporada activa: $seasonName';
+  }
+
+  @override
+  String rankingProgressToTop(int target) {
+    return 'Progrés cap al Top $target';
+  }
+
+  @override
+  String rankingPointsProgress(String currentPoints, String targetPoints) {
+    return '$currentPoints / $targetPoints punts';
+  }
+
+  @override
+  String get rankingSeasonPendingCalendar => 'Temporada pendent de calendari.';
+
+  @override
+  String rankingCurrentPosition(int position) {
+    return 'Posició actual: #$position';
+  }
+
+  @override
+  String get rankingComparisonPeriod => 'Període de comparació';
+
+  @override
+  String rankingLastSeasons(int count) {
+    return 'Últimes $count';
+  }
+
+  @override
+  String rankingTopTarget(int target) {
+    return 'Top $target';
+  }
+
+  @override
+  String get rankingBadgesEarned => 'Insígnies aconseguides';
+
+  @override
+  String get rankingViewAll => 'Veure-ho tot';
+
+  @override
+  String get rankingBadgeSolarMaster => 'Mestre solar';
+
+  @override
+  String get rankingBadgeDateOct25 => 'Oct 25';
+
+  @override
+  String get rankingBadgeMaxSavings => 'Màxim estalvi';
+
+  @override
+  String get rankingBadgeDateNov25 => 'Nov 25';
+
+  @override
+  String get rankingBadgeResilient => 'Resilient';
+
+  @override
+  String get rankingBadgeDateDec25 => 'Dec 25';
+
+  @override
+  String get rankingBadgeTest => 'Prova';
+
+  @override
+  String get rankingBadgeDateJan26 => 'Gen 26';
+
+  @override
+  String get rankingSearchHint => 'Cerca per carrer...';
+
+  @override
+  String get rankingNoCompetitors =>
+      'No s’ha trobat cap competidor amb aquests filtres.';
+
+  @override
+  String get rankingLoadMore => 'Carrega més competidors';
+
+  @override
+  String get rankingNoProgressHistory =>
+      'Encara no hi ha historial de progrés per aquest edifici.';
+
+  @override
+  String get rankingSeasonProgressTitle => 'Progrés de temporades';
+
+  @override
+  String rankingSeasonProgressSubtitle(int count) {
+    return 'Evolució real durant les últimes $count temporades disponibles.';
+  }
+
+  @override
+  String rankingProgressForBuilding(String buildingName) {
+    return 'Progrés de $buildingName';
+  }
+
+  @override
+  String rankingProgressModalSubtitle(int count) {
+    return 'Evolució de puntuació durant les últimes $count temporades.';
+  }
+
+  @override
+  String rankingAccumulatedImprovement(int delta) {
+    return 'Millora acumulada: +$delta punts';
+  }
+
+  @override
+  String rankingPointsRange(int startPoints, int currentPoints) {
+    return '$startPoints → $currentPoints punts';
+  }
+
+  @override
+  String rankingDeltaPoints(String deltaText) {
+    return '$deltaText pts';
+  }
+
+  @override
+  String get rankingViewDetail => 'Veure detall';
+
+  @override
+  String get buildingCardDetailLoadError =>
+      'No s’ha pogut carregar el detall de l’edifici.';
+
+  @override
+  String get buildingCardBadgesRecalculated =>
+      'Insígnies recalculades correctament.';
+
+  @override
+  String get buildingCardBadgesLoadError =>
+      'No s’han pogut carregar les insígnies.';
+
+  @override
+  String get buildingCardLoadError => 'No s’ha pogut carregar l’edifici.';
+
+  @override
+  String buildingCardClimateZone(String zone) {
+    return 'Zona climàtica $zone';
+  }
+
+  @override
+  String get buildingCardScoreExcellent => 'EXCEL·LENT';
+
+  @override
+  String get buildingCardScoreGood => 'BO';
+
+  @override
+  String get buildingCardScoreImprove => 'MILLORABLE';
+
+  @override
+  String get buildingCardScorePriority => 'PRIORITARI';
+
+  @override
+  String get buildingCardEstimatedRating => 'QUALIFICACIÓ ESTIMADA';
+
+  @override
+  String buildingCardPendingData(String items) {
+    return 'Dades pendents: $items';
+  }
+
+  @override
+  String get buildingCardBaseScore => 'Puntuació base BuildRank';
+
+  @override
+  String get buildingCardPerformance => 'RENDIMENT';
+
+  @override
+  String get buildingCardInitialData => 'Dades inicials';
+
+  @override
+  String get buildingCardSurface => 'SUPERFÍCIE';
+
+  @override
+  String get buildingCardFloors => 'PLANTES';
+
+  @override
+  String get buildingCardOrientation => 'ORIENTACIÓ';
+
+  @override
+  String get buildingCardBadgesTitle => 'INSÍGNIES DE L’EDIFICI';
+
+  @override
+  String get buildingCardRecalculate => 'Recalcular';
+
+  @override
+  String get buildingCardNoBadges =>
+      'Aquest edifici encara no té insígnies assignades. Es mostraran quan compleixi alguna fita.';
+
+  @override
+  String get buildingCardRecommendedActions => 'ACCIONS RECOMANADES';
+
+  @override
+  String get buildingCardActionSimulationTitle => 'Executa simulació';
+
+  @override
+  String get buildingCardActionSimulationSubtitle =>
+      'Prova escenaris de millora per aquest edifici';
+
+  @override
+  String get buildingCardActionVoteTitle => 'Votació de la comunitat';
+
+  @override
+  String get buildingCardActionVoteSubtitle =>
+      'Funcionalitat preparada per futures propostes';
+
+  @override
+  String get buildingCardActionReportTitle => 'Informe de junta (properament)';
+
+  @override
+  String get buildingCardActionReportSubtitle =>
+      'La generació d’informes encara no està disponible en aquest MVP';
+
+  @override
+  String get buildingCardActionManageRequestsTitle =>
+      'Gestionar sol·licituds pendents';
+
+  @override
+  String get buildingCardActionManageRequestsSubtitle =>
+      'Revisa i valida noves peticions d’unió a l’edifici';
+
+  @override
+  String get buildingCardActionEditHabitatgeTitle => 'Editar el meu habitatge';
+
+  @override
+  String get buildingCardActionEditHabitatgeSubtitle =>
+      'Completa superfície, reforma i dades energètiques';
+
+  @override
+  String get buildingCardTabDetails => 'Detalls';
+
+  @override
+  String get buildingCardTabHistory => 'Historial';
+
+  @override
+  String get buildingCardTabDocuments => 'Documents';
+
+  @override
+  String get buildingCardHistoryUnavailableTitle =>
+      'Historial encara no disponible';
+
+  @override
+  String get buildingCardHistoryUnavailableBody =>
+      'En aquesta secció es mostraran canvis de puntuació, validacions i simulacions guardades.';
+
+  @override
+  String get buildingCardDocumentsSoonTitle =>
+      'Documents i informes (properament)';
+
+  @override
+  String get buildingCardDocumentsSoonBody =>
+      'Aquesta secció queda preparada per a una futura integració documental. En aquest MVP no es mostren documents ni informes generats.';
+
+  @override
+  String get buildingCardConstructionYear => 'ANY DE CONSTRUCCIÓ';
+
+  @override
+  String buildingCardFloorsCount(String count) {
+    return '$count plantes';
+  }
+
+  @override
+  String get buildingCardTypology => 'TIPOLOGIA';
+
+  @override
+  String get buildingCardRegulation => 'REGLAMENT';
+
+  @override
+  String get buildingCardNoLocation =>
+      'Aquest edifici encara no té localització associada.';
+
+  @override
+  String buildingCardLocationSummary(
+    String street,
+    String number,
+    String neighborhood,
+    String postalCode,
+  ) {
+    return 'Localització: $street, $number · $neighborhood · $postalCode';
+  }
+
+  @override
+  String get buildingFormStreetMinChars =>
+      'Escriu almenys 2 caràcters per cercar el carrer.';
+
+  @override
+  String buildingFormNoStreetFound(String query) {
+    return 'No s’ha trobat cap carrer amb “$query”.';
+  }
+
+  @override
+  String get buildingFormStreetSuggestionsError =>
+      'No s’han pogut carregar els suggeriments de carrers.';
+
+  @override
+  String get buildingFormPostalCodeRequired => 'El codi postal és obligatori.';
+
+  @override
+  String get buildingFormPostalCodeInvalid =>
+      'El codi postal ha de tenir 5 dígits.';
+
+  @override
+  String get buildingFormNeighborhoodRequired => 'El camp barri és obligatori.';
+
+  @override
+  String get buildingFormStreetRequired => 'El nom del carrer és obligatori.';
+
+  @override
+  String get buildingFormStreetSelectionRequired =>
+      'Selecciona un carrer de la llista de suggeriments.';
+
+  @override
+  String get buildingFormNumberRequired => 'El número és obligatori.';
+
+  @override
+  String get buildingFormNumberPositive =>
+      'El número del carrer ha de ser un enter positiu.';
+
+  @override
+  String buildingFormNumberOutOfRange(int minNumber, int maxNumber) {
+    return 'El número no està dins del rang permès per aquest carrer ($minNumber-$maxNumber).';
+  }
+
+  @override
+  String get buildingFormTypeRequired => 'Has de seleccionar una tipologia.';
+
+  @override
+  String get buildingFormConstructionYearRequired =>
+      'L\'any de construcció és obligatori.';
+
+  @override
+  String get buildingFormConstructionYearInteger =>
+      'L\'any de construcció ha de ser un número enter.';
+
+  @override
+  String buildingFormConstructionYearRange(int currentYear) {
+    return 'L\'any de construcció ha d\'estar entre 1800 i $currentYear.';
+  }
+
+  @override
+  String get buildingFormRegulationRequired =>
+      'La normativa vigent és obligatòria.';
+
+  @override
+  String get buildingFormFloorsRequired =>
+      'El nombre de plantes és obligatori.';
+
+  @override
+  String get buildingFormFloorsPositive =>
+      'El nombre de plantes ha de ser un enter positiu.';
+
+  @override
+  String get buildingFormSurfaceRequired =>
+      'La superfície total és obligatòria.';
+
+  @override
+  String get buildingFormSurfacePositive =>
+      'La superfície total ha de ser un número positiu.';
+
+  @override
+  String get buildingFormOrientationRequired =>
+      'Has de seleccionar una orientació principal.';
+
+  @override
+  String get buildingFormDocumentsRequired =>
+      'Cal adjuntar almenys un document de verificació.';
+
+  @override
+  String get buildingFormCreatedMissingId =>
+      'L’edifici s’ha creat però la resposta no conté cap identificador reconeixible.';
+
+  @override
+  String get buildingFormSubmitSuccess =>
+      'Edifici creat i documentació enviada. Queda pendent de revisió.';
+
+  @override
+  String get buildingFormUnexpectedSaveError =>
+      'S\'ha produït un error inesperat en desar l\'edifici.';
+
+  @override
+  String get buildingFormTypeResidential => 'Residencial';
+
+  @override
+  String get buildingFormTypeCommercial => 'Comercial';
+
+  @override
+  String get buildingFormTypeEducational => 'Educatiu';
+
+  @override
+  String get buildingFormTypeHealthcare => 'Sanitari';
+
+  @override
+  String get buildingFormTypeMixed => 'Mixt';
+
+  @override
+  String get buildingFormTypeResidentialSubtitle => 'Unifamiliar o pisos';
+
+  @override
+  String get buildingFormTypeCommercialSubtitle => 'Oficines, comerç...';
+
+  @override
+  String get buildingFormTypeEducationalSubtitle => 'Escoles';
+
+  @override
+  String get buildingFormTypeHealthcareSubtitle => 'Hospitals';
+
+  @override
+  String get buildingFormTypeMixedSubtitle => 'Usos combinats';
+
+  @override
+  String get orientationNorth => 'Nord';
+
+  @override
+  String get orientationSouth => 'Sud';
+
+  @override
+  String get orientationEast => 'Est';
+
+  @override
+  String get orientationWest => 'Oest';
+
+  @override
+  String get buildingFormNewBuildingChip => 'Nou Edifici';
+
+  @override
+  String get buildingFormTitle => 'Registra l\'edifici';
+
+  @override
+  String get buildingFormStep1Subtitle =>
+      'Comencem per la ubicació de l\'edifici.';
+
+  @override
+  String get buildingFormStep2Subtitle => 'Ara completa la informació general.';
+
+  @override
+  String get buildingFormStep3Subtitle =>
+      'Afegeix les dades tècniques bàsiques.';
+
+  @override
+  String get buildingFormStep4Subtitle =>
+      'Adjunta la documentació per validar-te com a administrador de finca.';
+
+  @override
+  String get buildingFormLocationSection => 'UBICACIÓ';
+
+  @override
+  String get buildingFormPostalCodeLabel => 'Codi postal';
+
+  @override
+  String get buildingFormPostalCodeHint => 'p. ex., 08025';
+
+  @override
+  String get buildingFormOr => 'o';
+
+  @override
+  String get buildingFormNeighborhoodLabel => 'Barri';
+
+  @override
+  String get buildingFormNeighborhoodHint => 'p. ex., Sagrada Família';
+
+  @override
+  String get buildingFormStreetLabel => 'Nom del carrer';
+
+  @override
+  String get buildingFormStreetHint => 'Comença a escriure el carrer';
+
+  @override
+  String buildingFormStreetNumberRange(int minNumber, int maxNumber) {
+    return 'Números $minNumber-$maxNumber';
+  }
+
+  @override
+  String get buildingFormStreetRangeUnknown => 'Rang de numeració no informat';
+
+  @override
+  String get buildingFormNumberLabel => 'Número';
+
+  @override
+  String get buildingFormNumberHint => 'p. ex., 123';
+
+  @override
+  String get buildingFormLocationInfo =>
+      'Selecciona un carrer de la llista de suggeriments. En desar, BuildRank crearà primer la localització i després l’edifici vinculat al teu compte d’administrador.';
+
+  @override
+  String get buildingFormGeneralSection => 'INFORMACIÓ GENERAL';
+
+  @override
+  String get buildingFormRegisteredLocation => 'Ubicació registrada';
+
+  @override
+  String get buildingFormAddressLabel => 'Adreça';
+
+  @override
+  String get buildingFormTypeLabel => 'Tipologia de l\'edifici';
+
+  @override
+  String get buildingFormConstructionYearLabel => 'Any de construcció';
+
+  @override
+  String get buildingFormConstructionYearHint => 'p. ex., 1998';
+
+  @override
+  String get buildingFormRegulationLabel => 'Normativa vigent';
+
+  @override
+  String get buildingFormRegulationHint => 'p. ex., CTE';
+
+  @override
+  String get buildingFormTechnicalSection => 'DADES TÈCNIQUES';
+
+  @override
+  String get buildingFormBuildingSummary => 'Resum de l’edifici';
+
+  @override
+  String get buildingFormConstructionYearSummaryLabel => 'Any construcció';
+
+  @override
+  String get buildingFormRegulationSummaryLabel => 'Normativa';
+
+  @override
+  String get buildingFormFloorsLabel => 'Nombre de plantes';
+
+  @override
+  String get buildingFormFloorsHint => 'p. ex., 6';
+
+  @override
+  String get buildingFormSurfaceLabel => 'Superfície total (m²)';
+
+  @override
+  String get buildingFormSurfaceHint => 'p. ex., 850';
+
+  @override
+  String get buildingFormOrientationLabel => 'Orientació principal';
+
+  @override
+  String get buildingFormOrientationHint => 'Selecciona una orientació';
+
+  @override
+  String get buildingFormDocumentationSection => 'DOCUMENTACIÓ';
+
+  @override
+  String get buildingFormBuildingToVerify => 'Edifici a verificar';
+
+  @override
+  String get buildingFormSubmittingDocuments => 'Enviant documentació...';
+
+  @override
+  String get buildingFormSubmit => 'Crear edifici i enviar verificació';
+
+  @override
+  String get editHabitatgeNoLinkedHome =>
+      'No s’ha trobat cap habitatge vinculat al teu usuari en aquest edifici.';
+
+  @override
+  String get editHabitatgeNoneSelected =>
+      'No s’ha seleccionat cap habitatge per editar.';
+
+  @override
+  String get editHabitatgeMissingCadastralReference =>
+      'L’habitatge seleccionat no té referència cadastral.';
+
+  @override
+  String get editHabitatgeLoadError => 'No s’ha pogut carregar l’habitatge.';
+
+  @override
+  String get editHabitatgeSelectorTitle => 'Quin habitatge vols editar?';
+
+  @override
+  String editHabitatgeSelectorFloorDoor(String floor, String door) {
+    return 'Planta $floor · Porta $door';
+  }
+
+  @override
+  String get editHabitatgeEnergyRequired =>
+      'Camp obligatori si informes dades energètiques';
+
+  @override
+  String get editHabitatgeEnergyDateRequired =>
+      'Cal informar la data d’entrada si informes dades energètiques';
+
+  @override
+  String get editHabitatgeSaveWithEnergySuccess =>
+      'Dades de l’habitatge i dades energètiques actualitzades.';
+
+  @override
+  String get editHabitatgeSaveSuccess => 'Dades de l’habitatge actualitzades.';
+
+  @override
+  String get editHabitatgeAppBarTitle => 'Editar habitatge';
+
+  @override
+  String get editHabitatgeCannotEditTitle => 'No es pot editar l’habitatge';
+
+  @override
+  String get editHabitatgeSaveButton => 'Guardar dades';
+
+  @override
+  String get editHabitatgeIntroTitle => 'Completa les dades del teu habitatge';
+
+  @override
+  String get editHabitatgeIntroBody =>
+      'Aquestes dades ajudaran a calcular millor la classificació estimada i la puntuació BuildRank de l’edifici.';
+
+  @override
+  String get editHabitatgeHomeDataTitle => 'Dades de l’habitatge';
+
+  @override
+  String get editHabitatgeHomeDataSubtitle =>
+      'Informació bàsica de l’habitatge vinculat al teu compte.';
+
+  @override
+  String get editHabitatgeRenovationYear => 'Any reforma';
+
+  @override
+  String get editHabitatgeInvalidYear => 'Introdueix un any vàlid';
+
+  @override
+  String get editHabitatgeYearOutOfRange => 'L’any no és vàlid';
+
+  @override
+  String get editHabitatgeEnergyDataTitle => 'Dades energètiques';
+
+  @override
+  String get editHabitatgeEnergyDataSubtitle =>
+      'Afegeix la informació disponible del certificat o estimació energètica.';
+
+  @override
+  String get editHabitatgeEnergyOptionalNotice =>
+      'Les dades energètiques són opcionals. Si informes qualsevol camp d’aquesta secció, hauràs d’omplir tots els camps obligatoris del certificat energètic.';
+
+  @override
+  String get editHabitatgeGlobalRating => 'Qualificació global';
+
+  @override
+  String get editHabitatgePrimaryEnergyConsumption => 'Consum energia primària';
+
+  @override
+  String get editHabitatgeFinalEnergyConsumption => 'Consum energia final';
+
+  @override
+  String get editHabitatgeCo2Emissions => 'Emissions CO₂';
+
+  @override
+  String get editHabitatgeAnnualEnergyCost => 'Cost anual energia (€)';
+
+  @override
+  String get editHabitatgeConsumptionByUse => 'Consums per ús';
+
+  @override
+  String get editHabitatgeHeatingEnergy => 'Energia calefacció';
+
+  @override
+  String get editHabitatgeCoolingEnergy => 'Energia refrigeració';
+
+  @override
+  String get editHabitatgeAcsEnergy => 'Energia ACS';
+
+  @override
+  String get editHabitatgeLightingEnergy => 'Energia enllumenament';
+
+  @override
+  String get editHabitatgeEmissionsByUse => 'Emissions per ús';
+
+  @override
+  String get editHabitatgeHeatingEmissions => 'Emissions calefacció';
+
+  @override
+  String get editHabitatgeCoolingEmissions => 'Emissions refrigeració';
+
+  @override
+  String get editHabitatgeAcsEmissions => 'Emissions ACS';
+
+  @override
+  String get editHabitatgeLightingEmissions => 'Emissions enllumenament';
+
+  @override
+  String get editHabitatgeCertificationEnvelope => 'Certificació i envolupant';
+
+  @override
+  String get editHabitatgeThermalInsulation => 'Aïllament tèrmic';
+
+  @override
+  String get editHabitatgeWindowValue => 'Valor finestres';
+
+  @override
+  String get editHabitatgeCertificationTool => 'Eina certificació';
+
+  @override
+  String get editHabitatgeCertificationReason => 'Motiu certificació';
+
+  @override
+  String get editHabitatgeEnergyRenovation => 'Rehabilitació energètica';
+
+  @override
+  String get editHabitatgeSelectEntryDate => 'Seleccionar data d’entrada *';
+
+  @override
+  String editHabitatgeEntryDate(String date) {
+    return 'Data d’entrada: $date';
+  }
 }

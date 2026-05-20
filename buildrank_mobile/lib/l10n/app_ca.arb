@@ -100,9 +100,818 @@
   "legalPrivacySection6Body": "Qualsevol suport automatitzat o basat en IA, si existeix, s'ha d'entendre com una ajuda per detectar incoherències o punts de revisió. No substitueix la revisió humana ni hauria d'aprovar documents, assignar rols o modificar puntuacions de manera autònoma.",
   "legalPrivacySection7Title": "7. Responsabilitat de l'usuari",
   "legalPrivacySection7Body": "L'usuari ha d'evitar pujar informació innecessària o documents de tercers sense autorització. Les claus, tokens i credencials no s'han de compartir ni introduir fora dels formularis previstos per l'aplicació.",
+  "commonRetry": "Torna-ho a provar",
+  "commonCancel": "Cancel·lar",
+  "commonConfirm": "Confirmar",
+  "commonBack": "Torna",
+  "commonRefresh": "Refrescar",
+  "commonErrorWithValue": "Error: {error}",
+  "@commonErrorWithValue": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminUserManagementTitle": "Gestió d'usuaris",
+  "notificationsTitle": "Notificacions",
+  "notificationsMarkAll": "Marcar totes",
+  "notificationsLoadError": "No s'han pogut carregar les notificacions.",
+  "notificationsEmpty": "No tens notificacions",
+  "notificationsNow": "Ara mateix",
+  "notificationsMinutesAgo": "Fa {count} min",
+  "@notificationsMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsHoursAgo": "Fa {count} h",
+  "@notificationsHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsDaysAgo": "Fa {count} dies",
+  "@notificationsDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "myChatsTitle": "Els meus xats",
+  "myChatsConnectionError": "No s'ha pogut connectar al xat.",
+  "myChatsReconnect": "Reconnectar",
+  "myChatsNoMessages": "Sense missatges",
+  "myChatsEmpty": "No tens cap xat actiu.",
+  "myChatsDirectDescription": "Conversa directa o canal compartit entre administradors.",
+  "chatFallbackName": "Xat",
+  "chatDirectDescription": "Conversa directa entre administradors de finca.",
+  "chatUserNotConnectedError": "Usuari no connectat. Tanca sessió i torna a entrar.",
+  "chatConnectionError": "Error al connectar el xat:\n{error}",
+  "@chatConnectionError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "homeRankingTitle": "Rànquing",
+  "homeProfileTitle": "Perfil",
+  "homeGreeting": "Bon dia",
+  "homeSummaryTitle": "Resum del teu edifici",
+  "homeSummarySubtitle": "Consulta l'estat energètic actual, la teva posició a la lliga i les properes accions recomanades.",
+  "homeDemoBuildingName": "Biblioteca Central",
+  "homeDemoBuildingSubtitle": "Edifici monitoritzat aquesta setmana",
+  "homeMetricConsumption": "Consum",
+  "homeMetricPosition": "Posició",
+  "homeMetricImprovement": "Millora",
+  "homeKeyIndicatorsTitle": "Indicadors clau",
+  "homeTodayConsumptionTitle": "Consum estimat d'avui",
+  "homeTodayConsumptionSubtitle": "18 kWh · un 6% menys que ahir",
+  "homeLeaguePositionTitle": "Posició a la lliga",
+  "homeLeaguePositionSubtitle": "3a posició de 12 edificis",
+  "homeRecommendationTitle": "Recomanació principal",
+  "homeRecommendationSubtitle": "Reduir la climatització a la tarda",
+  "homeQuickActionsTitle": "Accions ràpides",
+  "homeBuildingTitle": "Edifici",
+  "homeImprovementsTitle": "Millores",
+  "homeCommunityTitle": "Comunitat",
+  "homeWeeklyGoalTitle": "Objectiu setmanal",
+  "homeWeeklyGoalBody": "Manteniu el consum per sota de 130 kWh per consolidar-vos dins del top 3.",
+  "twinTitle": "Twin Building",
+  "twinIntroTitle": "Administradors d'edificis comparables",
+  "twinIntroBody": "Contacta amb administradors de finca d'edificis similars a {buildingName} per compartir experiències sobre millores energètiques, votacions i gestió comunitària.",
+  "@twinIntroBody": {
+    "placeholders": {
+      "buildingName": {
+        "type": "String"
+      }
+    }
+  },
+  "twinEmptyTitle": "No hi ha administradors comparables disponibles.",
+  "twinEmptyBody": "Pot ser que l'edifici encara no tingui grup comparable o que no hi hagi altres edificis administrats dins del mateix grup.",
+  "twinChannelName": "Twin Building amb {address}",
+  "@twinChannelName": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "twinChannelDescription": "Conversa amb {adminName}, administrador de {address}.",
+  "@twinChannelDescription": {
+    "placeholders": {
+      "adminName": {
+        "type": "String"
+      },
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "twinPoints": "{points} pts",
+  "@twinPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "twinTypologyFallback": "Tipologia",
+  "twinClimateZone": "Zona {zone}",
+  "@twinClimateZone": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "twinAdminLine": "Admin: {adminName}",
+  "@twinAdminLine": {
+    "placeholders": {
+      "adminName": {
+        "type": "String"
+      }
+    }
+  },
+  "twinOpenChat": "Obrir xat",
+  "editProfileTitle": "Editar perfil",
+  "editProfilePersonalDataTitle": "Dades personals",
+  "editProfilePersonalDataSubtitle": "Actualitza la informació bàsica del teu compte. El rol no es pot modificar des d'aquesta pantalla.",
+  "editProfileRoleLabel": "Rol",
+  "editProfileSaving": "Desant...",
+  "editProfileSaveChanges": "Guardar canvis",
+  "editProfileFirstNameRequired": "El nom és obligatori.",
+  "editProfileLastNameRequired": "Els cognoms són obligatoris.",
+  "editProfileEmailRequired": "El correu electrònic és obligatori.",
+  "editProfileEmailInvalid": "Introdueix un correu electrònic vàlid.",
+  "editProfileSuccess": "Perfil actualitzat correctament.",
+  "votesCreateTitle": "Nova votació",
+  "votesCreateAction": "Crear",
+  "votesTitleLabel": "Títol",
+  "votesTitleHint": "Escriu el títol de la votació",
+  "votesTitleRequiredError": "El títol és obligatori.",
+  "votesTitleMinLengthError": "El títol ha de tenir almenys 4 caràcters.",
+  "votesDescriptionOptionalLabel": "Descripció (opcional)",
+  "votesDescriptionHint": "Explica el context de la votació...",
+  "votesDeadlineOptionalLabel": "Data límit (opcional)",
+  "votesNoDeadline": "Sense data límit",
+  "votesOptionsLabel": "Opcions",
+  "votesOptionsLimitHint": "Mínim 2 · Màxim 8",
+  "votesAddOption": "Afegir opció",
+  "votesOptionHint": "Opció {number}",
+  "@votesOptionHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "votesOptionRequiredError": "Aquesta opció no pot estar buida.",
+  "votesDuplicateOptionsError": "Hi ha opcions duplicades. Revisa-les.",
+  "pendingRequestsTitle": "Sol·licituds pendents",
+  "pendingRequestsIntro": "Aquí pots revisar i validar les sol·licituds d'unió com a resident per a {buildingTitle}.",
+  "@pendingRequestsIntro": {
+    "placeholders": {
+      "buildingTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingRequestsCount": "{count} pendents",
+  "@pendingRequestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pendingRequestsEmptyTitle": "No hi ha sol·licituds pendents",
+  "pendingRequestsEmptyBody": "Quan altres usuaris demanin unir-se a aquest edifici, apareixeran aquí.",
+  "pendingRequestsUnexpectedError": "S'ha produït un error inesperat.",
+  "pendingRequestsForbidden": "Només l'administrador de finca pot gestionar les sol·licituds pendents.",
+  "pendingRequestsAccepted": "S'ha acceptat la sol·licitud de {name}.",
+  "@pendingRequestsAccepted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingRequestsRejected": "S'ha rebutjat la sol·licitud de {name}.",
+  "@pendingRequestsRejected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingRequestsResidentChip": "Resident",
+  "pendingRequestsRequestTypeLabel": "Tipus de sol·licitud",
+  "pendingRequestsResidentJoinType": "Unió com a resident",
+  "pendingRequestsDateLabel": "Data",
+  "pendingRequestsCadastralReferenceLabel": "Referència cadastral",
+  "pendingRequestsHomeLabel": "Habitatge",
+  "pendingRequestsSurfaceLabel": "Superfície",
+  "pendingRequestsReject": "Rebutjar",
+  "pendingRequestsAccept": "Acceptar",
+  "pendingRequestsNotSpecified": "No especificat",
+  "pendingRequestsFloorDoor": "Planta {floor} · Porta {door}",
+  "@pendingRequestsFloorDoor": {
+    "placeholders": {
+      "floor": {
+        "type": "String"
+      },
+      "door": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingRequestsFloor": "Planta {floor}",
+  "@pendingRequestsFloor": {
+    "placeholders": {
+      "floor": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingRequestsDoor": "Porta {door}",
+  "@pendingRequestsDoor": {
+    "placeholders": {
+      "door": {
+        "type": "String"
+      }
+    }
+  },
+  "chatReasonOptionalHint": "Motiu (opcional)",
+  "chatConfirmActionTitle": "Confirmar acció",
+  "chatDurationLabel": "Durada",
+  "chatDurationIndefinite": "Indefinit",
+  "chatDuration30Minutes": "30 minuts",
+  "chatDuration1Hour": "1 hora",
+  "chatDuration6Hours": "6 hores",
+  "chatDuration24Hours": "24 hores",
+  "chatReportMessage": "Reportar missatge",
+  "chatHideMessage": "Ocultar missatge",
+  "chatDeleteMyMessage": "Eliminar el meu missatge",
+  "chatDeleteMessage": "Eliminar missatge",
+  "chatRestoreMessage": "Restaurar missatge",
+  "chatDismissReport": "Desestimar report",
+  "chatDeleteOwnMessageConfirm": "Segur que vols eliminar el teu missatge?",
+  "chatDeleteOtherMessageConfirm": "Eliminar el missatge d'aquest usuari?",
+  "chatMessageReported": "Missatge reportat.",
+  "chatMessageHidden": "Missatge ocult.",
+  "chatMessageDeleted": "Missatge eliminat.",
+  "chatMessageRestored": "Missatge restaurat.",
+  "chatReportDismissed": "Report desestimat.",
+  "chatWarnUser": "Advertir usuari",
+  "chatMuteUser": "Silenciar usuari",
+  "chatBanFromChannel": "Expulsar del canal",
+  "chatGlobalBan": "Expulsió global",
+  "chatShadowBan": "Shadow ban",
+  "chatWarn": "Advertir",
+  "chatMute": "Silenciar",
+  "chatUnmute": "Dessilenciar",
+  "chatReadmitToChannel": "Readmetre al canal",
+  "chatLiftGlobalBan": "Aixecar expulsió global",
+  "chatLiftShadowBan": "Aixecar shadow ban",
+  "chatWarningSent": "Advertència enviada.",
+  "chatUserMuted": "Usuari silenciat.",
+  "chatUserUnmuted": "Usuari dessilenciat.",
+  "chatUserBannedFromChannel": "Usuari expulsat del canal.",
+  "chatUserUnbannedFromChannel": "Usuari readmès al canal.",
+  "chatUserGloballyBanned": "Usuari expulsat globalment.",
+  "chatGlobalUnbanConfirm": "Aixecar l'expulsió global d'aquest usuari?",
+  "chatGlobalBanLifted": "Expulsió global aixecada.",
+  "chatShadowBanApplied": "Shadow ban aplicat.",
+  "chatShadowUnbanConfirm": "Aixecar el shadow ban d'aquest usuari?",
+  "chatShadowBanLifted": "Shadow ban aixecat.",
+  "chatCommunityTitle": "Comunitat de {buildingName}",
+  "@chatCommunityTitle": {
+    "placeholders": {
+      "buildingName": {
+        "type": "String"
+      }
+    }
+  },
+  "chatCommunitySubtitle": "Parla amb els membres d'aquest edifici sobre millores, incidències i propostes.",
+  "chatContactSimilarAdmins": "Contactar admins similars",
+  "mapTitle": "Mapa d'edificis",
+  "mapSearchHint": "Cerca per carrer, barri o codi postal",
+  "mapSearchTooltip": "Cercar",
+  "mapFilterAll": "Tots",
+  "mapFilterMinScore": "≥ {score}",
+  "@mapFilterMinScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "mapNoValidCoordinates": "No hi ha edificis amb coordenades vàlides per mostrar.",
+  "mapShownOfCount": "{shown} de {count} edificis mostrats",
+  "@mapShownOfCount": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapShownCount": "{shown} edificis al mapa",
+  "@mapShownCount": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      }
+    }
+  },
+  "mapLoadError": "No s'ha pogut carregar el mapa.",
+  "profileUserFallback": "Usuari",
+  "profileRoleAdmin": "Administrador de finca",
+  "profileRoleOwner": "Propietari",
+  "profileRoleTenant": "Llogater",
+  "profileAdminBuildingsTitle": "Edificis administrats",
+  "profileOwnerBuildingsTitle": "Edificis dels meus habitatges",
+  "profileTenantBuildingsTitle": "Edificis vinculats",
+  "profileAccessibleBuildingsTitle": "Edificis accessibles",
+  "profileEmptyAdminBuildings": "Encara no tens cap edifici assignat com a administrador de finca. Pots crear-ne un amb el formulari d'alta.",
+  "profileEmptyOwnerBuildings": "Encara no tens habitatges vinculats al teu compte. Quan un administrador t'assigni un habitatge, aquí veuràs l'edifici corresponent.",
+  "profileEmptyTenantBuildings": "Encara no tens cap habitatge vinculat al teu compte. Quan siguis assignat a un habitatge, aquí veuràs l'edifici corresponent.",
+  "profileEmptyAccessibleBuildings": "Encara no hi ha edificis disponibles per a aquest compte.",
+  "profileBuildingCreated": "Edifici creat correctament.",
+  "profileLogoutTooltip": "Tancar sessió",
+  "profileReportsSoon": "Els informes per a juntes encara no estan disponibles en aquest MVP.",
+  "profileCreateBuilding": "Crear edifici",
+  "profileReports": "Informes",
+  "profileNonAdminInfo": "Aquest compte pot consultar els edificis vinculats als seus habitatges. La creació i administració d'edificis queda reservada als administradors de finca.",
+  "profileMapSubtitle": "Visualitza els edificis registrats i consulta'n les estadístiques principals.",
+  "profileLinkNewBuilding": "Vincular nou edifici",
+  "profileLoadError": "No s'ha pogut carregar el perfil.",
+  "profileMetricBuildings": "EDIFICIS",
+  "profileMetricLinks": "VINCLES",
+  "profileMetricAvgRanking": "RÀNQUING MITJÀ",
+  "profileMetricProgress": "PROGRÉS",
+  "profileSeasonRestart": "Proper reinici de temporada",
+  "profileSeasonDaysLeft": "Queden {days} dies",
+  "@profileSeasonDaysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "profileBadgesTitle": "Insígnies d'edificis",
+  "profileBadgesBody": "Les insígnies reals es mostren dins de la fitxa de cada edifici. Quan un edifici compleixi criteris de puntuació, qualitat de dades o millora, apareixeran en el seu detall.",
+  "profileBuildingNumber": "Edifici #{id}",
+  "@profileBuildingNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "profileLocationUnavailable": "Localització no disponible",
+  "profileInactive": "Inactiu",
+  "profileActive": "Actiu",
   "accountBlockedTitle": "Compte bloquejat",
   "accountBlockedBody": "El teu compte ha estat bloquejat permanentment. Contacta amb l'administrador per obtenir més informació.",
   "accountSuspendedTitle": "Compte suspès",
   "accountSuspendedBody": "El teu compte està suspès temporalment. Contacta amb l'administrador per obtenir més informació.",
-  "accountBackToLogin": "Torna a l'inici de sessió"
+  "accountBackToLogin": "Torna a l'inici de sessió",
+  "appName": "BuildRank",
+  "commonUnavailable": "No disponible",
+  "commonUnknownError": "Error desconegut.",
+  "commonRequiredField": "Camp obligatori",
+  "commonInvalidNumber": "Introdueix un número vàlid",
+  "commonGreaterThanZero": "Ha de ser superior a 0",
+  "commonContinue": "Continua →",
+  "mainNavHome": "Inici",
+  "mainNavLeagues": "Lligues",
+  "mainNavSimulate": "Simula",
+  "mainNavChat": "Xat",
+  "mainNavVotes": "Votacions",
+  "habitatgeCadastralReference": "Referència cadastral",
+  "habitatgeFloor": "Planta",
+  "habitatgeDoor": "Porta",
+  "habitatgeSurface": "Superfície (m²)",
+  "addExistingAppBarTitle": "Vincular edifici",
+  "addExistingTitle": "Vincula't a un edifici ja existent",
+  "addExistingAdminSubtitle": "Quan seleccionis un edifici, s'enviarà una sol·licitud per vincular-te com a administrador de finca.",
+  "addExistingResidentSubtitle": "Quan seleccionis un edifici, s'enviarà una sol·licitud d'unió a l'administrador de finca perquè et pugui validar com a resident.",
+  "addExistingLocationSection": "Localització",
+  "addExistingSearchHint": "Escriu el carrer del teu edifici...",
+  "addExistingMinSearch": "Introdueix almenys 3 caràcters per començar la cerca.",
+  "addExistingResultsTitle": "Resultats",
+  "addExistingNoResults": "No s'ha trobat cap edifici amb aquesta adreça.",
+  "addExistingSelectedBuilding": "Seleccionat: {buildingName} · Rol sol·licitat: {role}",
+  "@addExistingSelectedBuilding": {
+    "placeholders": {
+      "buildingName": {
+        "type": "String"
+      },
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "addExistingClosedRequests": "Aquest edifici no admet noves sol·licituds d’unió en aquest moment.",
+  "addExistingHabitatgeTitle": "Dades de l’habitatge",
+  "addExistingHabitatgeSubtitle": "Completa les dades del teu habitatge per enviar la sol·licitud d’unió.",
+  "addExistingSubmit": "Enviar sol·licitud",
+  "addExistingAdminRequestSent": "S'ha enviat la sol·licitud per vincular-te com a administrador de finca.",
+  "addExistingResidentRequestSent": "S'ha enviat la sol·licitud d'unió a l'administrador de finca.",
+  "rankingLoadError": "No s’ha pogut carregar el rànquing.",
+  "rankingLoadMoreError": "No s’han pogut carregar més competidors.",
+  "rankingProgressLoadError": "No s’ha pogut carregar l’evolució de progrés.",
+  "rankingScopeLeague": "La meva lliga",
+  "rankingScopeComparableLeague": "Similars lliga",
+  "rankingScopeComparableSeason": "Similars temporada",
+  "rankingUnavailableTitle": "Rànquing no disponible",
+  "rankingLoadErrorTitle": "No s’ha pogut carregar el rànquing",
+  "rankingActiveSeason": "Temporada activa: {seasonName}",
+  "@rankingActiveSeason": {
+    "placeholders": {
+      "seasonName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankingProgressToTop": "Progrés cap al Top {target}",
+  "@rankingProgressToTop": {
+    "placeholders": {
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingPointsProgress": "{currentPoints} / {targetPoints} punts",
+  "@rankingPointsProgress": {
+    "placeholders": {
+      "currentPoints": {
+        "type": "String"
+      },
+      "targetPoints": {
+        "type": "String"
+      }
+    }
+  },
+  "rankingSeasonPendingCalendar": "Temporada pendent de calendari.",
+  "rankingCurrentPosition": "Posició actual: #{position}",
+  "@rankingCurrentPosition": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingComparisonPeriod": "Període de comparació",
+  "rankingLastSeasons": "Últimes {count}",
+  "@rankingLastSeasons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingTopTarget": "Top {target}",
+  "@rankingTopTarget": {
+    "placeholders": {
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingBadgesEarned": "Insígnies aconseguides",
+  "rankingViewAll": "Veure-ho tot",
+  "rankingBadgeSolarMaster": "Mestre solar",
+  "rankingBadgeDateOct25": "Oct 25",
+  "rankingBadgeMaxSavings": "Màxim estalvi",
+  "rankingBadgeDateNov25": "Nov 25",
+  "rankingBadgeResilient": "Resilient",
+  "rankingBadgeDateDec25": "Dec 25",
+  "rankingBadgeTest": "Prova",
+  "rankingBadgeDateJan26": "Gen 26",
+  "rankingSearchHint": "Cerca per carrer...",
+  "rankingNoCompetitors": "No s’ha trobat cap competidor amb aquests filtres.",
+  "rankingLoadMore": "Carrega més competidors",
+  "rankingNoProgressHistory": "Encara no hi ha historial de progrés per aquest edifici.",
+  "rankingSeasonProgressTitle": "Progrés de temporades",
+  "rankingSeasonProgressSubtitle": "Evolució real durant les últimes {count} temporades disponibles.",
+  "@rankingSeasonProgressSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingProgressForBuilding": "Progrés de {buildingName}",
+  "@rankingProgressForBuilding": {
+    "placeholders": {
+      "buildingName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankingProgressModalSubtitle": "Evolució de puntuació durant les últimes {count} temporades.",
+  "@rankingProgressModalSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingAccumulatedImprovement": "Millora acumulada: +{delta} punts",
+  "@rankingAccumulatedImprovement": {
+    "placeholders": {
+      "delta": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingPointsRange": "{startPoints} → {currentPoints} punts",
+  "@rankingPointsRange": {
+    "placeholders": {
+      "startPoints": {
+        "type": "int"
+      },
+      "currentPoints": {
+        "type": "int"
+      }
+    }
+  },
+  "rankingDeltaPoints": "{deltaText} pts",
+  "@rankingDeltaPoints": {
+    "placeholders": {
+      "deltaText": {
+        "type": "String"
+      }
+    }
+  },
+  "rankingViewDetail": "Veure detall",
+  "buildingCardDetailLoadError": "No s’ha pogut carregar el detall de l’edifici.",
+  "buildingCardBadgesRecalculated": "Insígnies recalculades correctament.",
+  "buildingCardBadgesLoadError": "No s’han pogut carregar les insígnies.",
+  "buildingCardLoadError": "No s’ha pogut carregar l’edifici.",
+  "buildingCardClimateZone": "Zona climàtica {zone}",
+  "@buildingCardClimateZone": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "buildingCardScoreExcellent": "EXCEL·LENT",
+  "buildingCardScoreGood": "BO",
+  "buildingCardScoreImprove": "MILLORABLE",
+  "buildingCardScorePriority": "PRIORITARI",
+  "buildingCardEstimatedRating": "QUALIFICACIÓ ESTIMADA",
+  "buildingCardPendingData": "Dades pendents: {items}",
+  "@buildingCardPendingData": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "buildingCardBaseScore": "Puntuació base BuildRank",
+  "buildingCardPerformance": "RENDIMENT",
+  "buildingCardInitialData": "Dades inicials",
+  "buildingCardSurface": "SUPERFÍCIE",
+  "buildingCardFloors": "PLANTES",
+  "buildingCardOrientation": "ORIENTACIÓ",
+  "buildingCardBadgesTitle": "INSÍGNIES DE L’EDIFICI",
+  "buildingCardRecalculate": "Recalcular",
+  "buildingCardNoBadges": "Aquest edifici encara no té insígnies assignades. Es mostraran quan compleixi alguna fita.",
+  "buildingCardRecommendedActions": "ACCIONS RECOMANADES",
+  "buildingCardActionSimulationTitle": "Executa simulació",
+  "buildingCardActionSimulationSubtitle": "Prova escenaris de millora per aquest edifici",
+  "buildingCardActionVoteTitle": "Votació de la comunitat",
+  "buildingCardActionVoteSubtitle": "Funcionalitat preparada per futures propostes",
+  "buildingCardActionReportTitle": "Informe de junta (properament)",
+  "buildingCardActionReportSubtitle": "La generació d’informes encara no està disponible en aquest MVP",
+  "buildingCardActionManageRequestsTitle": "Gestionar sol·licituds pendents",
+  "buildingCardActionManageRequestsSubtitle": "Revisa i valida noves peticions d’unió a l’edifici",
+  "buildingCardActionEditHabitatgeTitle": "Editar el meu habitatge",
+  "buildingCardActionEditHabitatgeSubtitle": "Completa superfície, reforma i dades energètiques",
+  "buildingCardTabDetails": "Detalls",
+  "buildingCardTabHistory": "Historial",
+  "buildingCardTabDocuments": "Documents",
+  "buildingCardHistoryUnavailableTitle": "Historial encara no disponible",
+  "buildingCardHistoryUnavailableBody": "En aquesta secció es mostraran canvis de puntuació, validacions i simulacions guardades.",
+  "buildingCardDocumentsSoonTitle": "Documents i informes (properament)",
+  "buildingCardDocumentsSoonBody": "Aquesta secció queda preparada per a una futura integració documental. En aquest MVP no es mostren documents ni informes generats.",
+  "buildingCardConstructionYear": "ANY DE CONSTRUCCIÓ",
+  "buildingCardFloorsCount": "{count} plantes",
+  "@buildingCardFloorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "buildingCardTypology": "TIPOLOGIA",
+  "buildingCardRegulation": "REGLAMENT",
+  "buildingCardNoLocation": "Aquest edifici encara no té localització associada.",
+  "buildingCardLocationSummary": "Localització: {street}, {number} · {neighborhood} · {postalCode}",
+  "@buildingCardLocationSummary": {
+    "placeholders": {
+      "street": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      },
+      "neighborhood": {
+        "type": "String"
+      },
+      "postalCode": {
+        "type": "String"
+      }
+    }
+  },
+  "buildingFormStreetMinChars": "Escriu almenys 2 caràcters per cercar el carrer.",
+  "buildingFormNoStreetFound": "No s’ha trobat cap carrer amb “{query}”.",
+  "@buildingFormNoStreetFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "buildingFormStreetSuggestionsError": "No s’han pogut carregar els suggeriments de carrers.",
+  "buildingFormPostalCodeRequired": "El codi postal és obligatori.",
+  "buildingFormPostalCodeInvalid": "El codi postal ha de tenir 5 dígits.",
+  "buildingFormNeighborhoodRequired": "El camp barri és obligatori.",
+  "buildingFormStreetRequired": "El nom del carrer és obligatori.",
+  "buildingFormStreetSelectionRequired": "Selecciona un carrer de la llista de suggeriments.",
+  "buildingFormNumberRequired": "El número és obligatori.",
+  "buildingFormNumberPositive": "El número del carrer ha de ser un enter positiu.",
+  "buildingFormNumberOutOfRange": "El número no està dins del rang permès per aquest carrer ({minNumber}-{maxNumber}).",
+  "@buildingFormNumberOutOfRange": {
+    "placeholders": {
+      "minNumber": {
+        "type": "int"
+      },
+      "maxNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "buildingFormTypeRequired": "Has de seleccionar una tipologia.",
+  "buildingFormConstructionYearRequired": "L'any de construcció és obligatori.",
+  "buildingFormConstructionYearInteger": "L'any de construcció ha de ser un número enter.",
+  "buildingFormConstructionYearRange": "L'any de construcció ha d'estar entre 1800 i {currentYear}.",
+  "@buildingFormConstructionYearRange": {
+    "placeholders": {
+      "currentYear": {
+        "type": "int"
+      }
+    }
+  },
+  "buildingFormRegulationRequired": "La normativa vigent és obligatòria.",
+  "buildingFormFloorsRequired": "El nombre de plantes és obligatori.",
+  "buildingFormFloorsPositive": "El nombre de plantes ha de ser un enter positiu.",
+  "buildingFormSurfaceRequired": "La superfície total és obligatòria.",
+  "buildingFormSurfacePositive": "La superfície total ha de ser un número positiu.",
+  "buildingFormOrientationRequired": "Has de seleccionar una orientació principal.",
+  "buildingFormDocumentsRequired": "Cal adjuntar almenys un document de verificació.",
+  "buildingFormCreatedMissingId": "L’edifici s’ha creat però la resposta no conté cap identificador reconeixible.",
+  "buildingFormSubmitSuccess": "Edifici creat i documentació enviada. Queda pendent de revisió.",
+  "buildingFormUnexpectedSaveError": "S'ha produït un error inesperat en desar l'edifici.",
+  "buildingFormTypeResidential": "Residencial",
+  "buildingFormTypeCommercial": "Comercial",
+  "buildingFormTypeEducational": "Educatiu",
+  "buildingFormTypeHealthcare": "Sanitari",
+  "buildingFormTypeMixed": "Mixt",
+  "buildingFormTypeResidentialSubtitle": "Unifamiliar o pisos",
+  "buildingFormTypeCommercialSubtitle": "Oficines, comerç...",
+  "buildingFormTypeEducationalSubtitle": "Escoles",
+  "buildingFormTypeHealthcareSubtitle": "Hospitals",
+  "buildingFormTypeMixedSubtitle": "Usos combinats",
+  "orientationNorth": "Nord",
+  "orientationSouth": "Sud",
+  "orientationEast": "Est",
+  "orientationWest": "Oest",
+  "buildingFormNewBuildingChip": "Nou Edifici",
+  "buildingFormTitle": "Registra l'edifici",
+  "buildingFormStep1Subtitle": "Comencem per la ubicació de l'edifici.",
+  "buildingFormStep2Subtitle": "Ara completa la informació general.",
+  "buildingFormStep3Subtitle": "Afegeix les dades tècniques bàsiques.",
+  "buildingFormStep4Subtitle": "Adjunta la documentació per validar-te com a administrador de finca.",
+  "buildingFormLocationSection": "UBICACIÓ",
+  "buildingFormPostalCodeLabel": "Codi postal",
+  "buildingFormPostalCodeHint": "p. ex., 08025",
+  "buildingFormOr": "o",
+  "buildingFormNeighborhoodLabel": "Barri",
+  "buildingFormNeighborhoodHint": "p. ex., Sagrada Família",
+  "buildingFormStreetLabel": "Nom del carrer",
+  "buildingFormStreetHint": "Comença a escriure el carrer",
+  "buildingFormStreetNumberRange": "Números {minNumber}-{maxNumber}",
+  "@buildingFormStreetNumberRange": {
+    "placeholders": {
+      "minNumber": {
+        "type": "int"
+      },
+      "maxNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "buildingFormStreetRangeUnknown": "Rang de numeració no informat",
+  "buildingFormNumberLabel": "Número",
+  "buildingFormNumberHint": "p. ex., 123",
+  "buildingFormLocationInfo": "Selecciona un carrer de la llista de suggeriments. En desar, BuildRank crearà primer la localització i després l’edifici vinculat al teu compte d’administrador.",
+  "buildingFormGeneralSection": "INFORMACIÓ GENERAL",
+  "buildingFormRegisteredLocation": "Ubicació registrada",
+  "buildingFormAddressLabel": "Adreça",
+  "buildingFormTypeLabel": "Tipologia de l'edifici",
+  "buildingFormConstructionYearLabel": "Any de construcció",
+  "buildingFormConstructionYearHint": "p. ex., 1998",
+  "buildingFormRegulationLabel": "Normativa vigent",
+  "buildingFormRegulationHint": "p. ex., CTE",
+  "buildingFormTechnicalSection": "DADES TÈCNIQUES",
+  "buildingFormBuildingSummary": "Resum de l’edifici",
+  "buildingFormConstructionYearSummaryLabel": "Any construcció",
+  "buildingFormRegulationSummaryLabel": "Normativa",
+  "buildingFormFloorsLabel": "Nombre de plantes",
+  "buildingFormFloorsHint": "p. ex., 6",
+  "buildingFormSurfaceLabel": "Superfície total (m²)",
+  "buildingFormSurfaceHint": "p. ex., 850",
+  "buildingFormOrientationLabel": "Orientació principal",
+  "buildingFormOrientationHint": "Selecciona una orientació",
+  "buildingFormDocumentationSection": "DOCUMENTACIÓ",
+  "buildingFormBuildingToVerify": "Edifici a verificar",
+  "buildingFormSubmittingDocuments": "Enviant documentació...",
+  "buildingFormSubmit": "Crear edifici i enviar verificació",
+  "editHabitatgeNoLinkedHome": "No s’ha trobat cap habitatge vinculat al teu usuari en aquest edifici.",
+  "editHabitatgeNoneSelected": "No s’ha seleccionat cap habitatge per editar.",
+  "editHabitatgeMissingCadastralReference": "L’habitatge seleccionat no té referència cadastral.",
+  "editHabitatgeLoadError": "No s’ha pogut carregar l’habitatge.",
+  "editHabitatgeSelectorTitle": "Quin habitatge vols editar?",
+  "editHabitatgeSelectorFloorDoor": "Planta {floor} · Porta {door}",
+  "@editHabitatgeSelectorFloorDoor": {
+    "placeholders": {
+      "floor": {
+        "type": "String"
+      },
+      "door": {
+        "type": "String"
+      }
+    }
+  },
+  "editHabitatgeEnergyRequired": "Camp obligatori si informes dades energètiques",
+  "editHabitatgeEnergyDateRequired": "Cal informar la data d’entrada si informes dades energètiques",
+  "editHabitatgeSaveWithEnergySuccess": "Dades de l’habitatge i dades energètiques actualitzades.",
+  "editHabitatgeSaveSuccess": "Dades de l’habitatge actualitzades.",
+  "editHabitatgeAppBarTitle": "Editar habitatge",
+  "editHabitatgeCannotEditTitle": "No es pot editar l’habitatge",
+  "editHabitatgeSaveButton": "Guardar dades",
+  "editHabitatgeIntroTitle": "Completa les dades del teu habitatge",
+  "editHabitatgeIntroBody": "Aquestes dades ajudaran a calcular millor la classificació estimada i la puntuació BuildRank de l’edifici.",
+  "editHabitatgeHomeDataTitle": "Dades de l’habitatge",
+  "editHabitatgeHomeDataSubtitle": "Informació bàsica de l’habitatge vinculat al teu compte.",
+  "editHabitatgeRenovationYear": "Any reforma",
+  "editHabitatgeInvalidYear": "Introdueix un any vàlid",
+  "editHabitatgeYearOutOfRange": "L’any no és vàlid",
+  "editHabitatgeEnergyDataTitle": "Dades energètiques",
+  "editHabitatgeEnergyDataSubtitle": "Afegeix la informació disponible del certificat o estimació energètica.",
+  "editHabitatgeEnergyOptionalNotice": "Les dades energètiques són opcionals. Si informes qualsevol camp d’aquesta secció, hauràs d’omplir tots els camps obligatoris del certificat energètic.",
+  "editHabitatgeGlobalRating": "Qualificació global",
+  "editHabitatgePrimaryEnergyConsumption": "Consum energia primària",
+  "editHabitatgeFinalEnergyConsumption": "Consum energia final",
+  "editHabitatgeCo2Emissions": "Emissions CO₂",
+  "editHabitatgeAnnualEnergyCost": "Cost anual energia (€)",
+  "editHabitatgeConsumptionByUse": "Consums per ús",
+  "editHabitatgeHeatingEnergy": "Energia calefacció",
+  "editHabitatgeCoolingEnergy": "Energia refrigeració",
+  "editHabitatgeAcsEnergy": "Energia ACS",
+  "editHabitatgeLightingEnergy": "Energia enllumenament",
+  "editHabitatgeEmissionsByUse": "Emissions per ús",
+  "editHabitatgeHeatingEmissions": "Emissions calefacció",
+  "editHabitatgeCoolingEmissions": "Emissions refrigeració",
+  "editHabitatgeAcsEmissions": "Emissions ACS",
+  "editHabitatgeLightingEmissions": "Emissions enllumenament",
+  "editHabitatgeCertificationEnvelope": "Certificació i envolupant",
+  "editHabitatgeThermalInsulation": "Aïllament tèrmic",
+  "editHabitatgeWindowValue": "Valor finestres",
+  "editHabitatgeCertificationTool": "Eina certificació",
+  "editHabitatgeCertificationReason": "Motiu certificació",
+  "editHabitatgeEnergyRenovation": "Rehabilitació energètica",
+  "editHabitatgeSelectEntryDate": "Seleccionar data d’entrada *",
+  "editHabitatgeEntryDate": "Data d’entrada: {date}",
+  "@editHabitatgeEntryDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

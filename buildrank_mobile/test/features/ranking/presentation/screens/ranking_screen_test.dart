@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:buildrank_mobile/features/ranking/data/ranking_model.dart';
 import 'package:buildrank_mobile/features/ranking/data/ranking_service.dart';
 import 'package:buildrank_mobile/features/ranking/presentation/screens/ranking_screen.dart';
+import 'package:buildrank_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,6 +12,9 @@ void main() {
 
   Widget buildSubject(FakeRankingService service) {
     return MaterialApp(
+      locale: const Locale('ca'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: MediaQuery(
         data: const MediaQueryData(
           size: Size(430, 900),
