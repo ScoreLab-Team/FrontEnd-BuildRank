@@ -284,6 +284,7 @@ class ApiConfig {
     );
   }
 
+  // =========================
   // Community / Votacions endpoints
   // =========================
   static const String votacions = '$baseUrl/api/community/votacions/';
@@ -375,26 +376,6 @@ class ApiConfig {
       '$baseUrl/api/chat/moderation/users/$userId/shadow-ban/';
   static String moderationShadowUnbanUser(int userId) =>
       '$baseUrl/api/chat/moderation/users/$userId/shadow-unban/';
-
-  // =========================
-  // Community / Votacions endpoints
-  // =========================
-  static const String votacions = '$baseUrl/api/community/votacions/';
-
-  static Uri votacionsEdifici({required int idEdifici}) =>
-      uri(votacions, queryParameters: {'edifici': idEdifici});
-
-  static String votacioDetall(int id) => '$votacions$id/';
-  static String votacioVotar(int id) => '${votacioDetall(id)}votar/';
-  static String votacioResultats(int id) => '${votacioDetall(id)}resultats/';
-
-  // =========================
-  // Notifications endpoints
-  // =========================
-  static const String notifications = '$baseUrl/api/notifications/';
-  static const String notificationsNoLlegides = '${notifications}no-llegides/';
-  static const String notificationsLlegirTotes = '${notifications}llegir-totes/';
-  static String notificationLlegir(int id) => '$notifications$id/llegir/';
 
   // =========================
   // XEMA Weather API
