@@ -253,18 +253,18 @@
   "editProfileSuccess": "Perfil actualitzat correctament.",
   "votesCreateTitle": "Nova votació",
   "votesCreateAction": "Crear",
-  "votesTitleLabel": "Títol",
-  "votesTitleHint": "Escriu el títol de la votació",
+  "votesTitleLabel": "T?tol",
+  "votesTitleHint": "T?tol de la votaci?",
   "votesTitleRequiredError": "El títol és obligatori.",
   "votesTitleMinLengthError": "El títol ha de tenir almenys 4 caràcters.",
   "votesDescriptionOptionalLabel": "Descripció (opcional)",
-  "votesDescriptionHint": "Explica el context de la votació...",
+  "votesDescriptionHint": "Context de la votaci?...",
   "votesDeadlineOptionalLabel": "Data límit (opcional)",
-  "votesNoDeadline": "Sense data límit",
+  "votesNoDeadline": "Sense data l?mit",
   "votesOptionsLabel": "Opcions",
   "votesOptionsLimitHint": "Mínim 2 · Màxim 8",
-  "votesAddOption": "Afegir opció",
-  "votesOptionHint": "Opció {number}",
+  "votesAddOption": "Afegir opci?",
+  "votesOptionHint": "Opci? {number}",
   "@votesOptionHint": {
     "placeholders": {
       "number": {
@@ -908,6 +908,422 @@
   "editHabitatgeSelectEntryDate": "Seleccionar data d’entrada *",
   "editHabitatgeEntryDate": "Data d’entrada: {date}",
   "@editHabitatgeEntryDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAuditTitle": "Registre d'auditoria",
+  "adminAuditEmpty": "Cap registre trobat.",
+  "adminAuditUserId": "ID usuari",
+  "adminAuditMethod": "M?tode",
+  "adminAuditResourceType": "Tipus de recurs",
+  "adminAuditHttpCode": "Codi HTTP",
+  "adminAuditFromDate": "Des de",
+  "adminAuditToDate": "Fins a",
+  "adminAuditClear": "Netejar",
+  "adminAuditApplyFilters": "Aplicar filtres",
+  "adminAuditAll": "Tots",
+  "adminAuditPageRange": "{firstItem}?{lastItem} de {totalCount}",
+  "adminAuditPage": "P?g. {page}",
+  "adminAuditPreviousPage": "P?gina anterior",
+  "adminAuditNextPage": "P?gina seg?ent",
+  "simulationCatalogLoadError": "No s?ha pogut carregar el cat?leg de millores.",
+  "simulationHistoryLoadError": "No s?ha pogut carregar l?historial de simulacions.",
+  "simulationCalculateError": "No s?ha pogut calcular la simulaci?.",
+  "simulationSaveError": "No s?ha pogut guardar la simulaci?.",
+  "simulationSavedSnack": "Simulaci? guardada correctament.",
+  "simulationTitle": "Simulador de millores",
+  "simulationCurrent": "Actual",
+  "simulationSimulated": "Simulat",
+  "simulationDisclaimer": "Els resultats s?n estimacions orientatives. No substitueixen una auditoria energ?tica professional.",
+  "simulationTabSimulate": "Simular",
+  "simulationTabSaved": "Guardades",
+  "simulationTabImplemented": "Aplicades",
+  "simulationCatalogTitle": "Cat?leg de millores",
+  "simulationSelectedCount": "{count} seleccionades",
+  "simulationSavedTitle": "Simulacions guardades",
+  "simulationNoSaved": "Encara no hi ha simulacions guardades per aquest edifici. Calcula un preview i prem ?Guardar simulaci??.",
+  "simulationImplementedTitle": "Millores aplicades",
+  "simulationNoImplemented": "Encara no hi ha millores aplicades registrades. Les simulacions guardades s?n escenaris; les aplicades representen actuacions realment executades o en validaci?.",
+  "simulationCalculatingPreview": "Calculant preview...",
+  "simulationCalculatePreview": "Calcular preview",
+  "simulationSaving": "Guardant simulaci?...",
+  "simulationSave": "Guardar simulaci?",
+  "simulationReadOnlyRole": "Aquest rol pot consultar el preview, per? la gesti? formal de simulacions queda reservada a l?administrador de finca.",
+  "simulationResultTitle": "Resultat de la simulaci?",
+  "simulationAnnualConsumption": "Consum anual",
+  "simulationEstimatedAnnualCost": "Cost anual estimat",
+  "simulationSavings": "Estalvi {amount}",
+  "simulationScore": "Puntuació",
+  "simulationPointsDelta": "+{points} punts",
+  "simulationTotalCostAndEngine": "Cost total estimat: {cost} ? Motor {engine}",
+  "simulationDateAndEngine": "Data: {date} ? Motor {engine}",
+  "simulationCost": "Cost {cost}",
+  "simulationRealCost": "Cost real {cost}",
+  "simulationExecutionDate": "Execuci?: {date}",
+  "simulationEmptyCatalog": "Encara no hi ha millores actives al cat?leg. Carrega el seed de millores al backend.",
+  "altSimulationPreparedSnack": "Simulaci? preparada per presentar a votaci? amb {count} millora/es.",
+  "altSimulationSelectUpdates": "Seleccioneu\nactualitzacions",
+  "altSimulationDetailedImpact": "Impacte detallat",
+  "altSimulationPresentVote": "Presentar a votaci?",
+  "altSimulationLive": "SIMULACI? EN DIRECTE",
+  "altSimulationExpectedPerformance": "Rendiment previst",
+  "altSimulationImpact": "IMPACTE",
+  "altSimulationEstimatedCost": "COST\nESTIM",
+  "altSimulationOperationalForecast": "PREVISI? OPERATIVA",
+  "altSimulationAnnualEnergyCost": "Cost energ?tic anual",
+  "altSimulationCarbonFootprint": "Petjada de carboni",
+  "altSimulationEnergyIntensity": "Intensitat energ?tica",
+  "altSimulationTotalInvestment": "INVERSI? TOTAL",
+  "altSimulationAnnualSavings": "ESTALVI ANUAL",
+  "altSimulationPaybackPeriod": "PER?ODE DE RETORN",
+  "altSimulationYears": "{years} anys",
+  "altSimulationSolarTitle": "Panell solar fotovoltaic",
+  "altSimulationSolarSubtitle": "10 kW teulada",
+  "altSimulationGlazingTitle": "Triple vidre",
+  "altSimulationGlazingSubtitle": "Alt rendiment",
+  "altSimulationInsulationTitle": "A?llament de paret",
+  "altSimulationInsulationSubtitle": "Mineral exterior",
+  "altSimulationHeatPumpTitle": "Bomba de calor",
+  "altSimulationHeatPumpSubtitle": "Sistema eficient aire-aigua",
+  "votesStatusOpen": "Oberta",
+  "votesStatusClosed": "Tancada",
+  "votesStatusArchived": "Arxivada",
+  "votesStatusCancelled": "Cancel?lada",
+  "votesRetry": "Torna-ho a provar",
+  "votesCount": "{count} vots",
+  "votesCountSingular": "{count} vot",
+  "votesSelectOptionSnack": "Selecciona una opci? per votar.",
+  "votesRegisteredSnack": "Vot registrat correctament.",
+  "votesDeleteTitle": "Eliminar votaci?",
+  "votesDeleteBody": "Segur que vols eliminar aquesta votaci?? S?esborraran totes les opcions i vots emesos. Aquesta acci? no es pot desfer.",
+  "votesCancel": "Cancel?lar",
+  "votesDelete": "Eliminar",
+  "votesFallbackTitle": "Votaci?",
+  "votesEdit": "Editar",
+  "votesUntilDate": "Fins al {date}",
+  "votesSelectOption": "Selecciona una opci?",
+  "votesOptions": "Opcions",
+  "votesPermissionOnlyOwners": "Nom?s els propietaris i administradors de finca vinculats a aquest edifici poden emetre vot.",
+  "votesVote": "Votar",
+  "votesViewResults": "Veure resultats",
+  "votesResults": "Resultats",
+  "votesTotal": "Total: {count} vots",
+  "votesTotalSingular": "Total: {count} vot",
+  "votesEditTitle": "Editar votaci?",
+  "votesSave": "Desar",
+  "votesSaveChanges": "Desar canvis",
+  "votesMinimumOptionsSnack": "Cal un m?nim de 2 opcions.",
+  "votesDuplicateOptionsSnack": "Hi ha opcions duplicades. Revisa'ls.",
+  "votesTitleRequired": "El t?tol ?s obligatori.",
+  "votesTitleMinLength": "El títol ha de tenir almenys 4 caràcters.",
+  "votesDescriptionOptional": "Descripci? (opcional)",
+  "votesDeadline": "Data l?mit",
+  "votesOptionsRange": "M?nim 2 ? M?xim 8",
+  "votesOptionsWarning": "Atenci?: modificar les opcions pot afectar els vots existents.",
+  "votesState": "Estat",
+  "votesCancelledLocked": "Una votaci? cancel?lada no es pot reobrir.",
+  "votesOptionRequired": "Aquesta opci? no pot estar buida.",
+  "votesListTitle": "Votaci? interna",
+  "votesListSubtitle": "Presa de decisions per {buildingName}",
+  "votesGeneralSection": "VOTACIONS GENERALS",
+  "votesSimulationSection": "VOTACIONS DE SIMULACI?",
+  "votesTabActive": "Actiu ({count})",
+  "votesTabCompleted": "Completat ({count})",
+  "votesTabMyProposals": "Les meves propostes",
+  "votesTabMyVotes": "Les meves votacions",
+  "votesEmptyActive": "No hi ha votacions actives ara mateix.",
+  "votesEmptySection": "No hi ha votacions en aquesta secci?.",
+  "votesEmptyBody": "Quan l?administrador sotmeti una simulaci? a votaci?, apareixer? aqu?.",
+  "votesInfoCanVote": "Pots participar en les votacions de la comunitat vinculades a aquest edifici.",
+  "votesInfoCannotVote": "Nom?s propietaris i administradors de finca vinculats a l?edifici poden votar.",
+  "votesRegisteredFavor": "Vot a favor registrat.",
+  "votesRegisteredAgainst": "Vot en contra registrat.",
+  "votesActive": "Activa",
+  "votesEndsToday": "Finalitza avui",
+  "votesDaysRemaining": "{days} dies restants",
+  "votesEnergyProposalFallback": "Proposta de millora energ?tica.",
+  "votesQuorumProgress": "Progr?s del qu?rum",
+  "votesQuorumReached": "Qu?rum assolit",
+  "votesNeedMoreParticipation": "Cal m?s participaci?",
+  "votesVoteSection": "VOTA",
+  "votesFavor": "A favor",
+  "votesAgainst": "En contra",
+  "votesEstimatedCostSaving": "Cost estimat {cost} ? +{saving} ?/any",
+  "votesKeepCurrentState": "Mantenir l'estat actual",
+  "votesYourVote": "El teu vot: {vote}",
+  "votesPendingVote": "Pendent de vot",
+  "votesNotReported": "no informat",
+  "adminUsersSuspendTitle": "Suspendre {email}",
+  "adminUsersReasonLabel": "Motiu (opcional)",
+  "adminUsersReasonHint": "Descriu el motiu de la suspensi?...",
+  "adminUsersEndDate": "Data fi",
+  "adminUsersRemoveDate": "Eliminar data",
+  "adminUsersConfirm": "Confirmar",
+  "adminUsersTitle": "Gesti? d'usuaris",
+  "adminUsersCount": "{count} usuaris",
+  "adminUsersEmpty": "No hi ha usuaris.",
+  "adminUsersReason": "Motiu: {reason}",
+  "adminUsersSuspend": "Suspendre",
+  "adminHomeVerificationPending": "Verificacions pendents",
+  "adminHomeSearchHint": "Cerca edificis o usuaris...",
+  "adminHomeVerificationQueue": "Cua de verificaci? documental",
+  "adminHomePendingCount": "{count} pendents",
+  "adminHomeNoPendingVerifications": "No hi ha verificacions pendents",
+  "adminHomeNoPendingVerificationsBody": "Quan una verificaci? acabi el processament d?IA apareixer? aqu?.",
+  "adminHomeCreateSeason": "Crear nova temporada",
+  "adminHomeChatsBody": "Accedeix als xats dels edificis i aplica accions de moderaci?.",
+  "adminHomeOpenBuildingChats": "Accedir als xats dels edificis",
+  "adminHomeUsersTitle": "Gesti? d'usuaris",
+  "adminHomeUsersBody": "Bloqueja, susp?n i gestiona els comptes dels usuaris.",
+  "adminHomeOpenUsers": "Accedir a la gesti? d?usuaris",
+  "adminHomeAnomalyBody": "5 edificis de la categoria ?Comercial? han presentat dades que superen els punts de refer?ncia hist?rics en m?s d?un 20%. Cal una auditoria manual.",
+  "adminHomeUnexpectedVerificationError": "S?ha produ?t un error inesperat revisant la verificaci?.",
+  "adminHomeRejectionReason": "Motiu de rebuig",
+  "adminHomeRejectionHint": "Explica breument per qu? es rebutja...",
+  "adminHomeCancel": "Cancel?la",
+  "adminHomeReject": "Rebutja",
+  "adminHomeFiltersPending": "Filtres avan?ats pendents d?integraci?.",
+  "adminHomeCreateSeasonPending": "Creaci? de temporada pendent d?integraci?.",
+  "adminHomeRolesPending": "Matriu de permisos pendent d?integraci?.",
+  "adminHomeApprove": "Aprova",
+  "adminHomeRejected": "Rebutjat",
+  "adminHomeApproved": "Aprovat",
+  "adminHomeSeasonStats": "{range} ? {participants} edificis",
+  "adminHomeRoleStats": "{users} usuaris ? {permissions} permisos",
+  "@adminAuditPageRange": {
+    "placeholders": {
+      "firstItem": {
+        "type": "int"
+      },
+      "lastItem": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminAuditPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "@simulationSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@simulationSavings": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationPointsDelta": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationTotalCostAndEngine": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      },
+      "engine": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationDateAndEngine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "engine": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationCost": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationRealCost": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationExecutionDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@altSimulationPreparedSnack": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@altSimulationYears": {
+    "placeholders": {
+      "years": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesCountSingular": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesUntilDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesTotalSingular": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesListSubtitle": {
+    "placeholders": {
+      "buildingName": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesTabActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesTabCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesDaysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesEstimatedCostSaving": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      },
+      "saving": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesYourVote": {
+    "placeholders": {
+      "vote": {
+        "type": "String"
+      }
+    }
+  },
+  "@adminUsersSuspendTitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@adminUsersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminUsersReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "@adminHomePendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminHomeSeasonStats": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "participants": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminHomeRoleStats": {
+    "placeholders": {
+      "users": {
+        "type": "int"
+      },
+      "permissions": {
+        "type": "int"
+      }
+    }
+  },
+  "adminUsersUntilDate": "Fins: {date}",
+  "adminUsersBlock": "Bloquejar",
+  "adminUsersUnblock": "Desbloquejar",
+  "adminUsersUnsuspend": "Aixecar suspensi?",
+  "adminHomePanelTitle": "Panell d?administraci?",
+  "adminHomeSeasonManagement": "Gesti? de temporades",
+  "@adminUsersUntilDate": {
     "placeholders": {
       "date": {
         "type": "String"

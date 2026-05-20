@@ -578,10 +578,10 @@ class AppLocalizationsCa extends AppLocalizations {
   String get votesCreateAction => 'Crear';
 
   @override
-  String get votesTitleLabel => 'Títol';
+  String get votesTitleLabel => 'T?tol';
 
   @override
-  String get votesTitleHint => 'Escriu el títol de la votació';
+  String get votesTitleHint => 'T?tol de la votaci?';
 
   @override
   String get votesTitleRequiredError => 'El títol és obligatori.';
@@ -594,13 +594,13 @@ class AppLocalizationsCa extends AppLocalizations {
   String get votesDescriptionOptionalLabel => 'Descripció (opcional)';
 
   @override
-  String get votesDescriptionHint => 'Explica el context de la votació...';
+  String get votesDescriptionHint => 'Context de la votaci?...';
 
   @override
   String get votesDeadlineOptionalLabel => 'Data límit (opcional)';
 
   @override
-  String get votesNoDeadline => 'Sense data límit';
+  String get votesNoDeadline => 'Sense data l?mit';
 
   @override
   String get votesOptionsLabel => 'Opcions';
@@ -609,11 +609,11 @@ class AppLocalizationsCa extends AppLocalizations {
   String get votesOptionsLimitHint => 'Mínim 2 · Màxim 8';
 
   @override
-  String get votesAddOption => 'Afegir opció';
+  String get votesAddOption => 'Afegir opci?';
 
   @override
   String votesOptionHint(int number) {
-    return 'Opció $number';
+    return 'Opci? $number';
   }
 
   @override
@@ -1840,4 +1840,643 @@ class AppLocalizationsCa extends AppLocalizations {
   String editHabitatgeEntryDate(String date) {
     return 'Data d’entrada: $date';
   }
+
+  @override
+  String get adminAuditTitle => 'Registre d\'auditoria';
+
+  @override
+  String get adminAuditEmpty => 'Cap registre trobat.';
+
+  @override
+  String get adminAuditUserId => 'ID usuari';
+
+  @override
+  String get adminAuditMethod => 'M?tode';
+
+  @override
+  String get adminAuditResourceType => 'Tipus de recurs';
+
+  @override
+  String get adminAuditHttpCode => 'Codi HTTP';
+
+  @override
+  String get adminAuditFromDate => 'Des de';
+
+  @override
+  String get adminAuditToDate => 'Fins a';
+
+  @override
+  String get adminAuditClear => 'Netejar';
+
+  @override
+  String get adminAuditApplyFilters => 'Aplicar filtres';
+
+  @override
+  String get adminAuditAll => 'Tots';
+
+  @override
+  String adminAuditPageRange(int firstItem, int lastItem, int totalCount) {
+    return '$firstItem?$lastItem de $totalCount';
+  }
+
+  @override
+  String adminAuditPage(int page) {
+    return 'P?g. $page';
+  }
+
+  @override
+  String get adminAuditPreviousPage => 'P?gina anterior';
+
+  @override
+  String get adminAuditNextPage => 'P?gina seg?ent';
+
+  @override
+  String get simulationCatalogLoadError =>
+      'No s?ha pogut carregar el cat?leg de millores.';
+
+  @override
+  String get simulationHistoryLoadError =>
+      'No s?ha pogut carregar l?historial de simulacions.';
+
+  @override
+  String get simulationCalculateError => 'No s?ha pogut calcular la simulaci?.';
+
+  @override
+  String get simulationSaveError => 'No s?ha pogut guardar la simulaci?.';
+
+  @override
+  String get simulationSavedSnack => 'Simulaci? guardada correctament.';
+
+  @override
+  String get simulationTitle => 'Simulador de millores';
+
+  @override
+  String get simulationCurrent => 'Actual';
+
+  @override
+  String get simulationSimulated => 'Simulat';
+
+  @override
+  String get simulationDisclaimer =>
+      'Els resultats s?n estimacions orientatives. No substitueixen una auditoria energ?tica professional.';
+
+  @override
+  String get simulationTabSimulate => 'Simular';
+
+  @override
+  String get simulationTabSaved => 'Guardades';
+
+  @override
+  String get simulationTabImplemented => 'Aplicades';
+
+  @override
+  String get simulationCatalogTitle => 'Cat?leg de millores';
+
+  @override
+  String simulationSelectedCount(int count) {
+    return '$count seleccionades';
+  }
+
+  @override
+  String get simulationSavedTitle => 'Simulacions guardades';
+
+  @override
+  String get simulationNoSaved =>
+      'Encara no hi ha simulacions guardades per aquest edifici. Calcula un preview i prem ?Guardar simulaci??.';
+
+  @override
+  String get simulationImplementedTitle => 'Millores aplicades';
+
+  @override
+  String get simulationNoImplemented =>
+      'Encara no hi ha millores aplicades registrades. Les simulacions guardades s?n escenaris; les aplicades representen actuacions realment executades o en validaci?.';
+
+  @override
+  String get simulationCalculatingPreview => 'Calculant preview...';
+
+  @override
+  String get simulationCalculatePreview => 'Calcular preview';
+
+  @override
+  String get simulationSaving => 'Guardant simulaci?...';
+
+  @override
+  String get simulationSave => 'Guardar simulaci?';
+
+  @override
+  String get simulationReadOnlyRole =>
+      'Aquest rol pot consultar el preview, per? la gesti? formal de simulacions queda reservada a l?administrador de finca.';
+
+  @override
+  String get simulationResultTitle => 'Resultat de la simulaci?';
+
+  @override
+  String get simulationAnnualConsumption => 'Consum anual';
+
+  @override
+  String get simulationEstimatedAnnualCost => 'Cost anual estimat';
+
+  @override
+  String simulationSavings(String amount) {
+    return 'Estalvi $amount';
+  }
+
+  @override
+  String get simulationScore => 'Puntuació';
+
+  @override
+  String simulationPointsDelta(String points) {
+    return '+$points punts';
+  }
+
+  @override
+  String simulationTotalCostAndEngine(String cost, String engine) {
+    return 'Cost total estimat: $cost ? Motor $engine';
+  }
+
+  @override
+  String simulationDateAndEngine(String date, String engine) {
+    return 'Data: $date ? Motor $engine';
+  }
+
+  @override
+  String simulationCost(String cost) {
+    return 'Cost $cost';
+  }
+
+  @override
+  String simulationRealCost(String cost) {
+    return 'Cost real $cost';
+  }
+
+  @override
+  String simulationExecutionDate(String date) {
+    return 'Execuci?: $date';
+  }
+
+  @override
+  String get simulationEmptyCatalog =>
+      'Encara no hi ha millores actives al cat?leg. Carrega el seed de millores al backend.';
+
+  @override
+  String altSimulationPreparedSnack(int count) {
+    return 'Simulaci? preparada per presentar a votaci? amb $count millora/es.';
+  }
+
+  @override
+  String get altSimulationSelectUpdates => 'Seleccioneu\nactualitzacions';
+
+  @override
+  String get altSimulationDetailedImpact => 'Impacte detallat';
+
+  @override
+  String get altSimulationPresentVote => 'Presentar a votaci?';
+
+  @override
+  String get altSimulationLive => 'SIMULACI? EN DIRECTE';
+
+  @override
+  String get altSimulationExpectedPerformance => 'Rendiment previst';
+
+  @override
+  String get altSimulationImpact => 'IMPACTE';
+
+  @override
+  String get altSimulationEstimatedCost => 'COST\nESTIM';
+
+  @override
+  String get altSimulationOperationalForecast => 'PREVISI? OPERATIVA';
+
+  @override
+  String get altSimulationAnnualEnergyCost => 'Cost energ?tic anual';
+
+  @override
+  String get altSimulationCarbonFootprint => 'Petjada de carboni';
+
+  @override
+  String get altSimulationEnergyIntensity => 'Intensitat energ?tica';
+
+  @override
+  String get altSimulationTotalInvestment => 'INVERSI? TOTAL';
+
+  @override
+  String get altSimulationAnnualSavings => 'ESTALVI ANUAL';
+
+  @override
+  String get altSimulationPaybackPeriod => 'PER?ODE DE RETORN';
+
+  @override
+  String altSimulationYears(String years) {
+    return '$years anys';
+  }
+
+  @override
+  String get altSimulationSolarTitle => 'Panell solar fotovoltaic';
+
+  @override
+  String get altSimulationSolarSubtitle => '10 kW teulada';
+
+  @override
+  String get altSimulationGlazingTitle => 'Triple vidre';
+
+  @override
+  String get altSimulationGlazingSubtitle => 'Alt rendiment';
+
+  @override
+  String get altSimulationInsulationTitle => 'A?llament de paret';
+
+  @override
+  String get altSimulationInsulationSubtitle => 'Mineral exterior';
+
+  @override
+  String get altSimulationHeatPumpTitle => 'Bomba de calor';
+
+  @override
+  String get altSimulationHeatPumpSubtitle => 'Sistema eficient aire-aigua';
+
+  @override
+  String get votesStatusOpen => 'Oberta';
+
+  @override
+  String get votesStatusClosed => 'Tancada';
+
+  @override
+  String get votesStatusArchived => 'Arxivada';
+
+  @override
+  String get votesStatusCancelled => 'Cancel?lada';
+
+  @override
+  String get votesRetry => 'Torna-ho a provar';
+
+  @override
+  String votesCount(int count) {
+    return '$count vots';
+  }
+
+  @override
+  String votesCountSingular(int count) {
+    return '$count vot';
+  }
+
+  @override
+  String get votesSelectOptionSnack => 'Selecciona una opci? per votar.';
+
+  @override
+  String get votesRegisteredSnack => 'Vot registrat correctament.';
+
+  @override
+  String get votesDeleteTitle => 'Eliminar votaci?';
+
+  @override
+  String get votesDeleteBody =>
+      'Segur que vols eliminar aquesta votaci?? S?esborraran totes les opcions i vots emesos. Aquesta acci? no es pot desfer.';
+
+  @override
+  String get votesCancel => 'Cancel?lar';
+
+  @override
+  String get votesDelete => 'Eliminar';
+
+  @override
+  String get votesFallbackTitle => 'Votaci?';
+
+  @override
+  String get votesEdit => 'Editar';
+
+  @override
+  String votesUntilDate(String date) {
+    return 'Fins al $date';
+  }
+
+  @override
+  String get votesSelectOption => 'Selecciona una opci?';
+
+  @override
+  String get votesOptions => 'Opcions';
+
+  @override
+  String get votesPermissionOnlyOwners =>
+      'Nom?s els propietaris i administradors de finca vinculats a aquest edifici poden emetre vot.';
+
+  @override
+  String get votesVote => 'Votar';
+
+  @override
+  String get votesViewResults => 'Veure resultats';
+
+  @override
+  String get votesResults => 'Resultats';
+
+  @override
+  String votesTotal(int count) {
+    return 'Total: $count vots';
+  }
+
+  @override
+  String votesTotalSingular(int count) {
+    return 'Total: $count vot';
+  }
+
+  @override
+  String get votesEditTitle => 'Editar votaci?';
+
+  @override
+  String get votesSave => 'Desar';
+
+  @override
+  String get votesSaveChanges => 'Desar canvis';
+
+  @override
+  String get votesMinimumOptionsSnack => 'Cal un m?nim de 2 opcions.';
+
+  @override
+  String get votesDuplicateOptionsSnack =>
+      'Hi ha opcions duplicades. Revisa\'ls.';
+
+  @override
+  String get votesTitleRequired => 'El t?tol ?s obligatori.';
+
+  @override
+  String get votesTitleMinLength => 'El títol ha de tenir almenys 4 caràcters.';
+
+  @override
+  String get votesDescriptionOptional => 'Descripci? (opcional)';
+
+  @override
+  String get votesDeadline => 'Data l?mit';
+
+  @override
+  String get votesOptionsRange => 'M?nim 2 ? M?xim 8';
+
+  @override
+  String get votesOptionsWarning =>
+      'Atenci?: modificar les opcions pot afectar els vots existents.';
+
+  @override
+  String get votesState => 'Estat';
+
+  @override
+  String get votesCancelledLocked =>
+      'Una votaci? cancel?lada no es pot reobrir.';
+
+  @override
+  String get votesOptionRequired => 'Aquesta opci? no pot estar buida.';
+
+  @override
+  String get votesListTitle => 'Votaci? interna';
+
+  @override
+  String votesListSubtitle(String buildingName) {
+    return 'Presa de decisions per $buildingName';
+  }
+
+  @override
+  String get votesGeneralSection => 'VOTACIONS GENERALS';
+
+  @override
+  String get votesSimulationSection => 'VOTACIONS DE SIMULACI?';
+
+  @override
+  String votesTabActive(int count) {
+    return 'Actiu ($count)';
+  }
+
+  @override
+  String votesTabCompleted(int count) {
+    return 'Completat ($count)';
+  }
+
+  @override
+  String get votesTabMyProposals => 'Les meves propostes';
+
+  @override
+  String get votesTabMyVotes => 'Les meves votacions';
+
+  @override
+  String get votesEmptyActive => 'No hi ha votacions actives ara mateix.';
+
+  @override
+  String get votesEmptySection => 'No hi ha votacions en aquesta secci?.';
+
+  @override
+  String get votesEmptyBody =>
+      'Quan l?administrador sotmeti una simulaci? a votaci?, apareixer? aqu?.';
+
+  @override
+  String get votesInfoCanVote =>
+      'Pots participar en les votacions de la comunitat vinculades a aquest edifici.';
+
+  @override
+  String get votesInfoCannotVote =>
+      'Nom?s propietaris i administradors de finca vinculats a l?edifici poden votar.';
+
+  @override
+  String get votesRegisteredFavor => 'Vot a favor registrat.';
+
+  @override
+  String get votesRegisteredAgainst => 'Vot en contra registrat.';
+
+  @override
+  String get votesActive => 'Activa';
+
+  @override
+  String get votesEndsToday => 'Finalitza avui';
+
+  @override
+  String votesDaysRemaining(int days) {
+    return '$days dies restants';
+  }
+
+  @override
+  String get votesEnergyProposalFallback => 'Proposta de millora energ?tica.';
+
+  @override
+  String get votesQuorumProgress => 'Progr?s del qu?rum';
+
+  @override
+  String get votesQuorumReached => 'Qu?rum assolit';
+
+  @override
+  String get votesNeedMoreParticipation => 'Cal m?s participaci?';
+
+  @override
+  String get votesVoteSection => 'VOTA';
+
+  @override
+  String get votesFavor => 'A favor';
+
+  @override
+  String get votesAgainst => 'En contra';
+
+  @override
+  String votesEstimatedCostSaving(String cost, String saving) {
+    return 'Cost estimat $cost ? +$saving ?/any';
+  }
+
+  @override
+  String get votesKeepCurrentState => 'Mantenir l\'estat actual';
+
+  @override
+  String votesYourVote(String vote) {
+    return 'El teu vot: $vote';
+  }
+
+  @override
+  String get votesPendingVote => 'Pendent de vot';
+
+  @override
+  String get votesNotReported => 'no informat';
+
+  @override
+  String adminUsersSuspendTitle(String email) {
+    return 'Suspendre $email';
+  }
+
+  @override
+  String get adminUsersReasonLabel => 'Motiu (opcional)';
+
+  @override
+  String get adminUsersReasonHint => 'Descriu el motiu de la suspensi?...';
+
+  @override
+  String get adminUsersEndDate => 'Data fi';
+
+  @override
+  String get adminUsersRemoveDate => 'Eliminar data';
+
+  @override
+  String get adminUsersConfirm => 'Confirmar';
+
+  @override
+  String get adminUsersTitle => 'Gesti? d\'usuaris';
+
+  @override
+  String adminUsersCount(int count) {
+    return '$count usuaris';
+  }
+
+  @override
+  String get adminUsersEmpty => 'No hi ha usuaris.';
+
+  @override
+  String adminUsersReason(String reason) {
+    return 'Motiu: $reason';
+  }
+
+  @override
+  String get adminUsersSuspend => 'Suspendre';
+
+  @override
+  String get adminHomeVerificationPending => 'Verificacions pendents';
+
+  @override
+  String get adminHomeSearchHint => 'Cerca edificis o usuaris...';
+
+  @override
+  String get adminHomeVerificationQueue => 'Cua de verificaci? documental';
+
+  @override
+  String adminHomePendingCount(int count) {
+    return '$count pendents';
+  }
+
+  @override
+  String get adminHomeNoPendingVerifications =>
+      'No hi ha verificacions pendents';
+
+  @override
+  String get adminHomeNoPendingVerificationsBody =>
+      'Quan una verificaci? acabi el processament d?IA apareixer? aqu?.';
+
+  @override
+  String get adminHomeCreateSeason => 'Crear nova temporada';
+
+  @override
+  String get adminHomeChatsBody =>
+      'Accedeix als xats dels edificis i aplica accions de moderaci?.';
+
+  @override
+  String get adminHomeOpenBuildingChats => 'Accedir als xats dels edificis';
+
+  @override
+  String get adminHomeUsersTitle => 'Gesti? d\'usuaris';
+
+  @override
+  String get adminHomeUsersBody =>
+      'Bloqueja, susp?n i gestiona els comptes dels usuaris.';
+
+  @override
+  String get adminHomeOpenUsers => 'Accedir a la gesti? d?usuaris';
+
+  @override
+  String get adminHomeAnomalyBody =>
+      '5 edificis de la categoria ?Comercial? han presentat dades que superen els punts de refer?ncia hist?rics en m?s d?un 20%. Cal una auditoria manual.';
+
+  @override
+  String get adminHomeUnexpectedVerificationError =>
+      'S?ha produ?t un error inesperat revisant la verificaci?.';
+
+  @override
+  String get adminHomeRejectionReason => 'Motiu de rebuig';
+
+  @override
+  String get adminHomeRejectionHint => 'Explica breument per qu? es rebutja...';
+
+  @override
+  String get adminHomeCancel => 'Cancel?la';
+
+  @override
+  String get adminHomeReject => 'Rebutja';
+
+  @override
+  String get adminHomeFiltersPending =>
+      'Filtres avan?ats pendents d?integraci?.';
+
+  @override
+  String get adminHomeCreateSeasonPending =>
+      'Creaci? de temporada pendent d?integraci?.';
+
+  @override
+  String get adminHomeRolesPending =>
+      'Matriu de permisos pendent d?integraci?.';
+
+  @override
+  String get adminHomeApprove => 'Aprova';
+
+  @override
+  String get adminHomeRejected => 'Rebutjat';
+
+  @override
+  String get adminHomeApproved => 'Aprovat';
+
+  @override
+  String adminHomeSeasonStats(String range, int participants) {
+    return '$range ? $participants edificis';
+  }
+
+  @override
+  String adminHomeRoleStats(int users, int permissions) {
+    return '$users usuaris ? $permissions permisos';
+  }
+
+  @override
+  String adminUsersUntilDate(String date) {
+    return 'Fins: $date';
+  }
+
+  @override
+  String get adminUsersBlock => 'Bloquejar';
+
+  @override
+  String get adminUsersUnblock => 'Desbloquejar';
+
+  @override
+  String get adminUsersUnsuspend => 'Aixecar suspensi?';
+
+  @override
+  String get adminHomePanelTitle => 'Panell d?administraci?';
+
+  @override
+  String get adminHomeSeasonManagement => 'Gesti? de temporades';
 }

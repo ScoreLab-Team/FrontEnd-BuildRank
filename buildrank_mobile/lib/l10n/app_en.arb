@@ -253,18 +253,18 @@
   "editProfileSuccess": "Profile updated successfully.",
   "votesCreateTitle": "New vote",
   "votesCreateAction": "Create",
-  "votesTitleLabel": "Title",
-  "votesTitleHint": "Enter the vote title",
+  "votesTitleLabel": "T?tol",
+  "votesTitleHint": "T?tol de la votaci?",
   "votesTitleRequiredError": "The title is required.",
   "votesTitleMinLengthError": "The title must be at least 4 characters long.",
   "votesDescriptionOptionalLabel": "Description (optional)",
-  "votesDescriptionHint": "Explain the context of the vote...",
+  "votesDescriptionHint": "Context de la votaci?...",
   "votesDeadlineOptionalLabel": "Deadline (optional)",
-  "votesNoDeadline": "No deadline",
+  "votesNoDeadline": "Sense data l?mit",
   "votesOptionsLabel": "Options",
   "votesOptionsLimitHint": "Minimum 2 · Maximum 8",
-  "votesAddOption": "Add option",
-  "votesOptionHint": "Option {number}",
+  "votesAddOption": "Afegir opci?",
+  "votesOptionHint": "Opci? {number}",
   "@votesOptionHint": {
     "placeholders": {
       "number": {
@@ -490,28 +490,28 @@
   "commonUnavailable": "No disponible",
   "commonUnknownError": "Error desconegut.",
   "commonRequiredField": "Camp obligatori",
-  "commonInvalidNumber": "Introdueix un n?mero v?lid",
+  "commonInvalidNumber": "Enter a valid number",
   "commonGreaterThanZero": "Ha de ser superior a 0",
-  "commonContinue": "Continua ?",
+  "commonContinue": "Continue ?",
   "mainNavHome": "Home",
   "mainNavLeagues": "Leagues",
   "mainNavSimulate": "Simulate",
   "mainNavChat": "Chat",
   "mainNavVotes": "Votes",
-  "habitatgeCadastralReference": "Refer?ncia cadastral",
+  "habitatgeCadastralReference": "Cadastral reference",
   "habitatgeFloor": "Planta",
   "habitatgeDoor": "Porta",
-  "habitatgeSurface": "Superf?cie (m?)",
-  "addExistingAppBarTitle": "Vincular edifici",
-  "addExistingTitle": "Vincula't a un edifici ja existent",
-  "addExistingAdminSubtitle": "Quan seleccionis un edifici, s'enviar? una sol?licitud per vincular-te com a administrador de finca.",
-  "addExistingResidentSubtitle": "Quan seleccionis un edifici, s'enviar? una sol?licitud d'uni? a l'administrador de finca perqu? et pugui validar com a resident.",
-  "addExistingLocationSection": "Localitzaci?",
-  "addExistingSearchHint": "Escriu el carrer del teu edifici...",
-  "addExistingMinSearch": "Introdueix almenys 3 car?cters per comen?ar la cerca.",
-  "addExistingResultsTitle": "Resultats",
-  "addExistingNoResults": "No s'ha trobat cap edifici amb aquesta adre?a.",
-  "addExistingSelectedBuilding": "Seleccionat: {buildingName} ? Rol sol?licitat: {role}",
+  "habitatgeSurface": "Area (m²)",
+  "addExistingAppBarTitle": "Link building",
+  "addExistingTitle": "Link yourself to an existing building",
+  "addExistingAdminSubtitle": "When you select a building, a request will be sent to link you as the property manager.",
+  "addExistingResidentSubtitle": "When you select a building, a join request will be sent to the property manager so they can validate you as a resident.",
+  "addExistingLocationSection": "Location",
+  "addExistingSearchHint": "Type your building street...",
+  "addExistingMinSearch": "Enter at least 3 characters to start searching.",
+  "addExistingResultsTitle": "Results",
+  "addExistingNoResults": "No building was found at that address.",
+  "addExistingSelectedBuilding": "Selected: {buildingName} ? Requested role: {role}",
   "@addExistingSelectedBuilding": {
     "placeholders": {
       "buildingName": {
@@ -522,20 +522,20 @@
       }
     }
   },
-  "addExistingClosedRequests": "Aquest edifici no admet noves sol?licituds d?uni? en aquest moment.",
-  "addExistingHabitatgeTitle": "Dades de l?habitatge",
-  "addExistingHabitatgeSubtitle": "Completa les dades del teu habitatge per enviar la sol?licitud d?uni?.",
-  "addExistingSubmit": "Enviar sol?licitud",
-  "addExistingAdminRequestSent": "S'ha enviat la sol?licitud per vincular-te com a administrador de finca.",
-  "addExistingResidentRequestSent": "S'ha enviat la sol?licitud d'uni? a l'administrador de finca.",
-  "rankingLoadError": "No s?ha pogut carregar el r?nquing.",
-  "rankingLoadMoreError": "No s?han pogut carregar m?s competidors.",
-  "rankingProgressLoadError": "No s?ha pogut carregar l?evoluci? de progr?s.",
+  "addExistingClosedRequests": "This building is not accepting new join requests right now.",
+  "addExistingHabitatgeTitle": "Home details",
+  "addExistingHabitatgeSubtitle": "Complete your home details to send the join request.",
+  "addExistingSubmit": "Send request",
+  "addExistingAdminRequestSent": "The request to link you as property manager has been sent.",
+  "addExistingResidentRequestSent": "The join request has been sent to the property manager.",
+  "rankingLoadError": "Could not load the ranking.",
+  "rankingLoadMoreError": "Could not load more competitors.",
+  "rankingProgressLoadError": "Could not load the progress evolution.",
   "rankingScopeLeague": "La meva lliga",
   "rankingScopeComparableLeague": "Similars lliga",
   "rankingScopeComparableSeason": "Similars temporada",
-  "rankingUnavailableTitle": "R?nquing no disponible",
-  "rankingLoadErrorTitle": "No s?ha pogut carregar el r?nquing",
+  "rankingUnavailableTitle": "Ranking unavailable",
+  "rankingLoadErrorTitle": "Could not load the ranking",
   "rankingActiveSeason": "Temporada activa: {seasonName}",
   "@rankingActiveSeason": {
     "placeholders": {
@@ -544,7 +544,7 @@
       }
     }
   },
-  "rankingProgressToTop": "Progr?s cap al Top {target}",
+  "rankingProgressToTop": "Progress toward Top {target}",
   "@rankingProgressToTop": {
     "placeholders": {
       "target": {
@@ -564,7 +564,7 @@
     }
   },
   "rankingSeasonPendingCalendar": "Temporada pendent de calendari.",
-  "rankingCurrentPosition": "Posici? actual: #{position}",
+  "rankingCurrentPosition": "Current position: #{position}",
   "@rankingCurrentPosition": {
     "placeholders": {
       "position": {
@@ -572,8 +572,8 @@
       }
     }
   },
-  "rankingComparisonPeriod": "Per?ode de comparaci?",
-  "rankingLastSeasons": "?ltimes {count}",
+  "rankingComparisonPeriod": "Comparison period",
+  "rankingLastSeasons": "Last {count}",
   "@rankingLastSeasons": {
     "placeholders": {
       "count": {
@@ -589,22 +589,22 @@
       }
     }
   },
-  "rankingBadgesEarned": "Ins?gnies aconseguides",
+  "rankingBadgesEarned": "Badges earned",
   "rankingViewAll": "Veure-ho tot",
   "rankingBadgeSolarMaster": "Mestre solar",
   "rankingBadgeDateOct25": "Oct 25",
-  "rankingBadgeMaxSavings": "M?xim estalvi",
+  "rankingBadgeMaxSavings": "Maximum savings",
   "rankingBadgeDateNov25": "Nov 25",
   "rankingBadgeResilient": "Resilient",
   "rankingBadgeDateDec25": "Dec 25",
   "rankingBadgeTest": "Prova",
   "rankingBadgeDateJan26": "Gen 26",
   "rankingSearchHint": "Cerca per carrer...",
-  "rankingNoCompetitors": "No s?ha trobat cap competidor amb aquests filtres.",
-  "rankingLoadMore": "Carrega m?s competidors",
-  "rankingNoProgressHistory": "Encara no hi ha historial de progr?s per aquest edifici.",
-  "rankingSeasonProgressTitle": "Progr?s de temporades",
-  "rankingSeasonProgressSubtitle": "Evoluci? real durant les ?ltimes {count} temporades disponibles.",
+  "rankingNoCompetitors": "No competitor was found with these filters.",
+  "rankingLoadMore": "Load more competitors",
+  "rankingNoProgressHistory": "There is no progress history for this building yet.",
+  "rankingSeasonProgressTitle": "Season progress",
+  "rankingSeasonProgressSubtitle": "Real evolution during the last {count} available seasons.",
   "@rankingSeasonProgressSubtitle": {
     "placeholders": {
       "count": {
@@ -612,7 +612,7 @@
       }
     }
   },
-  "rankingProgressForBuilding": "Progr?s de {buildingName}",
+  "rankingProgressForBuilding": "Progress for {buildingName}",
   "@rankingProgressForBuilding": {
     "placeholders": {
       "buildingName": {
@@ -620,7 +620,7 @@
       }
     }
   },
-  "rankingProgressModalSubtitle": "Evoluci? de puntuaci? durant les ?ltimes {count} temporades.",
+  "rankingProgressModalSubtitle": "Score evolution during the last {count} seasons.",
   "@rankingProgressModalSubtitle": {
     "placeholders": {
       "count": {
@@ -636,7 +636,7 @@
       }
     }
   },
-  "rankingPointsRange": "{startPoints} ? {currentPoints} punts",
+  "rankingPointsRange": "{startPoints} ? {currentPoints} points",
   "@rankingPointsRange": {
     "placeholders": {
       "startPoints": {
@@ -656,11 +656,11 @@
     }
   },
   "rankingViewDetail": "Veure detall",
-  "buildingCardDetailLoadError": "No s?ha pogut carregar el detall de l?edifici.",
-  "buildingCardBadgesRecalculated": "Ins?gnies recalculades correctament.",
-  "buildingCardBadgesLoadError": "No s?han pogut carregar les ins?gnies.",
-  "buildingCardLoadError": "No s?ha pogut carregar l?edifici.",
-  "buildingCardClimateZone": "Zona clim?tica {zone}",
+  "buildingCardDetailLoadError": "Could not load the building details.",
+  "buildingCardBadgesRecalculated": "Badges recalculated successfully.",
+  "buildingCardBadgesLoadError": "Could not load the badges.",
+  "buildingCardLoadError": "Could not load the building.",
+  "buildingCardClimateZone": "Climate zone {zone}",
   "@buildingCardClimateZone": {
     "placeholders": {
       "zone": {
@@ -668,12 +668,12 @@
       }
     }
   },
-  "buildingCardScoreExcellent": "EXCEL?LENT",
-  "buildingCardScoreGood": "BO",
-  "buildingCardScoreImprove": "MILLORABLE",
-  "buildingCardScorePriority": "PRIORITARI",
-  "buildingCardEstimatedRating": "QUALIFICACI? ESTIMADA",
-  "buildingCardPendingData": "Dades pendents: {items}",
+  "buildingCardScoreExcellent": "EXCELLENT",
+  "buildingCardScoreGood": "GOOD",
+  "buildingCardScoreImprove": "NEEDS IMPROVEMENT",
+  "buildingCardScorePriority": "PRIORITY",
+  "buildingCardEstimatedRating": "ESTIMATED RATING",
+  "buildingCardPendingData": "Pending data: {items}",
   "@buildingCardPendingData": {
     "placeholders": {
       "items": {
@@ -681,35 +681,35 @@
       }
     }
   },
-  "buildingCardBaseScore": "Puntuaci? base BuildRank",
-  "buildingCardPerformance": "RENDIMENT",
-  "buildingCardInitialData": "Dades inicials",
-  "buildingCardSurface": "SUPERF?CIE",
-  "buildingCardFloors": "PLANTES",
-  "buildingCardOrientation": "ORIENTACI?",
-  "buildingCardBadgesTitle": "INS?GNIES DE L?EDIFICI",
-  "buildingCardRecalculate": "Recalcular",
-  "buildingCardNoBadges": "Aquest edifici encara no t? ins?gnies assignades. Es mostraran quan compleixi alguna fita.",
-  "buildingCardRecommendedActions": "ACCIONS RECOMANADES",
-  "buildingCardActionSimulationTitle": "Executa simulaci?",
-  "buildingCardActionSimulationSubtitle": "Prova escenaris de millora per aquest edifici",
-  "buildingCardActionVoteTitle": "Votaci? de la comunitat",
-  "buildingCardActionVoteSubtitle": "Funcionalitat preparada per futures propostes",
-  "buildingCardActionReportTitle": "Informe de junta (properament)",
-  "buildingCardActionReportSubtitle": "La generaci? d?informes encara no est? disponible en aquest MVP",
-  "buildingCardActionManageRequestsTitle": "Gestionar sol?licituds pendents",
-  "buildingCardActionManageRequestsSubtitle": "Revisa i valida noves peticions d?uni? a l?edifici",
-  "buildingCardActionEditHabitatgeTitle": "Editar el meu habitatge",
-  "buildingCardActionEditHabitatgeSubtitle": "Completa superf?cie, reforma i dades energ?tiques",
-  "buildingCardTabDetails": "Detalls",
-  "buildingCardTabHistory": "Historial",
+  "buildingCardBaseScore": "BuildRank base score",
+  "buildingCardPerformance": "PERFORMANCE",
+  "buildingCardInitialData": "Initial data",
+  "buildingCardSurface": "AREA",
+  "buildingCardFloors": "FLOORS",
+  "buildingCardOrientation": "ORIENTATION",
+  "buildingCardBadgesTitle": "BUILDING BADGES",
+  "buildingCardRecalculate": "Recalculate",
+  "buildingCardNoBadges": "This building does not have any badges yet. They will appear when it reaches a milestone.",
+  "buildingCardRecommendedActions": "RECOMMENDED ACTIONS",
+  "buildingCardActionSimulationTitle": "Run simulation",
+  "buildingCardActionSimulationSubtitle": "Try improvement scenarios for this building",
+  "buildingCardActionVoteTitle": "Community vote",
+  "buildingCardActionVoteSubtitle": "Feature ready for future proposals",
+  "buildingCardActionReportTitle": "Board report (coming soon)",
+  "buildingCardActionReportSubtitle": "Report generation is not available in this MVP yet",
+  "buildingCardActionManageRequestsTitle": "Manage pending requests",
+  "buildingCardActionManageRequestsSubtitle": "Review and validate new building join requests",
+  "buildingCardActionEditHabitatgeTitle": "Edit my home",
+  "buildingCardActionEditHabitatgeSubtitle": "Complete area, renovation and energy details",
+  "buildingCardTabDetails": "Details",
+  "buildingCardTabHistory": "History",
   "buildingCardTabDocuments": "Documents",
-  "buildingCardHistoryUnavailableTitle": "Historial encara no disponible",
-  "buildingCardHistoryUnavailableBody": "En aquesta secci? es mostraran canvis de puntuaci?, validacions i simulacions guardades.",
-  "buildingCardDocumentsSoonTitle": "Documents i informes (properament)",
-  "buildingCardDocumentsSoonBody": "Aquesta secci? queda preparada per a una futura integraci? documental. En aquest MVP no es mostren documents ni informes generats.",
-  "buildingCardConstructionYear": "ANY DE CONSTRUCCI?",
-  "buildingCardFloorsCount": "{count} plantes",
+  "buildingCardHistoryUnavailableTitle": "History not available yet",
+  "buildingCardHistoryUnavailableBody": "This section will show score changes, validations and saved simulations.",
+  "buildingCardDocumentsSoonTitle": "Documents and reports (coming soon)",
+  "buildingCardDocumentsSoonBody": "This section is prepared for a future document integration. This MVP does not show generated documents or reports.",
+  "buildingCardConstructionYear": "CONSTRUCTION YEAR",
+  "buildingCardFloorsCount": "{count} floors",
   "@buildingCardFloorsCount": {
     "placeholders": {
       "count": {
@@ -717,10 +717,10 @@
       }
     }
   },
-  "buildingCardTypology": "TIPOLOGIA",
-  "buildingCardRegulation": "REGLAMENT",
-  "buildingCardNoLocation": "Aquest edifici encara no t? localitzaci? associada.",
-  "buildingCardLocationSummary": "Localitzaci?: {street}, {number} ? {neighborhood} ? {postalCode}",
+  "buildingCardTypology": "TYPOLOGY",
+  "buildingCardRegulation": "REGULATION",
+  "buildingCardNoLocation": "This building does not have an associated location yet.",
+  "buildingCardLocationSummary": "Location: {street}, {number} · {neighborhood} · {postalCode}",
   "@buildingCardLocationSummary": {
     "placeholders": {
       "street": {
@@ -737,8 +737,8 @@
       }
     }
   },
-  "buildingFormStreetMinChars": "Escriu almenys 2 car?cters per cercar el carrer.",
-  "buildingFormNoStreetFound": "No s?ha trobat cap carrer amb ?{query}?.",
+  "buildingFormStreetMinChars": "Type at least 2 characters to search for the street.",
+  "buildingFormNoStreetFound": "No street was found for ?{query}?.",
   "@buildingFormNoStreetFound": {
     "placeholders": {
       "query": {
@@ -746,15 +746,15 @@
       }
     }
   },
-  "buildingFormStreetSuggestionsError": "No s?han pogut carregar els suggeriments de carrers.",
-  "buildingFormPostalCodeRequired": "El codi postal ?s obligatori.",
-  "buildingFormPostalCodeInvalid": "El codi postal ha de tenir 5 d?gits.",
-  "buildingFormNeighborhoodRequired": "El camp barri ?s obligatori.",
-  "buildingFormStreetRequired": "El nom del carrer ?s obligatori.",
+  "buildingFormStreetSuggestionsError": "Could not load street suggestions.",
+  "buildingFormPostalCodeRequired": "Postal code is required.",
+  "buildingFormPostalCodeInvalid": "Postal code must have 5 digits.",
+  "buildingFormNeighborhoodRequired": "Neighborhood is required.",
+  "buildingFormStreetRequired": "Street name is required.",
   "buildingFormStreetSelectionRequired": "Selecciona un carrer de la llista de suggeriments.",
-  "buildingFormNumberRequired": "El n?mero ?s obligatori.",
-  "buildingFormNumberPositive": "El n?mero del carrer ha de ser un enter positiu.",
-  "buildingFormNumberOutOfRange": "El n?mero no est? dins del rang perm?s per aquest carrer ({minNumber}-{maxNumber}).",
+  "buildingFormNumberRequired": "Street number is required.",
+  "buildingFormNumberPositive": "Street number must be a positive integer.",
+  "buildingFormNumberOutOfRange": "The number is outside the allowed range for this street ({minNumber}-{maxNumber}).",
   "@buildingFormNumberOutOfRange": {
     "placeholders": {
       "minNumber": {
@@ -766,9 +766,9 @@
     }
   },
   "buildingFormTypeRequired": "Has de seleccionar una tipologia.",
-  "buildingFormConstructionYearRequired": "L'any de construcci? ?s obligatori.",
-  "buildingFormConstructionYearInteger": "L'any de construcci? ha de ser un n?mero enter.",
-  "buildingFormConstructionYearRange": "L'any de construcci? ha d'estar entre 1800 i {currentYear}.",
+  "buildingFormConstructionYearRequired": "Construction year is required.",
+  "buildingFormConstructionYearInteger": "Construction year must be an integer.",
+  "buildingFormConstructionYearRange": "Construction year must be between 1800 and {currentYear}.",
   "@buildingFormConstructionYearRange": {
     "placeholders": {
       "currentYear": {
@@ -776,23 +776,23 @@
       }
     }
   },
-  "buildingFormRegulationRequired": "La normativa vigent ?s obligat?ria.",
-  "buildingFormFloorsRequired": "El nombre de plantes ?s obligatori.",
+  "buildingFormRegulationRequired": "Current regulation is required.",
+  "buildingFormFloorsRequired": "Number of floors is required.",
   "buildingFormFloorsPositive": "El nombre de plantes ha de ser un enter positiu.",
-  "buildingFormSurfaceRequired": "La superf?cie total ?s obligat?ria.",
-  "buildingFormSurfacePositive": "La superf?cie total ha de ser un n?mero positiu.",
-  "buildingFormOrientationRequired": "Has de seleccionar una orientaci? principal.",
-  "buildingFormDocumentsRequired": "Cal adjuntar almenys un document de verificaci?.",
-  "buildingFormCreatedMissingId": "L?edifici s?ha creat per? la resposta no cont? cap identificador reconeixible.",
-  "buildingFormSubmitSuccess": "Edifici creat i documentaci? enviada. Queda pendent de revisi?.",
-  "buildingFormUnexpectedSaveError": "S'ha produ?t un error inesperat en desar l'edifici.",
+  "buildingFormSurfaceRequired": "Total area is required.",
+  "buildingFormSurfacePositive": "Total area must be a positive number.",
+  "buildingFormOrientationRequired": "Select a main orientation.",
+  "buildingFormDocumentsRequired": "Attach at least one verification document.",
+  "buildingFormCreatedMissingId": "The building was created, but the response did not include a recognizable identifier.",
+  "buildingFormSubmitSuccess": "Building created and documentation sent. It is pending review.",
+  "buildingFormUnexpectedSaveError": "An unexpected error occurred while saving the building.",
   "buildingFormTypeResidential": "Residencial",
   "buildingFormTypeCommercial": "Comercial",
   "buildingFormTypeEducational": "Educatiu",
   "buildingFormTypeHealthcare": "Sanitari",
   "buildingFormTypeMixed": "Mixt",
   "buildingFormTypeResidentialSubtitle": "Unifamiliar o pisos",
-  "buildingFormTypeCommercialSubtitle": "Oficines, comer?...",
+  "buildingFormTypeCommercialSubtitle": "Offices, shops...",
   "buildingFormTypeEducationalSubtitle": "Escoles",
   "buildingFormTypeHealthcareSubtitle": "Hospitals",
   "buildingFormTypeMixedSubtitle": "Usos combinats",
@@ -802,19 +802,19 @@
   "orientationWest": "Oest",
   "buildingFormNewBuildingChip": "Nou Edifici",
   "buildingFormTitle": "Registra l'edifici",
-  "buildingFormStep1Subtitle": "Comencem per la ubicaci? de l'edifici.",
-  "buildingFormStep2Subtitle": "Ara completa la informaci? general.",
-  "buildingFormStep3Subtitle": "Afegeix les dades t?cniques b?siques.",
-  "buildingFormStep4Subtitle": "Adjunta la documentaci? per validar-te com a administrador de finca.",
-  "buildingFormLocationSection": "UBICACI?",
+  "buildingFormStep1Subtitle": "Let?s start with the building location.",
+  "buildingFormStep2Subtitle": "Now complete the general information.",
+  "buildingFormStep3Subtitle": "Add the basic technical data.",
+  "buildingFormStep4Subtitle": "Attach documentation to validate yourself as property manager.",
+  "buildingFormLocationSection": "LOCATION",
   "buildingFormPostalCodeLabel": "Codi postal",
   "buildingFormPostalCodeHint": "p. ex., 08025",
   "buildingFormOr": "o",
   "buildingFormNeighborhoodLabel": "Barri",
-  "buildingFormNeighborhoodHint": "p. ex., Sagrada Fam?lia",
+  "buildingFormNeighborhoodHint": "e.g., Sagrada Fam?lia",
   "buildingFormStreetLabel": "Nom del carrer",
-  "buildingFormStreetHint": "Comen?a a escriure el carrer",
-  "buildingFormStreetNumberRange": "N?meros {minNumber}-{maxNumber}",
+  "buildingFormStreetHint": "Start typing the street",
+  "buildingFormStreetNumberRange": "Numbers {minNumber}-{maxNumber}",
   "@buildingFormStreetNumberRange": {
     "placeholders": {
       "minNumber": {
@@ -825,38 +825,38 @@
       }
     }
   },
-  "buildingFormStreetRangeUnknown": "Rang de numeraci? no informat",
-  "buildingFormNumberLabel": "N?mero",
+  "buildingFormStreetRangeUnknown": "Numbering range not provided",
+  "buildingFormNumberLabel": "Number",
   "buildingFormNumberHint": "p. ex., 123",
-  "buildingFormLocationInfo": "Selecciona un carrer de la llista de suggeriments. En desar, BuildRank crear? primer la localitzaci? i despr?s l?edifici vinculat al teu compte d?administrador.",
-  "buildingFormGeneralSection": "INFORMACI? GENERAL",
-  "buildingFormRegisteredLocation": "Ubicaci? registrada",
-  "buildingFormAddressLabel": "Adre?a",
+  "buildingFormLocationInfo": "Select a street from the suggestions list. When saving, BuildRank will first create the location and then the building linked to your property manager account.",
+  "buildingFormGeneralSection": "GENERAL INFORMATION",
+  "buildingFormRegisteredLocation": "Registered location",
+  "buildingFormAddressLabel": "Address",
   "buildingFormTypeLabel": "Tipologia de l'edifici",
-  "buildingFormConstructionYearLabel": "Any de construcci?",
+  "buildingFormConstructionYearLabel": "Construction year",
   "buildingFormConstructionYearHint": "p. ex., 1998",
   "buildingFormRegulationLabel": "Normativa vigent",
   "buildingFormRegulationHint": "p. ex., CTE",
-  "buildingFormTechnicalSection": "DADES T?CNIQUES",
-  "buildingFormBuildingSummary": "Resum de l?edifici",
-  "buildingFormConstructionYearSummaryLabel": "Any construcci?",
+  "buildingFormTechnicalSection": "TECHNICAL DATA",
+  "buildingFormBuildingSummary": "Building summary",
+  "buildingFormConstructionYearSummaryLabel": "Construction year",
   "buildingFormRegulationSummaryLabel": "Normativa",
   "buildingFormFloorsLabel": "Nombre de plantes",
   "buildingFormFloorsHint": "p. ex., 6",
-  "buildingFormSurfaceLabel": "Superf?cie total (m?)",
+  "buildingFormSurfaceLabel": "Total area (m²)",
   "buildingFormSurfaceHint": "p. ex., 850",
-  "buildingFormOrientationLabel": "Orientaci? principal",
-  "buildingFormOrientationHint": "Selecciona una orientaci?",
-  "buildingFormDocumentationSection": "DOCUMENTACI?",
+  "buildingFormOrientationLabel": "Main orientation",
+  "buildingFormOrientationHint": "Select an orientation",
+  "buildingFormDocumentationSection": "DOCUMENTATION",
   "buildingFormBuildingToVerify": "Edifici a verificar",
-  "buildingFormSubmittingDocuments": "Enviant documentaci?...",
-  "buildingFormSubmit": "Crear edifici i enviar verificaci?",
-  "editHabitatgeNoLinkedHome": "No s?ha trobat cap habitatge vinculat al teu usuari en aquest edifici.",
-  "editHabitatgeNoneSelected": "No s?ha seleccionat cap habitatge per editar.",
-  "editHabitatgeMissingCadastralReference": "L?habitatge seleccionat no t? refer?ncia cadastral.",
-  "editHabitatgeLoadError": "No s?ha pogut carregar l?habitatge.",
-  "editHabitatgeSelectorTitle": "Quin habitatge vols editar?",
-  "editHabitatgeSelectorFloorDoor": "Planta {floor} ? Porta {door}",
+  "buildingFormSubmittingDocuments": "Sending documentation...",
+  "buildingFormSubmit": "Create building and send verification",
+  "editHabitatgeNoLinkedHome": "No home linked to your user was found in this building.",
+  "editHabitatgeNoneSelected": "No home was selected to edit.",
+  "editHabitatgeMissingCadastralReference": "The selected home has no cadastral reference.",
+  "editHabitatgeLoadError": "Could not load the home.",
+  "editHabitatgeSelectorTitle": "Which home do you want to edit?",
+  "editHabitatgeSelectorFloorDoor": "Floor {floor} ? Door {door}",
   "@editHabitatgeSelectorFloorDoor": {
     "placeholders": {
       "floor": {
@@ -867,47 +867,463 @@
       }
     }
   },
-  "editHabitatgeEnergyRequired": "Camp obligatori si informes dades energ?tiques",
-  "editHabitatgeEnergyDateRequired": "Cal informar la data d?entrada si informes dades energ?tiques",
-  "editHabitatgeSaveWithEnergySuccess": "Dades de l?habitatge i dades energ?tiques actualitzades.",
-  "editHabitatgeSaveSuccess": "Dades de l?habitatge actualitzades.",
-  "editHabitatgeAppBarTitle": "Editar habitatge",
-  "editHabitatgeCannotEditTitle": "No es pot editar l?habitatge",
-  "editHabitatgeSaveButton": "Guardar dades",
-  "editHabitatgeIntroTitle": "Completa les dades del teu habitatge",
-  "editHabitatgeIntroBody": "Aquestes dades ajudaran a calcular millor la classificaci? estimada i la puntuaci? BuildRank de l?edifici.",
-  "editHabitatgeHomeDataTitle": "Dades de l?habitatge",
-  "editHabitatgeHomeDataSubtitle": "Informaci? b?sica de l?habitatge vinculat al teu compte.",
+  "editHabitatgeEnergyRequired": "Required if you provide energy data",
+  "editHabitatgeEnergyDateRequired": "Entry date is required if you provide energy data",
+  "editHabitatgeSaveWithEnergySuccess": "Home and energy data updated.",
+  "editHabitatgeSaveSuccess": "Home data updated.",
+  "editHabitatgeAppBarTitle": "Edit home",
+  "editHabitatgeCannotEditTitle": "This home cannot be edited",
+  "editHabitatgeSaveButton": "Save data",
+  "editHabitatgeIntroTitle": "Complete your home details",
+  "editHabitatgeIntroBody": "This data will help calculate the estimated rating and BuildRank score for the building more accurately.",
+  "editHabitatgeHomeDataTitle": "Home data",
+  "editHabitatgeHomeDataSubtitle": "Basic information about the home linked to your account.",
   "editHabitatgeRenovationYear": "Any reforma",
-  "editHabitatgeInvalidYear": "Introdueix un any v?lid",
-  "editHabitatgeYearOutOfRange": "L?any no ?s v?lid",
-  "editHabitatgeEnergyDataTitle": "Dades energ?tiques",
-  "editHabitatgeEnergyDataSubtitle": "Afegeix la informaci? disponible del certificat o estimaci? energ?tica.",
-  "editHabitatgeEnergyOptionalNotice": "Les dades energ?tiques s?n opcionals. Si informes qualsevol camp d?aquesta secci?, haur?s d?omplir tots els camps obligatoris del certificat energ?tic.",
-  "editHabitatgeGlobalRating": "Qualificaci? global",
-  "editHabitatgePrimaryEnergyConsumption": "Consum energia prim?ria",
+  "editHabitatgeInvalidYear": "Enter a valid year",
+  "editHabitatgeYearOutOfRange": "The year is not valid",
+  "editHabitatgeEnergyDataTitle": "Energy data",
+  "editHabitatgeEnergyDataSubtitle": "Add the available information from the energy certificate or estimate.",
+  "editHabitatgeEnergyOptionalNotice": "Energy data is optional. If you fill in any field in this section, you must complete all mandatory energy certificate fields.",
+  "editHabitatgeGlobalRating": "Overall rating",
+  "editHabitatgePrimaryEnergyConsumption": "Primary energy consumption",
   "editHabitatgeFinalEnergyConsumption": "Consum energia final",
-  "editHabitatgeCo2Emissions": "Emissions CO?",
-  "editHabitatgeAnnualEnergyCost": "Cost anual energia (?)",
-  "editHabitatgeConsumptionByUse": "Consums per ?s",
-  "editHabitatgeHeatingEnergy": "Energia calefacci?",
-  "editHabitatgeCoolingEnergy": "Energia refrigeraci?",
+  "editHabitatgeCo2Emissions": "CO? emissions",
+  "editHabitatgeAnnualEnergyCost": "Annual energy cost (?)",
+  "editHabitatgeConsumptionByUse": "Consumption by use",
+  "editHabitatgeHeatingEnergy": "Heating energy",
+  "editHabitatgeCoolingEnergy": "Cooling energy",
   "editHabitatgeAcsEnergy": "Energia ACS",
   "editHabitatgeLightingEnergy": "Energia enllumenament",
-  "editHabitatgeEmissionsByUse": "Emissions per ?s",
-  "editHabitatgeHeatingEmissions": "Emissions calefacci?",
-  "editHabitatgeCoolingEmissions": "Emissions refrigeraci?",
+  "editHabitatgeEmissionsByUse": "Emissions by use",
+  "editHabitatgeHeatingEmissions": "Heating emissions",
+  "editHabitatgeCoolingEmissions": "Cooling emissions",
   "editHabitatgeAcsEmissions": "Emissions ACS",
   "editHabitatgeLightingEmissions": "Emissions enllumenament",
-  "editHabitatgeCertificationEnvelope": "Certificaci? i envolupant",
-  "editHabitatgeThermalInsulation": "A?llament t?rmic",
+  "editHabitatgeCertificationEnvelope": "Certification and envelope",
+  "editHabitatgeThermalInsulation": "Thermal insulation",
   "editHabitatgeWindowValue": "Valor finestres",
-  "editHabitatgeCertificationTool": "Eina certificaci?",
-  "editHabitatgeCertificationReason": "Motiu certificaci?",
-  "editHabitatgeEnergyRenovation": "Rehabilitaci? energ?tica",
-  "editHabitatgeSelectEntryDate": "Seleccionar data d?entrada *",
-  "editHabitatgeEntryDate": "Data d?entrada: {date}",
+  "editHabitatgeCertificationTool": "Certification tool",
+  "editHabitatgeCertificationReason": "Certification reason",
+  "editHabitatgeEnergyRenovation": "Energy renovation",
+  "editHabitatgeSelectEntryDate": "Select entry date *",
+  "editHabitatgeEntryDate": "Entry date: {date}",
   "@editHabitatgeEntryDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAuditTitle": "Audit log",
+  "adminAuditEmpty": "No records found.",
+  "adminAuditUserId": "User ID",
+  "adminAuditMethod": "Method",
+  "adminAuditResourceType": "Resource type",
+  "adminAuditHttpCode": "HTTP code",
+  "adminAuditFromDate": "From",
+  "adminAuditToDate": "To",
+  "adminAuditClear": "Clear",
+  "adminAuditApplyFilters": "Apply filters",
+  "adminAuditAll": "All",
+  "adminAuditPageRange": "{firstItem}?{lastItem} of {totalCount}",
+  "adminAuditPage": "Page {page}",
+  "adminAuditPreviousPage": "Previous page",
+  "adminAuditNextPage": "Next page",
+  "simulationCatalogLoadError": "Could not load the improvement catalog.",
+  "simulationHistoryLoadError": "Could not load the simulation history.",
+  "simulationCalculateError": "Could not calculate the simulation.",
+  "simulationSaveError": "Could not save the simulation.",
+  "simulationSavedSnack": "Simulation saved successfully.",
+  "simulationTitle": "Improvement simulator",
+  "simulationCurrent": "Current",
+  "simulationSimulated": "Simulated",
+  "simulationDisclaimer": "Results are indicative estimates. They do not replace a professional energy audit.",
+  "simulationTabSimulate": "Simulate",
+  "simulationTabSaved": "Saved",
+  "simulationTabImplemented": "Applied",
+  "simulationCatalogTitle": "Improvement catalog",
+  "simulationSelectedCount": "{count} selected",
+  "simulationSavedTitle": "Saved simulations",
+  "simulationNoSaved": "There are no saved simulations for this building yet. Calculate a preview and tap ?Save simulation?.",
+  "simulationImplementedTitle": "Applied improvements",
+  "simulationNoImplemented": "There are no applied improvements registered yet. Saved simulations are scenarios; applied improvements represent work actually completed or under validation.",
+  "simulationCalculatingPreview": "Calculating preview...",
+  "simulationCalculatePreview": "Calculate preview",
+  "simulationSaving": "Saving simulation...",
+  "simulationSave": "Save simulation",
+  "simulationReadOnlyRole": "This role can view the preview, but formal simulation management is reserved for the property manager.",
+  "simulationResultTitle": "Simulation result",
+  "simulationAnnualConsumption": "Annual consumption",
+  "simulationEstimatedAnnualCost": "Estimated annual cost",
+  "simulationSavings": "Savings {amount}",
+  "simulationScore": "Score",
+  "simulationPointsDelta": "+{points} points",
+  "simulationTotalCostAndEngine": "Estimated total cost: {cost} ? Engine {engine}",
+  "simulationDateAndEngine": "Date: {date} ? Engine {engine}",
+  "simulationCost": "Cost {cost}",
+  "simulationRealCost": "Real cost {cost}",
+  "simulationExecutionDate": "Execution: {date}",
+  "simulationEmptyCatalog": "There are no active improvements in the catalog yet. Load the improvement seed in the backend.",
+  "altSimulationPreparedSnack": "Simulaci? preparada per presentar a votaci? amb {count} millora/es.",
+  "altSimulationSelectUpdates": "Seleccioneu\nactualitzacions",
+  "altSimulationDetailedImpact": "Impacte detallat",
+  "altSimulationPresentVote": "Presentar a votaci?",
+  "altSimulationLive": "SIMULACI? EN DIRECTE",
+  "altSimulationExpectedPerformance": "Rendiment previst",
+  "altSimulationImpact": "IMPACTE",
+  "altSimulationEstimatedCost": "COST\nESTIM",
+  "altSimulationOperationalForecast": "PREVISI? OPERATIVA",
+  "altSimulationAnnualEnergyCost": "Cost energ?tic anual",
+  "altSimulationCarbonFootprint": "Petjada de carboni",
+  "altSimulationEnergyIntensity": "Intensitat energ?tica",
+  "altSimulationTotalInvestment": "INVERSI? TOTAL",
+  "altSimulationAnnualSavings": "ESTALVI ANUAL",
+  "altSimulationPaybackPeriod": "PER?ODE DE RETORN",
+  "altSimulationYears": "{years} anys",
+  "altSimulationSolarTitle": "Panell solar fotovoltaic",
+  "altSimulationSolarSubtitle": "10 kW teulada",
+  "altSimulationGlazingTitle": "Triple vidre",
+  "altSimulationGlazingSubtitle": "Alt rendiment",
+  "altSimulationInsulationTitle": "A?llament de paret",
+  "altSimulationInsulationSubtitle": "Mineral exterior",
+  "altSimulationHeatPumpTitle": "Bomba de calor",
+  "altSimulationHeatPumpSubtitle": "Sistema eficient aire-aigua",
+  "votesStatusOpen": "Oberta",
+  "votesStatusClosed": "Tancada",
+  "votesStatusArchived": "Arxivada",
+  "votesStatusCancelled": "Cancel?lada",
+  "votesRetry": "Torna-ho a provar",
+  "votesCount": "{count} vots",
+  "votesCountSingular": "{count} vot",
+  "votesSelectOptionSnack": "Selecciona una opci? per votar.",
+  "votesRegisteredSnack": "Vot registrat correctament.",
+  "votesDeleteTitle": "Eliminar votaci?",
+  "votesDeleteBody": "Segur que vols eliminar aquesta votaci?? S?esborraran totes les opcions i vots emesos. Aquesta acci? no es pot desfer.",
+  "votesCancel": "Cancel?lar",
+  "votesDelete": "Eliminar",
+  "votesFallbackTitle": "Votaci?",
+  "votesEdit": "Editar",
+  "votesUntilDate": "Fins al {date}",
+  "votesSelectOption": "Selecciona una opci?",
+  "votesOptions": "Opcions",
+  "votesPermissionOnlyOwners": "Nom?s els propietaris i administradors de finca vinculats a aquest edifici poden emetre vot.",
+  "votesVote": "Votar",
+  "votesViewResults": "Veure resultats",
+  "votesResults": "Resultats",
+  "votesTotal": "Total: {count} vots",
+  "votesTotalSingular": "Total: {count} vot",
+  "votesEditTitle": "Editar votaci?",
+  "votesSave": "Desar",
+  "votesSaveChanges": "Desar canvis",
+  "votesMinimumOptionsSnack": "Cal un m?nim de 2 opcions.",
+  "votesDuplicateOptionsSnack": "Hi ha opcions duplicades. Revisa'ls.",
+  "votesTitleRequired": "El t?tol ?s obligatori.",
+  "votesTitleMinLength": "The title must be at least 4 characters long.",
+  "votesDescriptionOptional": "Descripci? (opcional)",
+  "votesDeadline": "Data l?mit",
+  "votesOptionsRange": "M?nim 2 ? M?xim 8",
+  "votesOptionsWarning": "Atenci?: modificar les opcions pot afectar els vots existents.",
+  "votesState": "Estat",
+  "votesCancelledLocked": "Una votaci? cancel?lada no es pot reobrir.",
+  "votesOptionRequired": "Aquesta opci? no pot estar buida.",
+  "votesListTitle": "Votaci? interna",
+  "votesListSubtitle": "Presa de decisions per {buildingName}",
+  "votesGeneralSection": "VOTACIONS GENERALS",
+  "votesSimulationSection": "VOTACIONS DE SIMULACI?",
+  "votesTabActive": "Actiu ({count})",
+  "votesTabCompleted": "Completat ({count})",
+  "votesTabMyProposals": "Les meves propostes",
+  "votesTabMyVotes": "Les meves votacions",
+  "votesEmptyActive": "No hi ha votacions actives ara mateix.",
+  "votesEmptySection": "No hi ha votacions en aquesta secci?.",
+  "votesEmptyBody": "Quan l?administrador sotmeti una simulaci? a votaci?, apareixer? aqu?.",
+  "votesInfoCanVote": "Pots participar en les votacions de la comunitat vinculades a aquest edifici.",
+  "votesInfoCannotVote": "Nom?s propietaris i administradors de finca vinculats a l?edifici poden votar.",
+  "votesRegisteredFavor": "Vot a favor registrat.",
+  "votesRegisteredAgainst": "Vot en contra registrat.",
+  "votesActive": "Activa",
+  "votesEndsToday": "Finalitza avui",
+  "votesDaysRemaining": "{days} dies restants",
+  "votesEnergyProposalFallback": "Proposta de millora energ?tica.",
+  "votesQuorumProgress": "Progr?s del qu?rum",
+  "votesQuorumReached": "Qu?rum assolit",
+  "votesNeedMoreParticipation": "Cal m?s participaci?",
+  "votesVoteSection": "VOTA",
+  "votesFavor": "A favor",
+  "votesAgainst": "En contra",
+  "votesEstimatedCostSaving": "Cost estimat {cost} ? +{saving} ?/any",
+  "votesKeepCurrentState": "Mantenir l'estat actual",
+  "votesYourVote": "El teu vot: {vote}",
+  "votesPendingVote": "Pendent de vot",
+  "votesNotReported": "no informat",
+  "adminUsersSuspendTitle": "Suspendre {email}",
+  "adminUsersReasonLabel": "Motiu (opcional)",
+  "adminUsersReasonHint": "Descriu el motiu de la suspensi?...",
+  "adminUsersEndDate": "Data fi",
+  "adminUsersRemoveDate": "Eliminar data",
+  "adminUsersConfirm": "Confirmar",
+  "adminUsersTitle": "Gesti? d'usuaris",
+  "adminUsersCount": "{count} usuaris",
+  "adminUsersEmpty": "No hi ha usuaris.",
+  "adminUsersReason": "Motiu: {reason}",
+  "adminUsersSuspend": "Suspendre",
+  "adminHomeVerificationPending": "Verificacions pendents",
+  "adminHomeSearchHint": "Cerca edificis o usuaris...",
+  "adminHomeVerificationQueue": "Cua de verificaci? documental",
+  "adminHomePendingCount": "{count} pendents",
+  "adminHomeNoPendingVerifications": "No hi ha verificacions pendents",
+  "adminHomeNoPendingVerificationsBody": "Quan una verificaci? acabi el processament d?IA apareixer? aqu?.",
+  "adminHomeCreateSeason": "Crear nova temporada",
+  "adminHomeChatsBody": "Accedeix als xats dels edificis i aplica accions de moderaci?.",
+  "adminHomeOpenBuildingChats": "Accedir als xats dels edificis",
+  "adminHomeUsersTitle": "Gesti? d'usuaris",
+  "adminHomeUsersBody": "Bloqueja, susp?n i gestiona els comptes dels usuaris.",
+  "adminHomeOpenUsers": "Accedir a la gesti? d?usuaris",
+  "adminHomeAnomalyBody": "5 edificis de la categoria ?Comercial? han presentat dades que superen els punts de refer?ncia hist?rics en m?s d?un 20%. Cal una auditoria manual.",
+  "adminHomeUnexpectedVerificationError": "S?ha produ?t un error inesperat revisant la verificaci?.",
+  "adminHomeRejectionReason": "Motiu de rebuig",
+  "adminHomeRejectionHint": "Explica breument per qu? es rebutja...",
+  "adminHomeCancel": "Cancel?la",
+  "adminHomeReject": "Rebutja",
+  "adminHomeFiltersPending": "Filtres avan?ats pendents d?integraci?.",
+  "adminHomeCreateSeasonPending": "Creaci? de temporada pendent d?integraci?.",
+  "adminHomeRolesPending": "Matriu de permisos pendent d?integraci?.",
+  "adminHomeApprove": "Aprova",
+  "adminHomeRejected": "Rebutjat",
+  "adminHomeApproved": "Aprovat",
+  "adminHomeSeasonStats": "{range} ? {participants} edificis",
+  "adminHomeRoleStats": "{users} usuaris ? {permissions} permisos",
+  "@adminAuditPageRange": {
+    "placeholders": {
+      "firstItem": {
+        "type": "int"
+      },
+      "lastItem": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminAuditPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "@simulationSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@simulationSavings": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationPointsDelta": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationTotalCostAndEngine": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      },
+      "engine": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationDateAndEngine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "engine": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationCost": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationRealCost": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "@simulationExecutionDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@altSimulationPreparedSnack": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@altSimulationYears": {
+    "placeholders": {
+      "years": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesCountSingular": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesUntilDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesTotalSingular": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesListSubtitle": {
+    "placeholders": {
+      "buildingName": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesTabActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesTabCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesDaysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "@votesEstimatedCostSaving": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      },
+      "saving": {
+        "type": "String"
+      }
+    }
+  },
+  "@votesYourVote": {
+    "placeholders": {
+      "vote": {
+        "type": "String"
+      }
+    }
+  },
+  "@adminUsersSuspendTitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@adminUsersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminUsersReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "@adminHomePendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminHomeSeasonStats": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "participants": {
+        "type": "int"
+      }
+    }
+  },
+  "@adminHomeRoleStats": {
+    "placeholders": {
+      "users": {
+        "type": "int"
+      },
+      "permissions": {
+        "type": "int"
+      }
+    }
+  },
+  "adminUsersUntilDate": "Until: {date}",
+  "adminUsersBlock": "Block",
+  "adminUsersUnblock": "Unblock",
+  "adminUsersUnsuspend": "Lift suspension",
+  "adminHomePanelTitle": "Administration panel",
+  "adminHomeSeasonManagement": "Season management",
+  "@adminUsersUntilDate": {
     "placeholders": {
       "date": {
         "type": "String"

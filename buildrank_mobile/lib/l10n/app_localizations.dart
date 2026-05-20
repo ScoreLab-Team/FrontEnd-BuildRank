@@ -1099,13 +1099,13 @@ abstract class AppLocalizations {
   /// No description provided for @votesTitleLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Títol'**
+  /// **'T?tol'**
   String get votesTitleLabel;
 
   /// No description provided for @votesTitleHint.
   ///
   /// In ca, this message translates to:
-  /// **'Escriu el títol de la votació'**
+  /// **'T?tol de la votaci?'**
   String get votesTitleHint;
 
   /// No description provided for @votesTitleRequiredError.
@@ -1129,7 +1129,7 @@ abstract class AppLocalizations {
   /// No description provided for @votesDescriptionHint.
   ///
   /// In ca, this message translates to:
-  /// **'Explica el context de la votació...'**
+  /// **'Context de la votaci?...'**
   String get votesDescriptionHint;
 
   /// No description provided for @votesDeadlineOptionalLabel.
@@ -1141,7 +1141,7 @@ abstract class AppLocalizations {
   /// No description provided for @votesNoDeadline.
   ///
   /// In ca, this message translates to:
-  /// **'Sense data límit'**
+  /// **'Sense data l?mit'**
   String get votesNoDeadline;
 
   /// No description provided for @votesOptionsLabel.
@@ -1159,13 +1159,13 @@ abstract class AppLocalizations {
   /// No description provided for @votesAddOption.
   ///
   /// In ca, this message translates to:
-  /// **'Afegir opció'**
+  /// **'Afegir opci?'**
   String get votesAddOption;
 
   /// No description provided for @votesOptionHint.
   ///
   /// In ca, this message translates to:
-  /// **'Opció {number}'**
+  /// **'Opci? {number}'**
   String votesOptionHint(int number);
 
   /// No description provided for @votesOptionRequiredError.
@@ -3314,6 +3314,1116 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Data d’entrada: {date}'**
   String editHabitatgeEntryDate(String date);
+
+  /// No description provided for @adminAuditTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Registre d\'auditoria'**
+  String get adminAuditTitle;
+
+  /// No description provided for @adminAuditEmpty.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cap registre trobat.'**
+  String get adminAuditEmpty;
+
+  /// No description provided for @adminAuditUserId.
+  ///
+  /// In ca, this message translates to:
+  /// **'ID usuari'**
+  String get adminAuditUserId;
+
+  /// No description provided for @adminAuditMethod.
+  ///
+  /// In ca, this message translates to:
+  /// **'M?tode'**
+  String get adminAuditMethod;
+
+  /// No description provided for @adminAuditResourceType.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tipus de recurs'**
+  String get adminAuditResourceType;
+
+  /// No description provided for @adminAuditHttpCode.
+  ///
+  /// In ca, this message translates to:
+  /// **'Codi HTTP'**
+  String get adminAuditHttpCode;
+
+  /// No description provided for @adminAuditFromDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Des de'**
+  String get adminAuditFromDate;
+
+  /// No description provided for @adminAuditToDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fins a'**
+  String get adminAuditToDate;
+
+  /// No description provided for @adminAuditClear.
+  ///
+  /// In ca, this message translates to:
+  /// **'Netejar'**
+  String get adminAuditClear;
+
+  /// No description provided for @adminAuditApplyFilters.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aplicar filtres'**
+  String get adminAuditApplyFilters;
+
+  /// No description provided for @adminAuditAll.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tots'**
+  String get adminAuditAll;
+
+  /// No description provided for @adminAuditPageRange.
+  ///
+  /// In ca, this message translates to:
+  /// **'{firstItem}?{lastItem} de {totalCount}'**
+  String adminAuditPageRange(int firstItem, int lastItem, int totalCount);
+
+  /// No description provided for @adminAuditPage.
+  ///
+  /// In ca, this message translates to:
+  /// **'P?g. {page}'**
+  String adminAuditPage(int page);
+
+  /// No description provided for @adminAuditPreviousPage.
+  ///
+  /// In ca, this message translates to:
+  /// **'P?gina anterior'**
+  String get adminAuditPreviousPage;
+
+  /// No description provided for @adminAuditNextPage.
+  ///
+  /// In ca, this message translates to:
+  /// **'P?gina seg?ent'**
+  String get adminAuditNextPage;
+
+  /// No description provided for @simulationCatalogLoadError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s?ha pogut carregar el cat?leg de millores.'**
+  String get simulationCatalogLoadError;
+
+  /// No description provided for @simulationHistoryLoadError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s?ha pogut carregar l?historial de simulacions.'**
+  String get simulationHistoryLoadError;
+
+  /// No description provided for @simulationCalculateError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s?ha pogut calcular la simulaci?.'**
+  String get simulationCalculateError;
+
+  /// No description provided for @simulationSaveError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s?ha pogut guardar la simulaci?.'**
+  String get simulationSaveError;
+
+  /// No description provided for @simulationSavedSnack.
+  ///
+  /// In ca, this message translates to:
+  /// **'Simulaci? guardada correctament.'**
+  String get simulationSavedSnack;
+
+  /// No description provided for @simulationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Simulador de millores'**
+  String get simulationTitle;
+
+  /// No description provided for @simulationCurrent.
+  ///
+  /// In ca, this message translates to:
+  /// **'Actual'**
+  String get simulationCurrent;
+
+  /// No description provided for @simulationSimulated.
+  ///
+  /// In ca, this message translates to:
+  /// **'Simulat'**
+  String get simulationSimulated;
+
+  /// No description provided for @simulationDisclaimer.
+  ///
+  /// In ca, this message translates to:
+  /// **'Els resultats s?n estimacions orientatives. No substitueixen una auditoria energ?tica professional.'**
+  String get simulationDisclaimer;
+
+  /// No description provided for @simulationTabSimulate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Simular'**
+  String get simulationTabSimulate;
+
+  /// No description provided for @simulationTabSaved.
+  ///
+  /// In ca, this message translates to:
+  /// **'Guardades'**
+  String get simulationTabSaved;
+
+  /// No description provided for @simulationTabImplemented.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aplicades'**
+  String get simulationTabImplemented;
+
+  /// No description provided for @simulationCatalogTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cat?leg de millores'**
+  String get simulationCatalogTitle;
+
+  /// No description provided for @simulationSelectedCount.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} seleccionades'**
+  String simulationSelectedCount(int count);
+
+  /// No description provided for @simulationSavedTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Simulacions guardades'**
+  String get simulationSavedTitle;
+
+  /// No description provided for @simulationNoSaved.
+  ///
+  /// In ca, this message translates to:
+  /// **'Encara no hi ha simulacions guardades per aquest edifici. Calcula un preview i prem ?Guardar simulaci??.'**
+  String get simulationNoSaved;
+
+  /// No description provided for @simulationImplementedTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Millores aplicades'**
+  String get simulationImplementedTitle;
+
+  /// No description provided for @simulationNoImplemented.
+  ///
+  /// In ca, this message translates to:
+  /// **'Encara no hi ha millores aplicades registrades. Les simulacions guardades s?n escenaris; les aplicades representen actuacions realment executades o en validaci?.'**
+  String get simulationNoImplemented;
+
+  /// No description provided for @simulationCalculatingPreview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Calculant preview...'**
+  String get simulationCalculatingPreview;
+
+  /// No description provided for @simulationCalculatePreview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Calcular preview'**
+  String get simulationCalculatePreview;
+
+  /// No description provided for @simulationSaving.
+  ///
+  /// In ca, this message translates to:
+  /// **'Guardant simulaci?...'**
+  String get simulationSaving;
+
+  /// No description provided for @simulationSave.
+  ///
+  /// In ca, this message translates to:
+  /// **'Guardar simulaci?'**
+  String get simulationSave;
+
+  /// No description provided for @simulationReadOnlyRole.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquest rol pot consultar el preview, per? la gesti? formal de simulacions queda reservada a l?administrador de finca.'**
+  String get simulationReadOnlyRole;
+
+  /// No description provided for @simulationResultTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Resultat de la simulaci?'**
+  String get simulationResultTitle;
+
+  /// No description provided for @simulationAnnualConsumption.
+  ///
+  /// In ca, this message translates to:
+  /// **'Consum anual'**
+  String get simulationAnnualConsumption;
+
+  /// No description provided for @simulationEstimatedAnnualCost.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cost anual estimat'**
+  String get simulationEstimatedAnnualCost;
+
+  /// No description provided for @simulationSavings.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estalvi {amount}'**
+  String simulationSavings(String amount);
+
+  /// No description provided for @simulationScore.
+  ///
+  /// In ca, this message translates to:
+  /// **'Puntuació'**
+  String get simulationScore;
+
+  /// No description provided for @simulationPointsDelta.
+  ///
+  /// In ca, this message translates to:
+  /// **'+{points} punts'**
+  String simulationPointsDelta(String points);
+
+  /// No description provided for @simulationTotalCostAndEngine.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cost total estimat: {cost} ? Motor {engine}'**
+  String simulationTotalCostAndEngine(String cost, String engine);
+
+  /// No description provided for @simulationDateAndEngine.
+  ///
+  /// In ca, this message translates to:
+  /// **'Data: {date} ? Motor {engine}'**
+  String simulationDateAndEngine(String date, String engine);
+
+  /// No description provided for @simulationCost.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cost {cost}'**
+  String simulationCost(String cost);
+
+  /// No description provided for @simulationRealCost.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cost real {cost}'**
+  String simulationRealCost(String cost);
+
+  /// No description provided for @simulationExecutionDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Execuci?: {date}'**
+  String simulationExecutionDate(String date);
+
+  /// No description provided for @simulationEmptyCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Encara no hi ha millores actives al cat?leg. Carrega el seed de millores al backend.'**
+  String get simulationEmptyCatalog;
+
+  /// No description provided for @altSimulationPreparedSnack.
+  ///
+  /// In ca, this message translates to:
+  /// **'Simulaci? preparada per presentar a votaci? amb {count} millora/es.'**
+  String altSimulationPreparedSnack(int count);
+
+  /// No description provided for @altSimulationSelectUpdates.
+  ///
+  /// In ca, this message translates to:
+  /// **'Seleccioneu\nactualitzacions'**
+  String get altSimulationSelectUpdates;
+
+  /// No description provided for @altSimulationDetailedImpact.
+  ///
+  /// In ca, this message translates to:
+  /// **'Impacte detallat'**
+  String get altSimulationDetailedImpact;
+
+  /// No description provided for @altSimulationPresentVote.
+  ///
+  /// In ca, this message translates to:
+  /// **'Presentar a votaci?'**
+  String get altSimulationPresentVote;
+
+  /// No description provided for @altSimulationLive.
+  ///
+  /// In ca, this message translates to:
+  /// **'SIMULACI? EN DIRECTE'**
+  String get altSimulationLive;
+
+  /// No description provided for @altSimulationExpectedPerformance.
+  ///
+  /// In ca, this message translates to:
+  /// **'Rendiment previst'**
+  String get altSimulationExpectedPerformance;
+
+  /// No description provided for @altSimulationImpact.
+  ///
+  /// In ca, this message translates to:
+  /// **'IMPACTE'**
+  String get altSimulationImpact;
+
+  /// No description provided for @altSimulationEstimatedCost.
+  ///
+  /// In ca, this message translates to:
+  /// **'COST\nESTIM'**
+  String get altSimulationEstimatedCost;
+
+  /// No description provided for @altSimulationOperationalForecast.
+  ///
+  /// In ca, this message translates to:
+  /// **'PREVISI? OPERATIVA'**
+  String get altSimulationOperationalForecast;
+
+  /// No description provided for @altSimulationAnnualEnergyCost.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cost energ?tic anual'**
+  String get altSimulationAnnualEnergyCost;
+
+  /// No description provided for @altSimulationCarbonFootprint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Petjada de carboni'**
+  String get altSimulationCarbonFootprint;
+
+  /// No description provided for @altSimulationEnergyIntensity.
+  ///
+  /// In ca, this message translates to:
+  /// **'Intensitat energ?tica'**
+  String get altSimulationEnergyIntensity;
+
+  /// No description provided for @altSimulationTotalInvestment.
+  ///
+  /// In ca, this message translates to:
+  /// **'INVERSI? TOTAL'**
+  String get altSimulationTotalInvestment;
+
+  /// No description provided for @altSimulationAnnualSavings.
+  ///
+  /// In ca, this message translates to:
+  /// **'ESTALVI ANUAL'**
+  String get altSimulationAnnualSavings;
+
+  /// No description provided for @altSimulationPaybackPeriod.
+  ///
+  /// In ca, this message translates to:
+  /// **'PER?ODE DE RETORN'**
+  String get altSimulationPaybackPeriod;
+
+  /// No description provided for @altSimulationYears.
+  ///
+  /// In ca, this message translates to:
+  /// **'{years} anys'**
+  String altSimulationYears(String years);
+
+  /// No description provided for @altSimulationSolarTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Panell solar fotovoltaic'**
+  String get altSimulationSolarTitle;
+
+  /// No description provided for @altSimulationSolarSubtitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'10 kW teulada'**
+  String get altSimulationSolarSubtitle;
+
+  /// No description provided for @altSimulationGlazingTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Triple vidre'**
+  String get altSimulationGlazingTitle;
+
+  /// No description provided for @altSimulationGlazingSubtitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Alt rendiment'**
+  String get altSimulationGlazingSubtitle;
+
+  /// No description provided for @altSimulationInsulationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'A?llament de paret'**
+  String get altSimulationInsulationTitle;
+
+  /// No description provided for @altSimulationInsulationSubtitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Mineral exterior'**
+  String get altSimulationInsulationSubtitle;
+
+  /// No description provided for @altSimulationHeatPumpTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Bomba de calor'**
+  String get altSimulationHeatPumpTitle;
+
+  /// No description provided for @altSimulationHeatPumpSubtitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sistema eficient aire-aigua'**
+  String get altSimulationHeatPumpSubtitle;
+
+  /// No description provided for @votesStatusOpen.
+  ///
+  /// In ca, this message translates to:
+  /// **'Oberta'**
+  String get votesStatusOpen;
+
+  /// No description provided for @votesStatusClosed.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tancada'**
+  String get votesStatusClosed;
+
+  /// No description provided for @votesStatusArchived.
+  ///
+  /// In ca, this message translates to:
+  /// **'Arxivada'**
+  String get votesStatusArchived;
+
+  /// No description provided for @votesStatusCancelled.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel?lada'**
+  String get votesStatusCancelled;
+
+  /// No description provided for @votesRetry.
+  ///
+  /// In ca, this message translates to:
+  /// **'Torna-ho a provar'**
+  String get votesRetry;
+
+  /// No description provided for @votesCount.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} vots'**
+  String votesCount(int count);
+
+  /// No description provided for @votesCountSingular.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} vot'**
+  String votesCountSingular(int count);
+
+  /// No description provided for @votesSelectOptionSnack.
+  ///
+  /// In ca, this message translates to:
+  /// **'Selecciona una opci? per votar.'**
+  String get votesSelectOptionSnack;
+
+  /// No description provided for @votesRegisteredSnack.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vot registrat correctament.'**
+  String get votesRegisteredSnack;
+
+  /// No description provided for @votesDeleteTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar votaci?'**
+  String get votesDeleteTitle;
+
+  /// No description provided for @votesDeleteBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Segur que vols eliminar aquesta votaci?? S?esborraran totes les opcions i vots emesos. Aquesta acci? no es pot desfer.'**
+  String get votesDeleteBody;
+
+  /// No description provided for @votesCancel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel?lar'**
+  String get votesCancel;
+
+  /// No description provided for @votesDelete.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar'**
+  String get votesDelete;
+
+  /// No description provided for @votesFallbackTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Votaci?'**
+  String get votesFallbackTitle;
+
+  /// No description provided for @votesEdit.
+  ///
+  /// In ca, this message translates to:
+  /// **'Editar'**
+  String get votesEdit;
+
+  /// No description provided for @votesUntilDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fins al {date}'**
+  String votesUntilDate(String date);
+
+  /// No description provided for @votesSelectOption.
+  ///
+  /// In ca, this message translates to:
+  /// **'Selecciona una opci?'**
+  String get votesSelectOption;
+
+  /// No description provided for @votesOptions.
+  ///
+  /// In ca, this message translates to:
+  /// **'Opcions'**
+  String get votesOptions;
+
+  /// No description provided for @votesPermissionOnlyOwners.
+  ///
+  /// In ca, this message translates to:
+  /// **'Nom?s els propietaris i administradors de finca vinculats a aquest edifici poden emetre vot.'**
+  String get votesPermissionOnlyOwners;
+
+  /// No description provided for @votesVote.
+  ///
+  /// In ca, this message translates to:
+  /// **'Votar'**
+  String get votesVote;
+
+  /// No description provided for @votesViewResults.
+  ///
+  /// In ca, this message translates to:
+  /// **'Veure resultats'**
+  String get votesViewResults;
+
+  /// No description provided for @votesResults.
+  ///
+  /// In ca, this message translates to:
+  /// **'Resultats'**
+  String get votesResults;
+
+  /// No description provided for @votesTotal.
+  ///
+  /// In ca, this message translates to:
+  /// **'Total: {count} vots'**
+  String votesTotal(int count);
+
+  /// No description provided for @votesTotalSingular.
+  ///
+  /// In ca, this message translates to:
+  /// **'Total: {count} vot'**
+  String votesTotalSingular(int count);
+
+  /// No description provided for @votesEditTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Editar votaci?'**
+  String get votesEditTitle;
+
+  /// No description provided for @votesSave.
+  ///
+  /// In ca, this message translates to:
+  /// **'Desar'**
+  String get votesSave;
+
+  /// No description provided for @votesSaveChanges.
+  ///
+  /// In ca, this message translates to:
+  /// **'Desar canvis'**
+  String get votesSaveChanges;
+
+  /// No description provided for @votesMinimumOptionsSnack.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cal un m?nim de 2 opcions.'**
+  String get votesMinimumOptionsSnack;
+
+  /// No description provided for @votesDuplicateOptionsSnack.
+  ///
+  /// In ca, this message translates to:
+  /// **'Hi ha opcions duplicades. Revisa\'ls.'**
+  String get votesDuplicateOptionsSnack;
+
+  /// No description provided for @votesTitleRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'El t?tol ?s obligatori.'**
+  String get votesTitleRequired;
+
+  /// No description provided for @votesTitleMinLength.
+  ///
+  /// In ca, this message translates to:
+  /// **'El títol ha de tenir almenys 4 caràcters.'**
+  String get votesTitleMinLength;
+
+  /// No description provided for @votesDescriptionOptional.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descripci? (opcional)'**
+  String get votesDescriptionOptional;
+
+  /// No description provided for @votesDeadline.
+  ///
+  /// In ca, this message translates to:
+  /// **'Data l?mit'**
+  String get votesDeadline;
+
+  /// No description provided for @votesOptionsRange.
+  ///
+  /// In ca, this message translates to:
+  /// **'M?nim 2 ? M?xim 8'**
+  String get votesOptionsRange;
+
+  /// No description provided for @votesOptionsWarning.
+  ///
+  /// In ca, this message translates to:
+  /// **'Atenci?: modificar les opcions pot afectar els vots existents.'**
+  String get votesOptionsWarning;
+
+  /// No description provided for @votesState.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estat'**
+  String get votesState;
+
+  /// No description provided for @votesCancelledLocked.
+  ///
+  /// In ca, this message translates to:
+  /// **'Una votaci? cancel?lada no es pot reobrir.'**
+  String get votesCancelledLocked;
+
+  /// No description provided for @votesOptionRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquesta opci? no pot estar buida.'**
+  String get votesOptionRequired;
+
+  /// No description provided for @votesListTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Votaci? interna'**
+  String get votesListTitle;
+
+  /// No description provided for @votesListSubtitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Presa de decisions per {buildingName}'**
+  String votesListSubtitle(String buildingName);
+
+  /// No description provided for @votesGeneralSection.
+  ///
+  /// In ca, this message translates to:
+  /// **'VOTACIONS GENERALS'**
+  String get votesGeneralSection;
+
+  /// No description provided for @votesSimulationSection.
+  ///
+  /// In ca, this message translates to:
+  /// **'VOTACIONS DE SIMULACI?'**
+  String get votesSimulationSection;
+
+  /// No description provided for @votesTabActive.
+  ///
+  /// In ca, this message translates to:
+  /// **'Actiu ({count})'**
+  String votesTabActive(int count);
+
+  /// No description provided for @votesTabCompleted.
+  ///
+  /// In ca, this message translates to:
+  /// **'Completat ({count})'**
+  String votesTabCompleted(int count);
+
+  /// No description provided for @votesTabMyProposals.
+  ///
+  /// In ca, this message translates to:
+  /// **'Les meves propostes'**
+  String get votesTabMyProposals;
+
+  /// No description provided for @votesTabMyVotes.
+  ///
+  /// In ca, this message translates to:
+  /// **'Les meves votacions'**
+  String get votesTabMyVotes;
+
+  /// No description provided for @votesEmptyActive.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha votacions actives ara mateix.'**
+  String get votesEmptyActive;
+
+  /// No description provided for @votesEmptySection.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha votacions en aquesta secci?.'**
+  String get votesEmptySection;
+
+  /// No description provided for @votesEmptyBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Quan l?administrador sotmeti una simulaci? a votaci?, apareixer? aqu?.'**
+  String get votesEmptyBody;
+
+  /// No description provided for @votesInfoCanVote.
+  ///
+  /// In ca, this message translates to:
+  /// **'Pots participar en les votacions de la comunitat vinculades a aquest edifici.'**
+  String get votesInfoCanVote;
+
+  /// No description provided for @votesInfoCannotVote.
+  ///
+  /// In ca, this message translates to:
+  /// **'Nom?s propietaris i administradors de finca vinculats a l?edifici poden votar.'**
+  String get votesInfoCannotVote;
+
+  /// No description provided for @votesRegisteredFavor.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vot a favor registrat.'**
+  String get votesRegisteredFavor;
+
+  /// No description provided for @votesRegisteredAgainst.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vot en contra registrat.'**
+  String get votesRegisteredAgainst;
+
+  /// No description provided for @votesActive.
+  ///
+  /// In ca, this message translates to:
+  /// **'Activa'**
+  String get votesActive;
+
+  /// No description provided for @votesEndsToday.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitza avui'**
+  String get votesEndsToday;
+
+  /// No description provided for @votesDaysRemaining.
+  ///
+  /// In ca, this message translates to:
+  /// **'{days} dies restants'**
+  String votesDaysRemaining(int days);
+
+  /// No description provided for @votesEnergyProposalFallback.
+  ///
+  /// In ca, this message translates to:
+  /// **'Proposta de millora energ?tica.'**
+  String get votesEnergyProposalFallback;
+
+  /// No description provided for @votesQuorumProgress.
+  ///
+  /// In ca, this message translates to:
+  /// **'Progr?s del qu?rum'**
+  String get votesQuorumProgress;
+
+  /// No description provided for @votesQuorumReached.
+  ///
+  /// In ca, this message translates to:
+  /// **'Qu?rum assolit'**
+  String get votesQuorumReached;
+
+  /// No description provided for @votesNeedMoreParticipation.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cal m?s participaci?'**
+  String get votesNeedMoreParticipation;
+
+  /// No description provided for @votesVoteSection.
+  ///
+  /// In ca, this message translates to:
+  /// **'VOTA'**
+  String get votesVoteSection;
+
+  /// No description provided for @votesFavor.
+  ///
+  /// In ca, this message translates to:
+  /// **'A favor'**
+  String get votesFavor;
+
+  /// No description provided for @votesAgainst.
+  ///
+  /// In ca, this message translates to:
+  /// **'En contra'**
+  String get votesAgainst;
+
+  /// No description provided for @votesEstimatedCostSaving.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cost estimat {cost} ? +{saving} ?/any'**
+  String votesEstimatedCostSaving(String cost, String saving);
+
+  /// No description provided for @votesKeepCurrentState.
+  ///
+  /// In ca, this message translates to:
+  /// **'Mantenir l\'estat actual'**
+  String get votesKeepCurrentState;
+
+  /// No description provided for @votesYourVote.
+  ///
+  /// In ca, this message translates to:
+  /// **'El teu vot: {vote}'**
+  String votesYourVote(String vote);
+
+  /// No description provided for @votesPendingVote.
+  ///
+  /// In ca, this message translates to:
+  /// **'Pendent de vot'**
+  String get votesPendingVote;
+
+  /// No description provided for @votesNotReported.
+  ///
+  /// In ca, this message translates to:
+  /// **'no informat'**
+  String get votesNotReported;
+
+  /// No description provided for @adminUsersSuspendTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Suspendre {email}'**
+  String adminUsersSuspendTitle(String email);
+
+  /// No description provided for @adminUsersReasonLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Motiu (opcional)'**
+  String get adminUsersReasonLabel;
+
+  /// No description provided for @adminUsersReasonHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descriu el motiu de la suspensi?...'**
+  String get adminUsersReasonHint;
+
+  /// No description provided for @adminUsersEndDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Data fi'**
+  String get adminUsersEndDate;
+
+  /// No description provided for @adminUsersRemoveDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar data'**
+  String get adminUsersRemoveDate;
+
+  /// No description provided for @adminUsersConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Confirmar'**
+  String get adminUsersConfirm;
+
+  /// No description provided for @adminUsersTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Gesti? d\'usuaris'**
+  String get adminUsersTitle;
+
+  /// No description provided for @adminUsersCount.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} usuaris'**
+  String adminUsersCount(int count);
+
+  /// No description provided for @adminUsersEmpty.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha usuaris.'**
+  String get adminUsersEmpty;
+
+  /// No description provided for @adminUsersReason.
+  ///
+  /// In ca, this message translates to:
+  /// **'Motiu: {reason}'**
+  String adminUsersReason(String reason);
+
+  /// No description provided for @adminUsersSuspend.
+  ///
+  /// In ca, this message translates to:
+  /// **'Suspendre'**
+  String get adminUsersSuspend;
+
+  /// No description provided for @adminHomeVerificationPending.
+  ///
+  /// In ca, this message translates to:
+  /// **'Verificacions pendents'**
+  String get adminHomeVerificationPending;
+
+  /// No description provided for @adminHomeSearchHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cerca edificis o usuaris...'**
+  String get adminHomeSearchHint;
+
+  /// No description provided for @adminHomeVerificationQueue.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cua de verificaci? documental'**
+  String get adminHomeVerificationQueue;
+
+  /// No description provided for @adminHomePendingCount.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} pendents'**
+  String adminHomePendingCount(int count);
+
+  /// No description provided for @adminHomeNoPendingVerifications.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha verificacions pendents'**
+  String get adminHomeNoPendingVerifications;
+
+  /// No description provided for @adminHomeNoPendingVerificationsBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Quan una verificaci? acabi el processament d?IA apareixer? aqu?.'**
+  String get adminHomeNoPendingVerificationsBody;
+
+  /// No description provided for @adminHomeCreateSeason.
+  ///
+  /// In ca, this message translates to:
+  /// **'Crear nova temporada'**
+  String get adminHomeCreateSeason;
+
+  /// No description provided for @adminHomeChatsBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Accedeix als xats dels edificis i aplica accions de moderaci?.'**
+  String get adminHomeChatsBody;
+
+  /// No description provided for @adminHomeOpenBuildingChats.
+  ///
+  /// In ca, this message translates to:
+  /// **'Accedir als xats dels edificis'**
+  String get adminHomeOpenBuildingChats;
+
+  /// No description provided for @adminHomeUsersTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Gesti? d\'usuaris'**
+  String get adminHomeUsersTitle;
+
+  /// No description provided for @adminHomeUsersBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Bloqueja, susp?n i gestiona els comptes dels usuaris.'**
+  String get adminHomeUsersBody;
+
+  /// No description provided for @adminHomeOpenUsers.
+  ///
+  /// In ca, this message translates to:
+  /// **'Accedir a la gesti? d?usuaris'**
+  String get adminHomeOpenUsers;
+
+  /// No description provided for @adminHomeAnomalyBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'5 edificis de la categoria ?Comercial? han presentat dades que superen els punts de refer?ncia hist?rics en m?s d?un 20%. Cal una auditoria manual.'**
+  String get adminHomeAnomalyBody;
+
+  /// No description provided for @adminHomeUnexpectedVerificationError.
+  ///
+  /// In ca, this message translates to:
+  /// **'S?ha produ?t un error inesperat revisant la verificaci?.'**
+  String get adminHomeUnexpectedVerificationError;
+
+  /// No description provided for @adminHomeRejectionReason.
+  ///
+  /// In ca, this message translates to:
+  /// **'Motiu de rebuig'**
+  String get adminHomeRejectionReason;
+
+  /// No description provided for @adminHomeRejectionHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Explica breument per qu? es rebutja...'**
+  String get adminHomeRejectionHint;
+
+  /// No description provided for @adminHomeCancel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel?la'**
+  String get adminHomeCancel;
+
+  /// No description provided for @adminHomeReject.
+  ///
+  /// In ca, this message translates to:
+  /// **'Rebutja'**
+  String get adminHomeReject;
+
+  /// No description provided for @adminHomeFiltersPending.
+  ///
+  /// In ca, this message translates to:
+  /// **'Filtres avan?ats pendents d?integraci?.'**
+  String get adminHomeFiltersPending;
+
+  /// No description provided for @adminHomeCreateSeasonPending.
+  ///
+  /// In ca, this message translates to:
+  /// **'Creaci? de temporada pendent d?integraci?.'**
+  String get adminHomeCreateSeasonPending;
+
+  /// No description provided for @adminHomeRolesPending.
+  ///
+  /// In ca, this message translates to:
+  /// **'Matriu de permisos pendent d?integraci?.'**
+  String get adminHomeRolesPending;
+
+  /// No description provided for @adminHomeApprove.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aprova'**
+  String get adminHomeApprove;
+
+  /// No description provided for @adminHomeRejected.
+  ///
+  /// In ca, this message translates to:
+  /// **'Rebutjat'**
+  String get adminHomeRejected;
+
+  /// No description provided for @adminHomeApproved.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aprovat'**
+  String get adminHomeApproved;
+
+  /// No description provided for @adminHomeSeasonStats.
+  ///
+  /// In ca, this message translates to:
+  /// **'{range} ? {participants} edificis'**
+  String adminHomeSeasonStats(String range, int participants);
+
+  /// No description provided for @adminHomeRoleStats.
+  ///
+  /// In ca, this message translates to:
+  /// **'{users} usuaris ? {permissions} permisos'**
+  String adminHomeRoleStats(int users, int permissions);
+
+  /// No description provided for @adminUsersUntilDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fins: {date}'**
+  String adminUsersUntilDate(String date);
+
+  /// No description provided for @adminUsersBlock.
+  ///
+  /// In ca, this message translates to:
+  /// **'Bloquejar'**
+  String get adminUsersBlock;
+
+  /// No description provided for @adminUsersUnblock.
+  ///
+  /// In ca, this message translates to:
+  /// **'Desbloquejar'**
+  String get adminUsersUnblock;
+
+  /// No description provided for @adminUsersUnsuspend.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aixecar suspensi?'**
+  String get adminUsersUnsuspend;
+
+  /// No description provided for @adminHomePanelTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Panell d?administraci?'**
+  String get adminHomePanelTitle;
+
+  /// No description provided for @adminHomeSeasonManagement.
+  ///
+  /// In ca, this message translates to:
+  /// **'Gesti? de temporades'**
+  String get adminHomeSeasonManagement;
 }
 
 class _AppLocalizationsDelegate

@@ -5,6 +5,7 @@ import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
 import 'package:buildrank_mobile/features/verification/data/admin_verification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:buildrank_mobile/l10n/app_localizations.dart';
 import 'package:buildrank_mobile/features/legal/presentation/screens/legal_document_screen.dart';
 
 import '../../../myChat/my_chats_screen.dart';
@@ -232,8 +233,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Panell d’administració',
+              Text(
+                AppLocalizations.of(context).adminHomePanelTitle,
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w900,
@@ -290,7 +291,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           _MetricCard(
             icon: Icons.error_outline,
             title: pending.toString(),
-            subtitle: 'Verificacions pendents',
+            subtitle: AppLocalizations.of(context).adminHomeVerificationPending,
             trend: '+12%',
             iconBackground: const Color(0xFFE5F9ED),
             iconColor: const Color(0xFF19C463),
@@ -332,7 +333,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       controller: _searchController,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-        hintText: 'Cerca edificis o usuaris...',
+        hintText: AppLocalizations.of(context).adminHomeSearchHint,
         hintStyle: const TextStyle(color: Color(0xFF6B7280)),
         prefixIcon: const Icon(Icons.search, color: Color(0xFF6B7280)),
         suffixIcon: IconButton(
@@ -413,8 +414,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     }).toList();
 
     return _PanelCard(
-      title: 'Cua de verificació documental',
-      badge: '${filteredTasks.length} pendents',
+      title: AppLocalizations.of(context).adminHomeVerificationQueue,
+      badge: AppLocalizations.of(
+        context,
+      ).adminHomePendingCount(filteredTasks.length),
       children: [
         if (_isLoadingVerifications)
           const Padding(
@@ -428,11 +431,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             subtitle: _verificationError!,
           )
         else if (filteredTasks.isEmpty)
-          const _EmptyState(
+          _EmptyState(
             icon: Icons.fact_check_outlined,
-            title: 'No hi ha verificacions pendents',
-            subtitle:
-                'Quan una verificació acabi el processament d’IA apareixerà aquí.',
+            title: AppLocalizations.of(context).adminHomeNoPendingVerifications,
+            subtitle: AppLocalizations.of(
+              context,
+            ).adminHomeNoPendingVerificationsBody,
           )
         else
           for (final task in filteredTasks)
@@ -454,12 +458,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   Widget _buildSeasonsPanel() {
     return _PanelCard(
-      title: 'Gestió de temporades',
+      title: AppLocalizations.of(context).adminHomeSeasonManagement,
       badge: '${_seasons.length} registres',
       children: [
         for (final season in _seasons) _SeasonTile(season: season),
         _PanelActionButton(
-          label: 'Crear nova temporada',
+          label: AppLocalizations.of(context).adminHomeCreateSeason,
           icon: Icons.add,
           onTap: _showCreateSeasonSnackBar,
         ),
@@ -516,7 +520,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -544,7 +548,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           ),
           const Divider(height: 1, color: Color(0xFFE2E6EA)),
           _PanelActionButton(
-            label: 'Accedir als xats dels edificis',
+            label: AppLocalizations.of(context).adminHomeOpenBuildingChats,
             icon: Icons.chat_bubble_outline,
             onTap: () => Navigator.push(
               context,
@@ -590,12 +594,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestió d\'usuaris',
+                        AppLocalizations.of(context).adminUsersTitle,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
@@ -604,7 +608,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       ),
                       SizedBox(height: 2),
                       Text(
-                        'Bloqueja, suspèn i gestiona els comptes dels usuaris.',
+                        AppLocalizations.of(context).adminHomeUsersBody,
                         style: TextStyle(
                           fontSize: 12,
                           color: Color(0xFF6B7280),
@@ -618,7 +622,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           ),
           const Divider(height: 1, color: Color(0xFFE2E6EA)),
           _PanelActionButton(
-            label: 'Accedir a la gestió d\'usuaris',
+            label: AppLocalizations.of(context).adminHomeOpenUsers,
             icon: Icons.manage_accounts,
             onTap: () => Navigator.push(
               context,
@@ -820,7 +824,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       _showSnackBar(e.message);
     } catch (_) {
       if (!mounted) return;
-      _showSnackBar('S’ha produït un error inesperat revisant la verificació.');
+      _showSnackBar(
+        AppLocalizations.of(context).adminHomeUnexpectedVerificationError,
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -838,7 +844,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Motiu de rebuig'),
+            title: Text(AppLocalizations.of(context).adminHomeRejectionReason),
             content: TextField(
               controller: controller,
               autofocus: true,
@@ -855,7 +861,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, controller.text),
-                child: const Text('Rebutja'),
+                child: Text(AppLocalizations.of(context).adminHomeReject),
               ),
             ],
           );
@@ -878,7 +884,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   );
 
   void _showFiltersSnackBar() =>
-      _showSnackBar('Filtres avançats pendents d’integració.');
+      _showSnackBar(AppLocalizations.of(context).adminHomeFiltersPending);
 
   void _showCreateSeasonSnackBar() =>
       _showSnackBar('Creació de temporada pendent d’integració.');
@@ -1183,14 +1189,14 @@ class _VerificationTaskTile extends StatelessWidget {
                   icon: Icons.check_circle_outline,
                   color: const Color(0xFF1F2937),
                   onTap: onApprove,
-                  tooltip: 'Aprova',
+                  tooltip: AppLocalizations.of(context).adminHomeApprove,
                 ),
                 const SizedBox(height: 8),
                 _CircleActionButton(
                   icon: Icons.cancel_outlined,
                   color: const Color(0xFFFF5555),
                   onTap: onReject,
-                  tooltip: 'Rebutja',
+                  tooltip: AppLocalizations.of(context).adminHomeReject,
                 ),
               ] else ...[
                 Container(
@@ -1433,7 +1439,9 @@ class _RoleTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${role.users} usuaris · ${role.permissions} permisos',
+                  AppLocalizations.of(
+                    context,
+                  ).adminHomeRoleStats(role.users, role.permissions),
                   style: const TextStyle(
                     color: Color(0xFF6B7280),
                     fontSize: 12,
