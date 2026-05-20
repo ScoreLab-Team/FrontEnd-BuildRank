@@ -698,8 +698,8 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
           const SizedBox(height: 10),
           const ActionTile(
             icon: Icons.description,
-            title: "Genera informe",
-            subtitle: "Exportació documental pendent d’integració",
+            title: "Informe de junta (properament)",
+            subtitle: "La generació d’informes encara no està disponible en aquest MVP",
             color: Color(0xFFF1F1F1),
           ),
           if (isAdmin) ...[
@@ -784,9 +784,10 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
       case 2:
         return _buildPlaceholderTab(
           icon: Icons.folder_outlined,
-          title: 'Documents pendents d’integració',
+          title: 'Documents i informes (properament)',
           text:
-              'Aquí es podran consultar certificats, informes i documents associats a l’edifici.',
+              'Aquesta secció queda preparada per a una futura integració documental. '
+              'En aquest MVP no es mostren documents ni informes generats.',
         );
       case 0:
       default:
