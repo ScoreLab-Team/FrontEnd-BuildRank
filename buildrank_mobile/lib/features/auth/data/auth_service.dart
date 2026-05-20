@@ -45,7 +45,8 @@ class AuthService {
         body: jsonEncode({
           'id_token': idToken,
           'mode': mode,
-          if (role != null && role.isNotEmpty) 'role': role,
+          if (mode == 'register' && role != null && role.isNotEmpty)
+            'role': role,
         }),
       );
 
