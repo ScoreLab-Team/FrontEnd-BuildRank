@@ -9,7 +9,9 @@ import 'package:buildrank_mobile/features/vots/data/votacions_model.dart';
 class VotacionsService {
   Future<List<VotacioResumModel>> getVotacions({required int idEdifici}) async {
     try {
-      final response = await ApiClient.get(ApiConfig.votacionsEdifici(idEdifici: idEdifici));
+      final response = await ApiClient.get(
+        ApiConfig.votacionsEdifici(idEdifici: idEdifici),
+      );
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -27,9 +29,13 @@ class VotacionsService {
           .map((e) => VotacioResumModel.fromJson(Map<String, dynamic>.from(e)))
           .toList();
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {
@@ -39,7 +45,9 @@ class VotacionsService {
 
   Future<VotacioDetallModel> getVotacioDetall({required int id}) async {
     try {
-      final response = await ApiClient.get(Uri.parse(ApiConfig.votacioDetall(id)));
+      final response = await ApiClient.get(
+        Uri.parse(ApiConfig.votacioDetall(id)),
+      );
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -50,14 +58,20 @@ class VotacionsService {
       }
 
       if (body is! Map) {
-        throw const VotacionsApiException('La resposta del servidor no té el format esperat.');
+        throw const VotacionsApiException(
+          'La resposta del servidor no té el format esperat.',
+        );
       }
 
       return VotacioDetallModel.fromJson(Map<String, dynamic>.from(body));
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {
@@ -77,7 +91,8 @@ class VotacionsService {
         'edifici': idEdifici,
         'titol': titol,
         'opcions': opcions,
-        if (descripcio != null && descripcio.isNotEmpty) 'descripcio': descripcio,
+        if (descripcio != null && descripcio.isNotEmpty)
+          'descripcio': descripcio,
         if (dataLimit != null) 'dataLimit': dataLimit.toUtc().toIso8601String(),
       };
 
@@ -95,14 +110,20 @@ class VotacionsService {
       }
 
       if (body is! Map) {
-        throw const VotacionsApiException('La resposta del servidor no té el format esperat.');
+        throw const VotacionsApiException(
+          'La resposta del servidor no té el format esperat.',
+        );
       }
 
       return VotacioDetallModel.fromJson(Map<String, dynamic>.from(body));
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {
@@ -125,9 +146,13 @@ class VotacionsService {
         );
       }
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {
@@ -142,6 +167,7 @@ class VotacionsService {
     DateTime? dataLimit,
     bool clearDataLimit = false,
     String? estat,
+    List<String>? opcions,
   }) async {
     try {
       final bodyMap = <String, dynamic>{
@@ -151,6 +177,7 @@ class VotacionsService {
         if (!clearDataLimit && dataLimit != null)
           'dataLimit': dataLimit.toUtc().toIso8601String(),
         'estat': ?estat,
+        'opcions': ?opcions,
       };
 
       final response = await ApiClient.patch(
@@ -167,14 +194,20 @@ class VotacionsService {
       }
 
       if (body is! Map) {
-        throw const VotacionsApiException('La resposta del servidor no té el format esperat.');
+        throw const VotacionsApiException(
+          'La resposta del servidor no té el format esperat.',
+        );
       }
 
       return VotacioDetallModel.fromJson(Map<String, dynamic>.from(body));
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {
@@ -184,7 +217,9 @@ class VotacionsService {
 
   Future<void> eliminarVotacio({required int id}) async {
     try {
-      final response = await ApiClient.delete(Uri.parse(ApiConfig.votacioDetall(id)));
+      final response = await ApiClient.delete(
+        Uri.parse(ApiConfig.votacioDetall(id)),
+      );
 
       if (response.statusCode != 204) {
         final body = _tryDecodeBody(response.body);
@@ -194,9 +229,13 @@ class VotacionsService {
         );
       }
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {
@@ -206,7 +245,9 @@ class VotacionsService {
 
   Future<ResultatsVotacioModel> getResultats({required int id}) async {
     try {
-      final response = await ApiClient.get(Uri.parse(ApiConfig.votacioResultats(id)));
+      final response = await ApiClient.get(
+        Uri.parse(ApiConfig.votacioResultats(id)),
+      );
       final body = _tryDecodeBody(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -217,14 +258,20 @@ class VotacionsService {
       }
 
       if (body is! Map) {
-        throw const VotacionsApiException('La resposta del servidor no té el format esperat.');
+        throw const VotacionsApiException(
+          'La resposta del servidor no té el format esperat.',
+        );
       }
 
       return ResultatsVotacioModel.fromJson(Map<String, dynamic>.from(body));
     } on TimeoutException {
-      throw const VotacionsApiException('La connexió ha trigat massa. Torna-ho a provar.');
+      throw const VotacionsApiException(
+        'La connexió ha trigat massa. Torna-ho a provar.',
+      );
     } on SocketException {
-      throw const VotacionsApiException('No s\'ha pogut connectar amb el servidor.');
+      throw const VotacionsApiException(
+        'No s\'ha pogut connectar amb el servidor.',
+      );
     } on VotacionsApiException {
       rethrow;
     } catch (_) {

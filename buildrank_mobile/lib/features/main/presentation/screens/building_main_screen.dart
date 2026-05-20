@@ -66,6 +66,7 @@ class _MainScreenState extends State<MainScreen> {
       VotacionsScreen(
         idEdifici: widget.idEdifici,
         userRole: widget.userRole,
+        buildingName: widget.title,
       ),
     ];
   }

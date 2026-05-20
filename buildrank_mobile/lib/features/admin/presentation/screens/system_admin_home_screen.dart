@@ -1,4 +1,13 @@
+import 'package:buildrank_mobile/core/services/stream_service.dart';
+import 'package:buildrank_mobile/features/admin/presentation/screens/audit_logs_screen.dart';
+import 'package:buildrank_mobile/features/admin/presentation/screens/user_management_screen.dart';
+import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
+import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
+import 'package:buildrank_mobile/features/verification/data/admin_verification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:buildrank_mobile/features/legal/presentation/screens/legal_document_screen.dart';
+
+import '../../../myChat/my_chats_screen.dart';
 
 class AdminPanelScreen extends StatefulWidget {
   final String adminName;
@@ -20,12 +29,23 @@ enum _AdminTab { tasks, seasons, roles }
 
 class _AdminPanelScreenState extends State<AdminPanelScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<_VerificationTask> _tasks = _VerificationTask.samples();
+  final AdminVerificationService _verificationService =
+      const AdminVerificationService();
   final List<_SeasonRow> _seasons = _SeasonRow.samples();
   final List<_RoleRow> _roles = _RoleRow.samples();
 
   _AdminTab _selectedTab = _AdminTab.tasks;
   String _search = '';
+  final _authService = AuthService();
+  bool _isLoggingOut = false;
+  bool _isLoadingVerifications = true;
+  String? _verificationError;
+  List<AdminVerificationItem> _verifications = [];
+  final Set<int> _processingVerificationIds = {};
+
+  List<_VerificationTask> get _tasks {
+    return _verifications.map(_VerificationTask.fromVerification).toList();
+  }
 
   @override
   void initState() {
@@ -33,6 +53,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     _searchController.addListener(() {
       setState(() => _search = _searchController.text.trim().toLowerCase());
     });
+    _loadVerifications();
   }
 
   @override
@@ -42,7 +63,40 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Future<void> _refresh() async {
-    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await _loadVerifications();
+  }
+
+  Future<void> _handleLogout() async {
+    if (_isLoggingOut) return;
+
+    setState(() {
+      _isLoggingOut = true;
+    });
+
+    try {
+      try {
+        await StreamService.disconnectUser();
+      } catch (_) {}
+
+      await _authService.logout();
+
+      if (!mounted) return;
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AuthBaseScreen()),
+        (_) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      _showSnackBar(e.toString().replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoggingOut = false;
+        });
+      }
+    }
   }
 
   @override
@@ -91,6 +145,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               const SizedBox(height: 16),
               _buildSelectedPanel(),
               const SizedBox(height: 24),
+              _buildChatModerationCard(),
+              const SizedBox(height: 14),
+              _buildUserManagementCard(),
+              const SizedBox(height: 22),
               _buildIntegrityAlert(),
               const SizedBox(height: 36),
               _buildFooter(),
@@ -105,20 +163,31 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     return Row(
       children: [
         ElevatedButton.icon(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: _isLoggingOut ? null : _handleLogout,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF19C463),
             foregroundColor: Colors.white,
+            disabledBackgroundColor: const Color(0xFFB7E8CB),
+            disabledForegroundColor: Colors.white,
             elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          icon: const Icon(Icons.arrow_back, size: 18),
-          label: const Text(
-            'Torna',
-            style: TextStyle(fontWeight: FontWeight.w700),
+          icon: _isLoggingOut
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : const Icon(Icons.logout, size: 18),
+          label: Text(
+            _isLoggingOut ? 'Sortint...' : 'Tanca sessió',
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
         const Spacer(),
@@ -206,11 +275,11 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Widget _buildMetricCards() {
-    final pending = _tasks
-        .where((task) => task.status == _TaskStatus.pending)
+    final pending = _verifications
+        .where((item) => item.status.toLowerCase() == 'review')
         .length;
-    final verified = _tasks
-        .where((task) => task.status == _TaskStatus.verified)
+    final verified = _verifications
+        .where((item) => item.status.toLowerCase() == 'approved')
         .length;
 
     return SizedBox(
@@ -331,33 +400,53 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Widget _buildVerificationQueue() {
-    final filteredTasks = _tasks.where((task) {
+    final reviewTasks = _tasks
+        .where((task) => task.status == _TaskStatus.pending)
+        .toList();
+
+    final filteredTasks = reviewTasks.where((task) {
       if (_search.isEmpty) return true;
       return task.title.toLowerCase().contains(_search) ||
           task.category.toLowerCase().contains(_search) ||
+          task.requester.toLowerCase().contains(_search) ||
           task.status.label.toLowerCase().contains(_search);
     }).toList();
 
     return _PanelCard(
-      title: 'Cua de verificació',
-      badge: '${filteredTasks.length} actius',
+      title: 'Cua de verificació documental',
+      badge: '${filteredTasks.length} pendents',
       children: [
-        if (filteredTasks.isEmpty)
+        if (_isLoadingVerifications)
+          const Padding(
+            padding: EdgeInsets.all(24),
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (_verificationError != null)
+          _EmptyState(
+            icon: Icons.error_outline,
+            title: 'No s’han pogut carregar les verificacions',
+            subtitle: _verificationError!,
+          )
+        else if (filteredTasks.isEmpty)
           const _EmptyState(
             icon: Icons.fact_check_outlined,
-            title: 'No hi ha tasques coincidents',
-            subtitle: 'Canvia la cerca o el filtre per veure més resultats.',
+            title: 'No hi ha verificacions pendents',
+            subtitle:
+                'Quan una verificació acabi el processament d’IA apareixerà aquí.',
           )
         else
           for (final task in filteredTasks)
             _VerificationTaskTile(
               task: task,
-              onApprove: () => _updateTaskStatus(task.id, _TaskStatus.verified),
-              onReject: () => _updateTaskStatus(task.id, _TaskStatus.rejected),
+              isProcessing: _processingVerificationIds.contains(
+                task.verificationId,
+              ),
+              onApprove: () => _reviewVerification(task.verificationId, true),
+              onReject: () => _reviewVerification(task.verificationId, false),
             ),
         _PanelActionButton(
-          label: 'Veure totes les tasques de verificació',
-          onTap: _showAllTasksSnackBar,
+          label: 'Actualitza verificacions',
+          onTap: _loadVerifications,
         ),
       ],
     );
@@ -390,6 +479,154 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           onTap: _showRolesSnackBar,
         ),
       ],
+    );
+  }
+
+  Widget _buildChatModerationCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFDDE2E8)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x09000000),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE5F9ED),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.forum_outlined,
+                    color: Color(0xFF19C463),
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Moderació de xats',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Accedeix als xats dels edificis i aplica accions de moderació.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: Color(0xFFE2E6EA)),
+          _PanelActionButton(
+            label: 'Accedir als xats dels edificis',
+            icon: Icons.chat_bubble_outline,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MyChatsScreen()),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserManagementCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFDDE2E8)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x09000000),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEAF2FF),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.manage_accounts_outlined,
+                    color: Color(0xFF2563EB),
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Gestió d\'usuaris',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Bloqueja, suspèn i gestiona els comptes dels usuaris.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: Color(0xFFE2E6EA)),
+          _PanelActionButton(
+            label: 'Accedir a la gestió d\'usuaris',
+            icon: Icons.manage_accounts,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const UserManagementScreen()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -464,26 +701,51 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Widget _buildFooter() {
-    return const Column(
+    return Column(
       children: [
-        Divider(height: 1, color: Color(0xFFE2E6EA)),
-        SizedBox(height: 18),
+        const Divider(height: 1, color: Color(0xFFE2E6EA)),
+        const SizedBox(height: 18),
         Wrap(
           alignment: WrapAlignment.center,
-          spacing: 20,
+          spacing: 12,
           runSpacing: 8,
           children: [
-            Text(
-              '© 2026 BuildRank Performance Systems.',
-              style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                '© 2026 BuildRank Performance Systems.',
+                style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
+              ),
             ),
-            Text(
-              'Política de privacitat',
-              style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const LegalDocumentScreen(
+                      type: LegalDocumentType.privacy,
+                    ),
+                  ),
+                );
+              },
+              child: const Text(
+                'Política de privacitat',
+                style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
+              ),
             ),
-            Text(
-              'Termes del servei',
-              style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const LegalDocumentScreen(
+                      type: LegalDocumentType.terms,
+                    ),
+                  ),
+                );
+              },
+              child: const Text(
+                'Termes del servei',
+                style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
+              ),
             ),
           ],
         ),
@@ -491,20 +753,117 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-  void _updateTaskStatus(String taskId, _TaskStatus status) {
+  Future<void> _loadVerifications() async {
     setState(() {
-      final index = _tasks.indexWhere((task) => task.id == taskId);
-      if (index == -1) return;
-      _tasks[index] = _tasks[index].copyWith(status: status);
+      _isLoadingVerifications = true;
+      _verificationError = null;
     });
 
-    final message = switch (status) {
-      _TaskStatus.verified => 'Verificació aprovada',
-      _TaskStatus.rejected => 'Verificació rebutjada',
-      _TaskStatus.pending => 'Verificació pendent',
-    };
+    try {
+      final verifications = await _verificationService.listVerifications();
 
-    _showSnackBar(message);
+      if (!mounted) return;
+
+      setState(() {
+        _verifications = verifications;
+      });
+    } on AdminVerificationApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _verificationError = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _verificationError =
+            'S’ha produït un error inesperat carregant verificacions.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingVerifications = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _reviewVerification(int verificationId, bool approve) async {
+    String? reason;
+
+    if (!approve) {
+      reason = await _askRejectReason();
+      if (reason == null || reason.trim().isEmpty) return;
+    }
+
+    setState(() {
+      _processingVerificationIds.add(verificationId);
+    });
+
+    try {
+      await _verificationService.reviewVerification(
+        verificationId: verificationId,
+        approve: approve,
+        reason: reason,
+      );
+
+      if (!mounted) return;
+
+      _showSnackBar(
+        approve ? 'Verificació aprovada.' : 'Verificació rebutjada.',
+      );
+
+      await _loadVerifications();
+    } on AdminVerificationApiException catch (e) {
+      if (!mounted) return;
+      _showSnackBar(e.message);
+    } catch (_) {
+      if (!mounted) return;
+      _showSnackBar('S’ha produït un error inesperat revisant la verificació.');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _processingVerificationIds.remove(verificationId);
+        });
+      }
+    }
+  }
+
+  Future<String?> _askRejectReason() async {
+    final controller = TextEditingController();
+
+    try {
+      return showDialog<String>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Motiu de rebuig'),
+            content: TextField(
+              controller: controller,
+              autofocus: true,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: 'Explica breument per què es rebutja...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel·la'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, controller.text),
+                child: const Text('Rebutja'),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      controller.dispose();
+    }
   }
 
   void _showSnackBar(String message) {
@@ -513,14 +872,13 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-  void _showAuditSnackBar() =>
-      _showSnackBar('S’ha iniciat l’auditoria d’integritat.');
+  void _showAuditSnackBar() => Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => const AuditLogsScreen()),
+  );
 
   void _showFiltersSnackBar() =>
       _showSnackBar('Filtres avançats pendents d’integració.');
-
-  void _showAllTasksSnackBar() =>
-      _showSnackBar('Vista completa de tasques pendent d’integració.');
 
   void _showCreateSeasonSnackBar() =>
       _showSnackBar('Creació de temporada pendent d’integració.');
@@ -739,11 +1097,13 @@ class _PanelCard extends StatelessWidget {
 
 class _VerificationTaskTile extends StatelessWidget {
   final _VerificationTask task;
+  final bool isProcessing;
   final VoidCallback onApprove;
   final VoidCallback onReject;
 
   const _VerificationTaskTile({
     required this.task,
+    required this.isProcessing,
     required this.onApprove,
     required this.onReject,
   });
@@ -789,11 +1149,19 @@ class _VerificationTaskTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${task.category} • Fa ${task.age}',
+                  '${task.category} • ${task.requester}',
                   style: const TextStyle(
                     fontSize: 12,
                     color: Color(0xFF6B7280),
                     fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  task.scoreLabel,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF6B7280),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -804,19 +1172,42 @@ class _VerificationTaskTile extends StatelessWidget {
           const SizedBox(width: 10),
           Column(
             children: [
-              _CircleActionButton(
-                icon: Icons.check_circle_outline,
-                color: const Color(0xFF1F2937),
-                onTap: onApprove,
-                tooltip: 'Aprova',
-              ),
-              const SizedBox(height: 8),
-              _CircleActionButton(
-                icon: Icons.cancel_outlined,
-                color: const Color(0xFFFF5555),
-                onTap: onReject,
-                tooltip: 'Rebutja',
-              ),
+              if (isProcessing)
+                const SizedBox(
+                  width: 34,
+                  height: 34,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              else if (task.canReview) ...[
+                _CircleActionButton(
+                  icon: Icons.check_circle_outline,
+                  color: const Color(0xFF1F2937),
+                  onTap: onApprove,
+                  tooltip: 'Aprova',
+                ),
+                const SizedBox(height: 8),
+                _CircleActionButton(
+                  icon: Icons.cancel_outlined,
+                  color: const Color(0xFFFF5555),
+                  onTap: onReject,
+                  tooltip: 'Rebutja',
+                ),
+              ] else ...[
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F4F6),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                  ),
+                  child: const Icon(
+                    Icons.hourglass_top,
+                    color: Colors.black45,
+                    size: 22,
+                  ),
+                ),
+              ],
             ],
           ),
         ],
@@ -1120,8 +1511,8 @@ class _EmptyState extends StatelessWidget {
 }
 
 enum _TaskStatus {
-  pending('Pendent'),
-  verified('Verificat'),
+  pending('Revisió'),
+  verified('Aprovat'),
   rejected('Rebutjat');
 
   final String label;
@@ -1130,53 +1521,57 @@ enum _TaskStatus {
 
 class _VerificationTask {
   final String id;
+  final int verificationId;
   final String title;
   final String category;
-  final String age;
+  final String requester;
+  final String scoreLabel;
   final _TaskStatus status;
+  final String rawStatus;
+
+  bool get canReview => rawStatus.toLowerCase() == 'review';
 
   const _VerificationTask({
     required this.id,
+    required this.verificationId,
     required this.title,
     required this.category,
-    required this.age,
+    required this.requester,
+    required this.scoreLabel,
     required this.status,
+    required this.rawStatus,
   });
 
-  _VerificationTask copyWith({_TaskStatus? status}) {
-    return _VerificationTask(
-      id: id,
-      title: title,
-      category: category,
-      age: age,
-      status: status ?? this.status,
-    );
-  }
+  factory _VerificationTask.fromVerification(AdminVerificationItem item) {
+    final normalizedStatus = item.status.toLowerCase();
 
-  static List<_VerificationTask> samples() {
-    return const [
-      _VerificationTask(
-        id: 'skyline-plaza',
-        title: 'Skyline Plaza',
-        category: 'Comercial',
-        age: '2h',
-        status: _TaskStatus.pending,
-      ),
-      _VerificationTask(
-        id: 'green-valley',
-        title: 'Green Valley Apts',
-        category: 'Residencial',
-        age: '5h',
-        status: _TaskStatus.pending,
-      ),
-      _VerificationTask(
-        id: 'tech-hub-v3',
-        title: 'Tech Hub V3',
-        category: 'Oficina',
-        age: '1d',
-        status: _TaskStatus.verified,
-      ),
-    ];
+    final status = switch (normalizedStatus) {
+      'review' => _TaskStatus.pending,
+      'approved' => _TaskStatus.verified,
+      'rejected' => _TaskStatus.rejected,
+      _ => _TaskStatus.pending,
+    };
+
+    final scoreText = item.score == null
+        ? 'Score pendent'
+        : 'Score IA ${(item.score! * 100).toStringAsFixed(0)}%';
+
+    final docText = item.documents.isEmpty
+        ? 'sense documents'
+        : '${item.documents.length} document(s)';
+
+    return _VerificationTask(
+      id: item.id.toString(),
+      verificationId: item.id,
+      title: item.edificiTitle,
+      category: '${item.status} · $docText',
+      requester: '${item.requesterName} · ${item.requesterEmail}',
+      scoreLabel: item.suggeriment == null || item.suggeriment!.trim().isEmpty
+          ? scoreText
+          : '$scoreText · ${item.suggeriment}',
+      status: status,
+      rawStatus: item.status,
+    );
   }
 }
 

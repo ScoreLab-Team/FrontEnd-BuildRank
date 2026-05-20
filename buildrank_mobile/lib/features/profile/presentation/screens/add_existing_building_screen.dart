@@ -2,11 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:buildrank_mobile/features/profile/data/add_existing_building_service.dart';
+import 'package:buildrank_mobile/features/verification/data/admin_verification_service.dart';
+import 'package:buildrank_mobile/features/verification/presentation/widgets/admin_verification_documents_section.dart';
 
 class AddExistingBuildingScreen extends StatefulWidget {
   final String userRole;
+  final AddExistingBuildingService service;
 
-  const AddExistingBuildingScreen({super.key, required this.userRole});
+  const AddExistingBuildingScreen({
+    super.key,
+    required this.userRole,
+    this.service = const AddExistingBuildingService(),
+  });
 
   @override
   State<AddExistingBuildingScreen> createState() =>
@@ -20,8 +27,6 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
   final TextEditingController _portaController = TextEditingController();
   final TextEditingController _superficieController = TextEditingController();
 
-  final AddExistingBuildingService _service = AddExistingBuildingService();
-
   Timer? _debounce;
   bool _isSearching = false;
   bool _isSubmitting = false;
@@ -29,12 +34,26 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
 
   List<ExistingBuildingItem> _results = [];
   ExistingBuildingItem? _selectedBuilding;
+  List<AdminVerificationDocumentInput> _verificationDocuments = [];
 
-  String get _membershipRole =>
-      widget.userRole == 'admin' ? 'administrator' : 'resident';
+  bool get _isAdminRole => widget.userRole == 'admin';
+
+  String get _membershipRole => _isAdminRole ? 'administrator' : 'resident';
 
   bool get _canShowHabitatgeForm =>
-      _selectedBuilding != null && _selectedBuilding!.acceptsNewRequests;
+      !_isAdminRole &&
+      _selectedBuilding != null &&
+      _selectedBuilding!.acceptsNewRequests;
+
+  bool get _canSubmitRequest {
+    if (_selectedBuilding == null || _isSubmitting) return false;
+
+    if (_isAdminRole) {
+      return _verificationDocuments.isNotEmpty;
+    }
+
+    return _canShowHabitatgeForm && _isHabitatgeFormValid;
+  }
 
   bool get _requiresBlockFields =>
       _selectedBuilding != null && _selectedBuilding!.isBlock;
@@ -84,6 +103,7 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
       _selectedBuilding = null;
       _results = [];
       _clearHabitatgeForm();
+      _verificationDocuments = [];
     });
 
     if (trimmed.length < 3) {
@@ -98,7 +118,7 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
     });
 
     try {
-      final results = await _service.searchBuildings(trimmed);
+      final results = await widget.service.searchBuildings(trimmed);
 
       if (!mounted) return;
 
@@ -129,6 +149,7 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
       _selectedBuilding = building;
       _errorMessage = null;
       _clearHabitatgeForm();
+      _verificationDocuments = [];
     });
   }
 
@@ -141,21 +162,26 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
       _errorMessage = null;
     });
 
-    final habitatgePayload = {
-      'building_id': building.id,
-      'referencia_cadastral': _refCadastralController.text.trim(),
-      'planta': _requiresBlockFields ? _plantaController.text.trim() : null,
-      'porta': _requiresBlockFields ? _portaController.text.trim() : null,
-      'superficie': _superficieController.text.trim(),
-      'valid': false,
-      'requested_membership_role': _membershipRole,
-    };
+    final habitatgePayload = _isAdminRole
+        ? <String, dynamic>{}
+        : {
+            'building_id': building.id,
+            'referencia_cadastral': _refCadastralController.text.trim(),
+            'planta': _requiresBlockFields
+                ? _plantaController.text.trim()
+                : null,
+            'porta': _requiresBlockFields ? _portaController.text.trim() : null,
+            'superficie': _superficieController.text.trim(),
+            'valid': false,
+            'requested_membership_role': _membershipRole,
+          };
 
     try {
-      await _service.createJoinRequest(
+      await widget.service.createJoinRequest(
         building: building,
         userRole: widget.userRole,
         habitatgePayload: habitatgePayload,
+        verificationDocuments: _verificationDocuments,
       );
 
       if (!mounted) return;
@@ -237,7 +263,7 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
               controller: _searchController,
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
-                hintText: 'Escriu carrer i número...',
+                hintText: 'Escriu el carrer del teu edifici...',
                 prefixIcon: const Icon(Icons.location_on_outlined),
                 suffixIcon: _searchController.text.isEmpty
                     ? null
@@ -249,6 +275,7 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
                             _selectedBuilding = null;
                             _errorMessage = null;
                             _clearHabitatgeForm();
+                            _verificationDocuments = [];
                           });
                         },
                         icon: const Icon(Icons.close),
@@ -337,14 +364,15 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
                   border: Border.all(color: const Color(0xFF86EFAC)),
                 ),
                 child: Text(
-                  'Seleccionat: ${_selectedBuilding!.name} · Rol sol·licitat: $_membershipRole',
+                  'Seleccionat: ${_selectedBuilding!.name} · Rol sol·licitat: ${_isAdminRole ? 'administrador de finca' : 'resident'}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF166534),
                   ),
                 ),
               ),
-            if (_selectedBuilding != null &&
+            if (!_isAdminRole &&
+                _selectedBuilding != null &&
                 !_selectedBuilding!.acceptsNewRequests) ...[
               const SizedBox(height: 16),
               Container(
@@ -448,16 +476,23 @@ class _AddExistingBuildingScreenState extends State<AddExistingBuildingScreen> {
                 ),
               ),
             ],
+            if (_isAdminRole && _selectedBuilding != null) ...[
+              const SizedBox(height: 16),
+              AdminVerificationDocumentsSection(
+                documents: _verificationDocuments,
+                enabled: !_isSubmitting,
+                onChanged: (documents) {
+                  setState(() {
+                    _verificationDocuments = documents;
+                  });
+                },
+              ),
+            ],
             const SizedBox(height: 16),
             SizedBox(
               height: 54,
               child: ElevatedButton(
-                onPressed:
-                    (_canShowHabitatgeForm &&
-                        _isHabitatgeFormValid &&
-                        !_isSubmitting)
-                    ? _submitJoinRequest
-                    : null,
+                onPressed: _canSubmitRequest ? _submitJoinRequest : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF22C55E),
                   foregroundColor: Colors.white,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import '../../core/services/stream_service.dart';
+import '../xat/data/chat_service.dart';
 import '../xat/presentation/screens/building_chat_screen.dart';
+import '../xat/presentation/screens/direct_channel_screen.dart';
 
 class MyChatsScreen extends StatefulWidget {
   const MyChatsScreen({super.key});
@@ -21,7 +23,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
       _connectionError = null;
     });
     try {
-      await StreamService.reconnect();
+      await ChatService.provisionAndReconnect();
     } catch (e) {
       if (mounted) {
         setState(() => _connectionError = e.toString());
@@ -191,15 +193,31 @@ class _ChannelListState extends State<_ChannelList> {
                 : null,
             onTap: () {
               final channelId = channel.id ?? '';
-              final buildingIdStr = channelId.replaceFirst('building_', '');
-              final buildingId = int.tryParse(buildingIdStr) ?? 0;
+
+              if (channelId.startsWith('building_')) {
+                final buildingIdStr = channelId.replaceFirst('building_', '');
+                final buildingId = int.tryParse(buildingIdStr) ?? 0;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BuildingChatScreen(
+                      idEdifici: buildingId,
+                      buildingName: name,
+                    ),
+                  ),
+                );
+                return;
+              }
 
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => BuildingChatScreen(
-                    idEdifici: buildingId,
-                    buildingName: name,
+                  builder: (_) => DirectChannelScreen(
+                    channelId: channelId,
+                    channelName: name,
+                    description:
+                        'Conversa directa o canal compartit entre administradors.',
                   ),
                 ),
               );

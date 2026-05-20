@@ -20,7 +20,9 @@ class VotacioResumModel {
       id: _readInt(json['id']) ?? 0,
       titol: json['titol']?.toString() ?? '',
       estat: json['estat']?.toString() ?? 'oberta',
-      dataCreacio: DateTime.tryParse(json['dataCreacio']?.toString() ?? '') ?? DateTime.now(),
+      dataCreacio:
+          DateTime.tryParse(json['dataCreacio']?.toString() ?? '') ??
+          DateTime.now(),
       dataLimit: json['dataLimit'] != null
           ? DateTime.tryParse(json['dataLimit'].toString())
           : null,
@@ -104,9 +106,9 @@ class VotacioDetallModel {
     final opcionsRaw = json['opcions'];
     final opcions = opcionsRaw is List
         ? opcionsRaw
-            .whereType<Map>()
-            .map((o) => OpcioVotModel.fromJson(Map<String, dynamic>.from(o)))
-            .toList()
+              .whereType<Map>()
+              .map((o) => OpcioVotModel.fromJson(Map<String, dynamic>.from(o)))
+              .toList()
         : <OpcioVotModel>[];
 
     return VotacioDetallModel(
@@ -117,7 +119,9 @@ class VotacioDetallModel {
           ? json['descripcio'].toString()
           : null,
       estat: json['estat']?.toString() ?? 'oberta',
-      dataCreacio: DateTime.tryParse(json['dataCreacio']?.toString() ?? '') ?? DateTime.now(),
+      dataCreacio:
+          DateTime.tryParse(json['dataCreacio']?.toString() ?? '') ??
+          DateTime.now(),
       dataLimit: json['dataLimit'] != null
           ? DateTime.tryParse(json['dataLimit'].toString())
           : null,
@@ -149,9 +153,12 @@ class ResultatsVotacioModel {
     final opcionsRaw = json['opcions'];
     final opcions = opcionsRaw is List
         ? opcionsRaw
-            .whereType<Map>()
-            .map((o) => OpcioResultatModel.fromJson(Map<String, dynamic>.from(o)))
-            .toList()
+              .whereType<Map>()
+              .map(
+                (o) =>
+                    OpcioResultatModel.fromJson(Map<String, dynamic>.from(o)),
+              )
+              .toList()
         : <OpcioResultatModel>[];
 
     return ResultatsVotacioModel(

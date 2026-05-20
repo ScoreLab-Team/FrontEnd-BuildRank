@@ -2,6 +2,7 @@ import 'package:buildrank_mobile/core/services/stream_service.dart';
 import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:buildrank_mobile/features/admin/presentation/screens/system_admin_home_screen.dart';
+import 'package:buildrank_mobile/features/auth/presentation/screens/password_reset_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -38,36 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       await _authService.login(email: email, password: password);
-
-      final me = await _authService.getMe();
-      final isSystemAdmin = me['is_system_admin'] == true;
-
-      // Connectar a GetStream com el nou usuari
-      try {
-        final userId = 'user_${me['id']}';
-        final email = me['email'] as String? ?? '';
-        final userName = email.isNotEmpty ? email.split('@').first : userId;
-        await StreamService.connectUser(
-          userId: userId,
-          userName: userName,
-        );
-        final token = await FirebaseMessaging.instance.getToken().timeout(
-          const Duration(seconds: 5),
-        );
-        if (token != null) await StreamService.registerFcmToken(token);
-      } catch (_) {}
-
-      if (!mounted) return;
-
-      if (isSystemAdmin) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AdminPanelScreen()),
-        );
-      } else {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const ProfileScreen()),
-        );
-      }
+      await _finishAuthenticatedNavigation();
     } catch (e) {
       setState(() {
         _errorText = e.toString().replaceFirst('Exception: ', '');
@@ -78,6 +50,61 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+
+    try {
+      await _authService.loginWithGoogle();
+      await _finishAuthenticatedNavigation();
+    } catch (e) {
+      setState(() {
+        _errorText = e.toString().replaceFirst('Exception: ', '');
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _finishAuthenticatedNavigation() async {
+    final me = await _authService.getMe();
+    final isSystemAdmin = me['is_system_admin'] == true;
+
+    try {
+      final userId = 'user_${me['id']}';
+      final userName = '${me['first_name'] ?? ''} ${me['last_name'] ?? ''}'
+          .trim();
+
+      await StreamService.connectUser(
+        userId: userId,
+        userName: userName.isNotEmpty ? userName : userId,
+      );
+
+      final token = await FirebaseMessaging.instance.getToken().timeout(
+        const Duration(seconds: 5),
+      );
+      if (token != null) await StreamService.registerFcmToken(token);
+    } catch (_) {}
+
+    if (!mounted) return;
+
+    if (isSystemAdmin) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const AdminPanelScreen()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+      );
     }
   }
 
@@ -162,7 +189,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: null,
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const PasswordResetScreen(),
+                                ),
+                              );
+                            },
                       child: const Text('Has oblidat la contrasenya?'),
                     ),
                   ),
@@ -192,9 +227,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.person_outline),
-                    label: const Text('Continuar amb un altre mètode'),
+                    onPressed: _isLoading ? null : _handleGoogleLogin,
+                    icon: const Icon(Icons.g_mobiledata),
+                    label: const Text('Continuar amb Google'),
                   ),
                 ],
               ),

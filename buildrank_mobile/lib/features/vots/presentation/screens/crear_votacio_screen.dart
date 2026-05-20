@@ -59,7 +59,15 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
       lastDate: now.add(const Duration(days: 365)),
     );
     if (picked != null && mounted) {
-      setState(() => _dataLimit = DateTime(picked.year, picked.month, picked.day, 23, 59));
+      setState(
+        () => _dataLimit = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          23,
+          59,
+        ),
+      );
     }
   }
 
@@ -96,9 +104,9 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
     } on VotacionsApiException catch (e) {
       if (mounted) {
         setState(() => _isSubmitting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -146,8 +154,12 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: _inputDecoration('Escriu el títol de la votació'),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty) return 'El títol és obligatori.';
-                  if (v.trim().length < 4) return 'El títol ha de tenir almenys 4 caràcters.';
+                  if (v == null || v.trim().isEmpty) {
+                    return 'El títol és obligatori.';
+                  }
+                  if (v.trim().length < 4) {
+                    return 'El títol ha de tenir almenys 4 caràcters.';
+                  }
                   return null;
                 },
               ),
@@ -160,7 +172,9 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
                 maxLines: 3,
                 maxLength: 500,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: _inputDecoration('Explica el context de la votació...'),
+                decoration: _inputDecoration(
+                  'Explica el context de la votació...',
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -169,7 +183,10 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
               GestureDetector(
                 onTap: _pickDate,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.grey[300]!),
@@ -177,7 +194,11 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 18, color: Colors.grey[500]),
+                      Icon(
+                        Icons.calendar_today,
+                        size: 18,
+                        color: Colors.grey[500],
+                      ),
                       const SizedBox(width: 10),
                       Text(
                         _dataLimit != null
@@ -185,14 +206,20 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
                             : 'Sense data límit',
                         style: TextStyle(
                           fontSize: 15,
-                          color: _dataLimit != null ? Colors.black87 : Colors.grey[500],
+                          color: _dataLimit != null
+                              ? Colors.black87
+                              : Colors.grey[500],
                         ),
                       ),
                       const Spacer(),
                       if (_dataLimit != null)
                         GestureDetector(
                           onTap: () => setState(() => _dataLimit = null),
-                          child: Icon(Icons.close, size: 18, color: Colors.grey[500]),
+                          child: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: Colors.grey[500],
+                          ),
                         ),
                     ],
                   ),
@@ -214,12 +241,18 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            ...List.generate(_opcionsControllers.length, (i) => _buildOpcioField(i)),
+            ...List.generate(
+              _opcionsControllers.length,
+              (i) => _buildOpcioField(i),
+            ),
             if (_opcionsControllers.length < 8)
               TextButton.icon(
                 onPressed: _addOpcio,
                 icon: Icon(Icons.add, color: Colors.green[700]),
-                label: Text('Afegir opció', style: TextStyle(color: Colors.green[700])),
+                label: Text(
+                  'Afegir opció',
+                  style: TextStyle(color: Colors.green[700]),
+                ),
               ),
             const SizedBox(height: 32),
             SizedBox(
@@ -229,13 +262,18 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[700],
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: _isSubmitting
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Text(
                         'Crear votació',
@@ -254,7 +292,14 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black54)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.black54,
+          ),
+        ),
         const SizedBox(height: 6),
         child,
       ],
@@ -272,7 +317,9 @@ class _CrearVotacioScreenState extends State<CrearVotacioScreen> {
               textCapitalization: TextCapitalization.sentences,
               decoration: _inputDecoration('Opció ${index + 1}'),
               validator: (v) {
-                if (v == null || v.trim().isEmpty) return 'Aquesta opció no pot estar buida.';
+                if (v == null || v.trim().isEmpty) {
+                  return 'Aquesta opció no pot estar buida.';
+                }
                 return null;
               },
             ),

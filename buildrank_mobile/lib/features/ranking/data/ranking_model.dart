@@ -233,6 +233,19 @@ class RankingEntry {
           json['building_name'],
     );
 
+    final address = _readString(
+      json['address'] ?? json['adreca'] ?? json['localitzacio'],
+    );
+
+    final cleanExplicitName = explicitName == null
+        ? null
+        : _cleanBuildingDisplayName(explicitName);
+
+    final displayName =
+        cleanExplicitName != null && !_isGenericBuildingName(cleanExplicitName)
+        ? cleanExplicitName
+        : address ?? cleanExplicitName ?? 'Edifici #$id';
+
     return RankingEntry(
       idEdifici: id,
       position:
@@ -244,10 +257,8 @@ class RankingEntry {
                 json['ranking'],
           ) ??
           0,
-      name: explicitName ?? 'Edifici #$id',
-      address: _readString(
-        json['address'] ?? json['adreca'] ?? json['localitzacio'],
-      ),
+      name: displayName,
+      address: address,
       points:
           _readInt(
             json['points'] ??
@@ -292,6 +303,42 @@ class RankingEntry {
   }
 }
 
+class RankingProgressPoint {
+  final int seasonId;
+  final String seasonName;
+  final String category;
+  final int points;
+  final int position;
+  final String? division;
+  final DateTime? calculatedAt;
+
+  const RankingProgressPoint({
+    required this.seasonId,
+    required this.seasonName,
+    required this.category,
+    required this.points,
+    required this.position,
+    this.division,
+    this.calculatedAt,
+  });
+
+  factory RankingProgressPoint.fromJson(Map<String, dynamic> json) {
+    return RankingProgressPoint(
+      seasonId: _readInt(json['temporada'] ?? json['season']) ?? 0,
+      seasonName:
+          _readString(json['nom_temporada'] ?? json['season_name']) ??
+          'Temporada',
+      category: _readString(json['categoria'] ?? json['category']) ?? 'PROGRES',
+      points: _readInt(json['puntuacio'] ?? json['points']) ?? 0,
+      position: _readInt(json['posicio'] ?? json['position']) ?? 0,
+      division: _readString(json['divisio'] ?? json['division']),
+      calculatedAt: DateTime.tryParse(
+        (json['data_calcul'] ?? json['calculated_at'] ?? '').toString(),
+      ),
+    );
+  }
+}
+
 Map<String, dynamic>? _readMap(dynamic value) {
   if (value is Map<String, dynamic>) return value;
   if (value is Map) return Map<String, dynamic>.from(value);
@@ -303,6 +350,22 @@ String? _readString(dynamic value) {
 
   final text = value.toString().trim();
   return text.isEmpty ? null : text;
+}
+
+String _cleanBuildingDisplayName(String value) {
+  return value
+      .replaceFirst(
+        RegExp(r'^Edifici\s*#?\s*\d+\s*[-–—]\s*', caseSensitive: false),
+        '',
+      )
+      .trim();
+}
+
+bool _isGenericBuildingName(String value) {
+  return RegExp(
+    r'^Edifici\s*#?\s*\d+$',
+    caseSensitive: false,
+  ).hasMatch(value.trim());
 }
 
 int? _readInt(dynamic value) {

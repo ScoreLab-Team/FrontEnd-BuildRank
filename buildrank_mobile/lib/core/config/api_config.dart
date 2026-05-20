@@ -30,10 +30,44 @@ class ApiConfig {
   // =========================
   static const String register = '$baseUrl/api/accounts/register/';
   static const String login = '$baseUrl/api/accounts/login/';
+  static const String googleOAuth = '$baseUrl/api/accounts/oauth/google/';
   static const String refresh = '$baseUrl/api/accounts/refresh/';
   static const String logout = '$baseUrl/api/accounts/logout/';
   static const String me = '$baseUrl/api/accounts/me/';
   static const String meEdificis = '$baseUrl/api/accounts/me/edificis/';
+  static const String passwordReset = '$baseUrl/api/accounts/password-reset/';
+  static const String passwordResetConfirm =
+      '$baseUrl/api/accounts/password-reset-confirm/';
+
+  // Admin user management (requires is_superuser)
+  static const String adminUsers = '$baseUrl/api/accounts/users/';
+  static String adminUser(int id) => '$adminUsers$id/';
+  static String adminBlockUser(int id) => '$adminUsers$id/block/';
+  static String adminUnblockUser(int id) => '$adminUsers$id/unblock/';
+  static String adminSuspendUser(int id) => '$adminUsers$id/suspend/';
+  static String adminUnsuspendUser(int id) => '$adminUsers$id/unsuspend/';
+
+  // Audit logs (requires is_superuser)
+  static Uri auditLogs({
+    int? userId,
+    String? method,
+    String? resourceType,
+    int? statusCode,
+    String? fromDate,
+    String? toDate,
+    int page = 1,
+  }) {
+    final params = <String, dynamic>{'page': page};
+    if (userId != null) params['user_id'] = userId;
+    if (method?.isNotEmpty ?? false) params['method'] = method;
+    if (resourceType?.isNotEmpty ?? false) {
+      params['resource_type'] = resourceType;
+    }
+    if (statusCode != null) params['status_code'] = statusCode;
+    if (fromDate?.isNotEmpty ?? false) params['from_date'] = fromDate;
+    if (toDate?.isNotEmpty ?? false) params['to_date'] = toDate;
+    return uri('$baseUrl/api/audit/logs/', queryParameters: params);
+  }
 
   // =========================
   // Buildings endpoints
@@ -45,6 +79,25 @@ class ApiConfig {
 
   static const String edificis = '$baseUrl/api/buildings/edificis/';
   static const String edificisMapa = '$baseUrl/api/buildings/edificis/mapa/';
+
+  static Uri searchExistingBuildings(String query) {
+    return uri('${edificis}cerca/', queryParameters: {'q': query.trim()});
+  }
+
+  static const String adminFincaEdificiAlta =
+      '$baseUrl/api/buildings/admin-finca/edificis/alta/';
+
+  // =========================
+  // Admin verification endpoints
+  // =========================
+  static const String verifications = '$baseUrl/api/verification/';
+  static const String verificationCreate = '$baseUrl/api/verification/create/';
+
+  static String verificationDetail(int verificationId) =>
+      '$verifications$verificationId/';
+
+  static String verificationReview(int verificationId) =>
+      '$verifications$verificationId/revisar/';
 
   // =========================
   // Habitatges endpoints
@@ -71,9 +124,6 @@ class ApiConfig {
   static String dadesEnergetiquesDetail(int id) =>
       '$baseUrl/api/buildings/dades_energetiques/$id/';
 
-  static const String searchExistingBuildings =
-      '$baseUrl/api/buildings/search/'; //Falta implementar endpoint real al backend, però el frontend ja el té preparat.
-
   // Assignacions via accounts
   static String assignarResident(String refCadastral) =>
       '$baseUrl/api/accounts/habitatges/$refCadastral/assignar-resident/';
@@ -87,6 +137,24 @@ class ApiConfig {
 
   static String edificiDetail(int idEdifici) =>
       '$baseUrl/api/buildings/edificis/$idEdifici/';
+
+  static String edificiBadges(int idEdifici) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/badges/';
+
+  static String edificiBadgesRecalcular(int idEdifici) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/badges/recalcular/';
+
+  static const String habitatges = '$baseUrl/api/buildings/habitatges/';
+
+  static String habitatgeSolicitarAcces(String referenciaCadastral) =>
+      '$habitatges${Uri.encodeComponent(referenciaCadastral)}/solicitar-acces/';
+
+  // Endpoints per administrador de finques
+
+  static const String habitatgesPendents = '${habitatges}pendents/';
+
+  static String habitatgeValidarAcces(String referenciaCadastral) =>
+      '$habitatges${Uri.encodeComponent(referenciaCadastral)}/validar-acces/';
 
   // =========================
   // Improvements / simulation endpoints
@@ -113,6 +181,16 @@ class ApiConfig {
     return uri(
       '${participations}current/',
       queryParameters: {'edifici': buildingId},
+    );
+  }
+
+  static Uri rankingEvolution({
+    required int buildingId,
+    String categoria = 'PROGRES',
+  }) {
+    return uri(
+      '${leagues}evolucio/',
+      queryParameters: {'edifici': buildingId, 'categoria': categoria},
     );
   }
 
@@ -205,6 +283,98 @@ class ApiConfig {
       },
     );
   }
+
+  // Community / Votacions endpoints
+  // =========================
+  static const String votacions = '$baseUrl/api/community/votacions/';
+
+  static Uri votacionsEdifici({required int idEdifici}) =>
+      uri(votacions, queryParameters: {'edifici': idEdifici});
+
+  static String votacioDetall(int id) => '$votacions$id/';
+  static String votacioVotar(int id) => '${votacioDetall(id)}votar/';
+  static String votacioResultats(int id) => '${votacioDetall(id)}resultats/';
+
+  // =========================
+  // Votacions de simulacions
+  // =========================
+  static String votacionsSimulacions(int idEdifici) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/votacions-simulacions/';
+
+  static String votarSimulacio({
+    required int idEdifici,
+    required int votacioId,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/votacions-simulacions/$votacioId/votar/';
+
+  static String sotmetreSimulacioVotacio({
+    required int idEdifici,
+    required int simulacioId,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/simulacions/$simulacioId/sotmetre-votacio/';
+
+  static String acreditarSimulacioImplementacio({
+    required int idEdifici,
+    required int simulacioId,
+  }) =>
+      '$baseUrl/api/buildings/edificis/$idEdifici/simulacions/$simulacioId/acreditar-implementacio/';
+
+  // =========================
+  // Notifications endpoints
+  // =========================
+  static const String notifications = '$baseUrl/api/notifications/';
+  static const String notificationsNoLlegides = '${notifications}no-llegides/';
+  static const String notificationsLlegirTotes =
+      '${notifications}llegir-totes/';
+  static String notificationLlegir(int id) => '$notifications$id/llegir/';
+
+  // =========================
+  // Chat core & Twin Building endpoints
+  // =========================
+  static const String chatToken = '$baseUrl/api/chat/token/';
+  static const String chatProvision = '$baseUrl/api/chat/channels/provision/';
+  static const String chatChannels = '$baseUrl/api/chat/channels/';
+  static const String chatChannelsProvision =
+      '$baseUrl/api/chat/channels/provision/';
+
+  static String twinBuildingAdmins(int idEdifici) =>
+      '$baseUrl/api/chat/twin-buildings/$idEdifici/admins/';
+
+  static String twinBuildingChannel(int idEdifici) =>
+      '$baseUrl/api/chat/twin-buildings/$idEdifici/channels/';
+
+  // =========================
+  // Chat moderation endpoints
+  // =========================
+  static String moderationFlagMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/flag/';
+  static String moderationHideMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/hide/';
+  static String moderationDeleteMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/';
+  static String moderationRestoreMessage(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/restore/';
+  static String moderationDismissFlag(String messageId) =>
+      '$baseUrl/api/chat/moderation/messages/$messageId/dismiss-flag/';
+
+  static String moderationWarnUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/warn/';
+  static String moderationMuteUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/mute/';
+  static String moderationUnmuteUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/unmute/';
+  static String moderationBanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/ban/';
+  static String moderationUnbanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/unban/';
+  static String moderationGlobalBanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/global-ban/';
+  static String moderationGlobalUnbanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/global-unban/';
+  static String moderationShadowBanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/shadow-ban/';
+  static String moderationShadowUnbanUser(int userId) =>
+      '$baseUrl/api/chat/moderation/users/$userId/shadow-unban/';
 
   // =========================
   // Community / Votacions endpoints

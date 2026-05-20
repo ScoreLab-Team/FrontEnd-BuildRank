@@ -1,5 +1,7 @@
 import 'package:buildrank_mobile/core/services/api_client.dart';
 import 'package:buildrank_mobile/core/services/stream_service.dart';
+import 'package:buildrank_mobile/features/auth/presentation/screens/account_blocked_screen.dart';
+import 'package:buildrank_mobile/features/auth/presentation/screens/account_suspended_screen.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/session_gate_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,20 @@ class BuildRankApp extends StatelessWidget {
     ApiClient.onSessionExpired = () {
       _navigatorKey.currentState?.pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const AuthBaseScreen()),
+        (route) => false,
+      );
+    };
+
+    ApiClient.onAccountBlocked = () {
+      _navigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AccountBlockedScreen()),
+        (route) => false,
+      );
+    };
+
+    ApiClient.onAccountSuspended = () {
+      _navigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AccountSuspendedScreen()),
         (route) => false,
       );
     };
