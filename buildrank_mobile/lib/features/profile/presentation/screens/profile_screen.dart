@@ -671,7 +671,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-
   String _buildBuildingTitle(Map<String, dynamic> building) {
     final localitzacio = _readMap(building['localitzacio']);
     final carrer = localitzacio?['carrer']?.toString().trim();

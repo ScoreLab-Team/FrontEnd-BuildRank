@@ -312,7 +312,8 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                       maxLines: 3,
                       decoration: const InputDecoration(
                         labelText: 'Enllaç de recuperació',
-                        hintText: 'https://.../reset-password?uid=...&token=...',
+                        hintText:
+                            'https://.../reset-password?uid=...&token=...',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.link),
                       ),
@@ -401,8 +402,5 @@ class _ResetCredentials {
   final String uid;
   final String token;
 
-  const _ResetCredentials({
-    required this.uid,
-    required this.token,
-  });
+  const _ResetCredentials({required this.uid, required this.token});
 }

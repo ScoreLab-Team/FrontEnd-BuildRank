@@ -421,28 +421,17 @@ class _BuildingMapDetailCard extends StatelessWidget {
 
   List<Widget> _buildStats() {
     final stats = <Widget>[
-      _MiniStat(
-        icon: Icons.speed_outlined,
-        text: feature.scoreText,
-      ),
+      _MiniStat(icon: Icons.speed_outlined, text: feature.scoreText),
       _MiniStat(
         icon: Icons.energy_savings_leaf_outlined,
         text: 'Classe ${feature.energyClassText}',
       ),
-      _MiniStat(
-        icon: Icons.dataset_outlined,
-        text: feature.sourceText,
-      ),
+      _MiniStat(icon: Icons.dataset_outlined, text: feature.sourceText),
     ];
 
     final heatRisk = feature.heatRiskText;
     if (heatRisk != null && heatRisk.isNotEmpty) {
-      stats.add(
-        _MiniStat(
-          icon: Icons.thermostat_outlined,
-          text: heatRisk,
-        ),
-      );
+      stats.add(_MiniStat(icon: Icons.thermostat_outlined, text: heatRisk));
     }
 
     return stats;
@@ -495,11 +484,7 @@ class _BuildingMapDetailCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 12, color: Colors.black54),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 6,
-                    children: _buildStats(),
-                  ),
+                  Wrap(spacing: 8, runSpacing: 6, children: _buildStats()),
                   if (visibleBadges.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Wrap(
@@ -538,7 +523,11 @@ class _MapBadgeChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.emoji_events_outlined, size: 13, color: Colors.brown),
+          const Icon(
+            Icons.emoji_events_outlined,
+            size: 13,
+            color: Colors.brown,
+          ),
           const SizedBox(width: 4),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 120),

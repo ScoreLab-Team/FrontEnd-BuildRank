@@ -231,11 +231,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _openLegalDocument(LegalDocumentType type) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => LegalDocumentScreen(type: type),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => LegalDocumentScreen(type: type)));
   }
 
   Widget _buildTermsBlock() {
@@ -320,7 +318,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ],
     );
   }
-
 
   @override
   void dispose() {

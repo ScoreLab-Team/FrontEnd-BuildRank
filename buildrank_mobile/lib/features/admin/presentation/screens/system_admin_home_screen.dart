@@ -753,7 +753,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-
   Future<void> _loadVerifications() async {
     setState(() {
       _isLoadingVerifications = true;

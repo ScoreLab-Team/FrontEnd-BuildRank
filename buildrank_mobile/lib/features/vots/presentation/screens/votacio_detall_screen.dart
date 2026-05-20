@@ -585,7 +585,6 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
   }
 }
 
-
 class _PermissionInfoBox extends StatelessWidget {
   final String text;
 

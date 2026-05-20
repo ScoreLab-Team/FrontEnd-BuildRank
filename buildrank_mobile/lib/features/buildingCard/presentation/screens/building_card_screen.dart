@@ -699,7 +699,8 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
           const ActionTile(
             icon: Icons.description,
             title: "Informe de junta (properament)",
-            subtitle: "La generació d’informes encara no està disponible en aquest MVP",
+            subtitle:
+                "La generació d’informes encara no està disponible en aquest MVP",
             color: Color(0xFFF1F1F1),
           ),
           if (isAdmin) ...[
@@ -968,7 +969,6 @@ class _DetailItem extends StatelessWidget {
   }
 }
 
-
 class _BuildingBadgeCard extends StatelessWidget {
   final BuildingBadgeItem badge;
 
@@ -980,7 +980,9 @@ class _BuildingBadgeCard extends StatelessWidget {
     if (text.contains('emiss')) return Colors.green;
     if (text.contains('dades') || text.contains('data')) return Colors.blue;
     if (text.contains('millora')) return Colors.deepPurple;
-    if (text.contains('ranking') || text.contains('or') || text.contains('gold')) {
+    if (text.contains('ranking') ||
+        text.contains('or') ||
+        text.contains('gold')) {
       return Colors.amber;
     }
 
@@ -996,7 +998,9 @@ class _BuildingBadgeCard extends StatelessWidget {
     }
     if (text.contains('millora')) return Icons.construction_outlined;
     if (text.contains('bhs') || text.contains('score')) return Icons.speed;
-    if (text.contains('ranking') || text.contains('or') || text.contains('gold')) {
+    if (text.contains('ranking') ||
+        text.contains('or') ||
+        text.contains('gold')) {
       return Icons.emoji_events_outlined;
     }
 
@@ -1076,10 +1080,7 @@ class _BadgeStateMessage extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const _BadgeStateMessage({
-    required this.icon,
-    required this.text,
-  });
+  const _BadgeStateMessage({required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {

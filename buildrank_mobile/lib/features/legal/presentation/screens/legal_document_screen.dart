@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 
-enum LegalDocumentType {
-  terms,
-  privacy,
-}
+enum LegalDocumentType { terms, privacy }
 
 class LegalDocumentScreen extends StatelessWidget {
   final LegalDocumentType type;
 
-  const LegalDocumentScreen({
-    super.key,
-    required this.type,
-  });
+  const LegalDocumentScreen({super.key, required this.type});
 
   bool get _isTerms => type == LegalDocumentType.terms;
 
@@ -38,10 +32,7 @@ class LegalDocumentScreen extends StatelessWidget {
           children: [
             Text(
               _title,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-              ),
+              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
@@ -144,10 +135,7 @@ class _LegalSectionData {
   final String title;
   final String body;
 
-  const _LegalSectionData({
-    required this.title,
-    required this.body,
-  });
+  const _LegalSectionData({required this.title, required this.body});
 }
 
 class _LegalSection extends StatelessWidget {
@@ -170,10 +158,7 @@ class _LegalSection extends StatelessWidget {
         children: [
           Text(
             section.title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -210,12 +195,7 @@ class _InfoNotice extends StatelessWidget {
         children: [
           Icon(Icons.info_outline, color: Colors.green.shade700),
           const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(height: 1.35),
-            ),
-          ),
+          Expanded(child: Text(text, style: const TextStyle(height: 1.35))),
         ],
       ),
     );

@@ -18,7 +18,10 @@ class AuthService {
     _isGoogleSignInInitialized = true;
   }
 
-  Future<Map<String, dynamic>> loginWithGoogle({String mode = 'login', String? role}) async {
+  Future<Map<String, dynamic>> loginWithGoogle({
+    String mode = 'login',
+    String? role,
+  }) async {
     try {
       await _ensureGoogleSignInInitialized();
 

@@ -477,11 +477,7 @@ class BuildingBadgesResponse {
       );
     }
 
-    return const BuildingBadgesResponse(
-      badges: [],
-      summary: [],
-      total: 0,
-    );
+    return const BuildingBadgesResponse(badges: [], summary: [], total: 0);
   }
 }
 
