@@ -40,7 +40,7 @@ class _RankingScreenState extends State<RankingScreen> {
   int _targetTop = 3;
   int _progressSeasonsCount = 3;
   RankingResponse? _ranking;
-  List<RankingProgressPoint> _progressEvolution = const [];
+  List<ProgressRankingEntry> _progressRanking = const [];
   bool _isLoadingProgress = false;
   String? _progressErrorText;
 
@@ -170,25 +170,25 @@ class _RankingScreenState extends State<RankingScreen> {
       _errorText = null;
     });
 
-    _loadProgressEvolution();
+    _loadProgressRanking();
   }
 
-  Future<void> _loadProgressEvolution() async {
+  Future<void> _loadProgressRanking() async {
     setState(() {
       _isLoadingProgress = true;
       _progressErrorText = null;
     });
 
     try {
-      final result = await widget.rankingService.getProgressEvolution(
+      final result = await widget.rankingService.getProgressRanking(
         idEdifici: widget.idEdifici,
-        seasonsCount: _progressSeasonsCount,
+        window: _progressSeasonsCount,
       );
 
       if (!mounted) return;
 
       setState(() {
-        _progressEvolution = result;
+        _progressRanking = result;
         _isLoadingProgress = false;
       });
     } on RankingApiException catch (e) {
@@ -520,7 +520,7 @@ class _RankingScreenState extends State<RankingScreen> {
                           _progressSeasonsCount = option;
                         });
 
-                        _loadProgressEvolution();
+                        _loadProgressRanking();
                       },
                     ),
                   ),
@@ -815,7 +815,7 @@ class _RankingScreenState extends State<RankingScreen> {
       );
     }
 
-    if (_progressEvolution.isEmpty) {
+    if (_progressRanking.isEmpty) {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
@@ -826,47 +826,44 @@ class _RankingScreenState extends State<RankingScreen> {
         ),
         child: Text(
           l10n.rankingNoProgressHistory,
-          style: TextStyle(color: Colors.black54, height: 1.35),
+          style: const TextStyle(color: Colors.black54, height: 1.35),
         ),
       );
     }
-
-    final first = _progressEvolution.first;
-    final last = _progressEvolution.last;
-
-    final entry = _ProgressRankingEntry(
-      idEdifici: widget.idEdifici,
-      position: last.position,
-      name: _cleanBuildingDisplayName(widget.buildingName),
-      startPoints: first.points,
-      currentPoints: last.points,
-      isCurrentBuilding: true,
-    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           l10n.rankingSeasonProgressTitle,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 6),
         Text(
-          l10n.rankingSeasonProgressSubtitle(_progressEvolution.length),
+          l10n.rankingSeasonProgressSubtitle(_progressSeasonsCount),
           style: const TextStyle(color: Colors.black54, height: 1.35),
         ),
         const SizedBox(height: 14),
-        _ProgressRankingCard(
-          entry: entry,
-          onDetail: () => _showProgressDetailModal(entry),
+        ..._progressRanking.map(
+          (entry) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _ProgressRankingCard(
+              entry: entry,
+              onDetail: entry.series.isEmpty
+                  ? null
+                  : () => _showProgressDetailModal(entry),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  void _showProgressDetailModal(_ProgressRankingEntry entry) {
+  void _showProgressDetailModal(ProgressRankingEntry entry) {
     final l10n = AppLocalizations.of(context);
-    final values = _progressEvolution.map((item) => item.points).toList();
+    final values = entry.series.isEmpty
+        ? [entry.startPoints, entry.currentPoints]
+        : entry.series.map((item) => item.points).toList();
 
     showModalBottomSheet<void>(
       context: context,
@@ -1014,7 +1011,7 @@ class _ProgressBarPlot extends StatelessWidget {
 }
 
 class _ProgressRankingCard extends StatelessWidget {
-  final _ProgressRankingEntry entry;
+  final ProgressRankingEntry entry;
   final VoidCallback? onDetail;
 
   const _ProgressRankingCard({required this.entry, this.onDetail});
@@ -1111,31 +1108,6 @@ class _ProgressRankingCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class _ProgressRankingEntry {
-  final int idEdifici;
-  final int position;
-  final String name;
-  final int startPoints;
-  final int currentPoints;
-  final bool isCurrentBuilding;
-
-  const _ProgressRankingEntry({
-    required this.idEdifici,
-    required this.position,
-    required this.name,
-    required this.startPoints,
-    required this.currentPoints,
-    this.isCurrentBuilding = false,
-  });
-
-  int get delta => currentPoints - startPoints;
-
-  double get percentage {
-    if (startPoints <= 0) return 0;
-    return delta / startPoints;
   }
 }
 
