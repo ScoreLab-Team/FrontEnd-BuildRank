@@ -8,24 +8,13 @@ class StreamService {
     logLevel: Level.INFO,
   );
 
-  static String? _lastUserId;
-  static String? _lastUserName;
-  static String? _lastToken;
-
-  static String? get lastUserName => _lastUserName;
-
   static Future<void> connectUser({
     required String userId,
     required String userName,
-    String? token,
+    required String token,
   }) async {
-    _lastUserId = userId;
-    _lastUserName = userName;
-    if (token != null) _lastToken = token;
-
-    // Ja connectat com el mateix usuari i amb el mateix nom
+    // Ja connectat com el mateix usuari — no fer res
     if (client.state.currentUser?.id == userId &&
-        client.state.currentUser?.name == userName &&
         client.wsConnectionStatus == ConnectionStatus.connected) {
       return;
     }
@@ -37,16 +26,7 @@ class StreamService {
 
     await client.connectUser(
       User(id: userId, name: userName),
-      token ?? _lastToken ?? client.devToken(userId).rawValue,
-    );
-  }
-
-  static Future<void> reconnect() async {
-    if (_lastUserId == null) return;
-    await connectUser(
-      userId: _lastUserId!,
-      userName: _lastUserName!,
-      token: _lastToken,
+      token,
     );
   }
 
@@ -59,9 +39,6 @@ class StreamService {
   }
 
   static Future<void> disconnectUser() async {
-    _lastUserId = null;
-    _lastUserName = null;
-    _lastToken = null;
     await client.disconnectUser();
   }
 }

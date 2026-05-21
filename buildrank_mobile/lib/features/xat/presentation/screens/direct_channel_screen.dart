@@ -1,4 +1,5 @@
 import 'package:buildrank_mobile/core/services/stream_service.dart';
+import 'package:buildrank_mobile/features/xat/data/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -33,7 +34,7 @@ class _DirectChannelScreenState extends State<DirectChannelScreen> {
   Future<void> _initChannel() async {
     try {
       if (StreamService.client.state.currentUser == null) {
-        await StreamService.reconnect();
+        await ChatService.provisionAndReconnect();
       }
 
       if (StreamService.client.state.currentUser == null) {
