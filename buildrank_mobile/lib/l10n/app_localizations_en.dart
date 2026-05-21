@@ -338,6 +338,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonRefresh => 'Refresh';
 
   @override
+  String get commonHideForSession => 'Hide for this session';
+
+  @override
   String commonErrorWithValue(String error) {
     return 'Error: $error';
   }
@@ -572,10 +575,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votesCreateAction => 'Create';
 
   @override
-  String get votesTitleLabel => 'T?tol';
+  String get votesTitleLabel => 'Title';
 
   @override
-  String get votesTitleHint => 'T?tol de la votaci?';
+  String get votesTitleHint => 'Voting title';
 
   @override
   String get votesTitleRequiredError => 'The title is required.';
@@ -588,13 +591,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votesDescriptionOptionalLabel => 'Description (optional)';
 
   @override
-  String get votesDescriptionHint => 'Context de la votaci?...';
+  String get votesDescriptionHint => 'Voting context...';
 
   @override
   String get votesDeadlineOptionalLabel => 'Deadline (optional)';
 
   @override
-  String get votesNoDeadline => 'Sense data l?mit';
+  String get votesNoDeadline => 'No deadline';
 
   @override
   String get votesOptionsLabel => 'Options';
@@ -603,11 +606,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votesOptionsLimitHint => 'Minimum 2 · Maximum 8';
 
   @override
-  String get votesAddOption => 'Afegir opci?';
+  String get votesAddOption => 'Add option';
 
   @override
   String votesOptionHint(int number) {
-    return 'Opci? $number';
+    return 'Option $number';
   }
 
   @override
@@ -1022,7 +1025,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonGreaterThanZero => 'Ha de ser superior a 0';
 
   @override
-  String get commonContinue => 'Continue ?';
+  String get commonContinue => 'Continue →';
 
   @override
   String get mainNavHome => 'Home';
@@ -1083,7 +1086,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String addExistingSelectedBuilding(String buildingName, String role) {
-    return 'Selected: $buildingName ? Requested role: $role';
+    return 'Selected: $buildingName · Requested role: $role';
   }
 
   @override
@@ -1119,13 +1122,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Could not load the progress evolution.';
 
   @override
-  String get rankingScopeLeague => 'La meva lliga';
+  String get rankingScopeLeague => 'My league';
 
   @override
-  String get rankingScopeComparableLeague => 'Similars lliga';
+  String get rankingScopeComparableLeague => 'Similar league';
 
   @override
-  String get rankingScopeComparableSeason => 'Similars temporada';
+  String get rankingScopeComparableSeason => 'Similar season';
 
   @override
   String get rankingUnavailableTitle => 'Ranking unavailable';
@@ -1135,7 +1138,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rankingActiveSeason(String seasonName) {
-    return 'Temporada activa: $seasonName';
+    return 'Active season: $seasonName';
   }
 
   @override
@@ -1145,11 +1148,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rankingPointsProgress(String currentPoints, String targetPoints) {
-    return '$currentPoints / $targetPoints punts';
+    return '$currentPoints / $targetPoints points';
   }
 
   @override
-  String get rankingSeasonPendingCalendar => 'Temporada pendent de calendari.';
+  String get rankingSeasonPendingCalendar => 'Season pending calendar.';
 
   @override
   String rankingCurrentPosition(int position) {
@@ -1173,10 +1176,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rankingBadgesEarned => 'Badges earned';
 
   @override
-  String get rankingViewAll => 'Veure-ho tot';
+  String get rankingViewAll => 'View all';
 
   @override
-  String get rankingBadgeSolarMaster => 'Mestre solar';
+  String get rankingBadgeSolarMaster => 'Solar master';
 
   @override
   String get rankingBadgeDateOct25 => 'Oct 25';
@@ -1194,13 +1197,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rankingBadgeDateDec25 => 'Dec 25';
 
   @override
-  String get rankingBadgeTest => 'Prova';
+  String get rankingBadgeTest => 'Test';
 
   @override
-  String get rankingBadgeDateJan26 => 'Gen 26';
+  String get rankingBadgeDateJan26 => 'Jan 26';
 
   @override
-  String get rankingSearchHint => 'Cerca per carrer...';
+  String get rankingSearchHint => 'Search by street...';
 
   @override
   String get rankingNoCompetitors =>
@@ -1233,12 +1236,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rankingAccumulatedImprovement(int delta) {
-    return 'Millora acumulada: +$delta punts';
+    return 'Accumulated improvement: +$delta points';
   }
 
   @override
   String rankingPointsRange(int startPoints, int currentPoints) {
-    return '$startPoints ? $currentPoints points';
+    return '$startPoints · $currentPoints points';
   }
 
   @override
@@ -1412,7 +1415,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String buildingFormNoStreetFound(String query) {
-    return 'No street was found for ?$query?.';
+    return 'No street was found for \"$query\".';
   }
 
   @override
@@ -1433,7 +1436,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buildingFormStreetSelectionRequired =>
-      'Selecciona un carrer de la llista de suggeriments.';
+      'Select a street from the suggestions list.';
 
   @override
   String get buildingFormNumberRequired => 'Street number is required.';
@@ -1448,7 +1451,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get buildingFormTypeRequired => 'Has de seleccionar una tipologia.';
+  String get buildingFormTypeRequired => 'You must select a typology.';
 
   @override
   String get buildingFormConstructionYearRequired =>
@@ -1472,7 +1475,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buildingFormFloorsPositive =>
-      'El nombre de plantes ha de ser un enter positiu.';
+      'The number of floors must be a positive integer.';
 
   @override
   String get buildingFormSurfaceRequired => 'Total area is required.';
@@ -1501,56 +1504,57 @@ class AppLocalizationsEn extends AppLocalizations {
       'An unexpected error occurred while saving the building.';
 
   @override
-  String get buildingFormTypeResidential => 'Residencial';
+  String get buildingFormTypeResidential => 'Residential';
 
   @override
-  String get buildingFormTypeCommercial => 'Comercial';
+  String get buildingFormTypeCommercial => 'Commercial';
 
   @override
-  String get buildingFormTypeEducational => 'Educatiu';
+  String get buildingFormTypeEducational => 'Educational';
 
   @override
-  String get buildingFormTypeHealthcare => 'Sanitari';
+  String get buildingFormTypeHealthcare => 'Healthcare';
 
   @override
-  String get buildingFormTypeMixed => 'Mixt';
+  String get buildingFormTypeMixed => 'Mixed';
 
   @override
-  String get buildingFormTypeResidentialSubtitle => 'Unifamiliar o pisos';
+  String get buildingFormTypeResidentialSubtitle =>
+      'Single-family or apartments';
 
   @override
   String get buildingFormTypeCommercialSubtitle => 'Offices, shops...';
 
   @override
-  String get buildingFormTypeEducationalSubtitle => 'Escoles';
+  String get buildingFormTypeEducationalSubtitle => 'Schools';
 
   @override
   String get buildingFormTypeHealthcareSubtitle => 'Hospitals';
 
   @override
-  String get buildingFormTypeMixedSubtitle => 'Usos combinats';
+  String get buildingFormTypeMixedSubtitle => 'Combined uses';
 
   @override
-  String get orientationNorth => 'Nord';
+  String get orientationNorth => 'North';
 
   @override
-  String get orientationSouth => 'Sud';
+  String get orientationSouth => 'South';
 
   @override
-  String get orientationEast => 'Est';
+  String get orientationEast => 'East';
 
   @override
-  String get orientationWest => 'Oest';
+  String get orientationWest => 'West';
 
   @override
-  String get buildingFormNewBuildingChip => 'Nou Edifici';
+  String get buildingFormNewBuildingChip => 'New building';
 
   @override
-  String get buildingFormTitle => 'Registra l\'edifici';
+  String get buildingFormTitle => 'Register the building';
 
   @override
   String get buildingFormStep1Subtitle =>
-      'Let?s start with the building location.';
+      'Let\'s start with the building location.';
 
   @override
   String get buildingFormStep2Subtitle =>
@@ -1567,22 +1571,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormLocationSection => 'LOCATION';
 
   @override
-  String get buildingFormPostalCodeLabel => 'Codi postal';
+  String get buildingFormPostalCodeLabel => 'Postal code';
 
   @override
-  String get buildingFormPostalCodeHint => 'p. ex., 08025';
+  String get buildingFormPostalCodeHint => 'e.g., 08025';
 
   @override
   String get buildingFormOr => 'o';
 
   @override
-  String get buildingFormNeighborhoodLabel => 'Barri';
+  String get buildingFormNeighborhoodLabel => 'Neighborhood';
 
   @override
-  String get buildingFormNeighborhoodHint => 'e.g., Sagrada Fam?lia';
+  String get buildingFormNeighborhoodHint => 'e.g., Sagrada Família';
 
   @override
-  String get buildingFormStreetLabel => 'Nom del carrer';
+  String get buildingFormStreetLabel => 'Street name';
 
   @override
   String get buildingFormStreetHint => 'Start typing the street';
@@ -1615,19 +1619,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormAddressLabel => 'Address';
 
   @override
-  String get buildingFormTypeLabel => 'Tipologia de l\'edifici';
+  String get buildingFormTypeLabel => 'Building typology';
 
   @override
   String get buildingFormConstructionYearLabel => 'Construction year';
 
   @override
-  String get buildingFormConstructionYearHint => 'p. ex., 1998';
+  String get buildingFormConstructionYearHint => 'e.g., 1998';
 
   @override
-  String get buildingFormRegulationLabel => 'Normativa vigent';
+  String get buildingFormRegulationLabel => 'Current regulation';
 
   @override
-  String get buildingFormRegulationHint => 'p. ex., CTE';
+  String get buildingFormRegulationHint => 'e.g., CTE';
 
   @override
   String get buildingFormTechnicalSection => 'TECHNICAL DATA';
@@ -1639,19 +1643,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormConstructionYearSummaryLabel => 'Construction year';
 
   @override
-  String get buildingFormRegulationSummaryLabel => 'Normativa';
+  String get buildingFormRegulationSummaryLabel => 'Regulation';
 
   @override
-  String get buildingFormFloorsLabel => 'Nombre de plantes';
+  String get buildingFormFloorsLabel => 'Number of floors';
 
   @override
-  String get buildingFormFloorsHint => 'p. ex., 6';
+  String get buildingFormFloorsHint => 'e.g., 6';
 
   @override
-  String get buildingFormSurfaceLabel => 'Total area (m²)';
+  String get buildingFormSurfaceLabel => 'Total area (m�)';
 
   @override
-  String get buildingFormSurfaceHint => 'p. ex., 850';
+  String get buildingFormSurfaceHint => 'e.g., 850';
 
   @override
   String get buildingFormOrientationLabel => 'Main orientation';
@@ -1663,7 +1667,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormDocumentationSection => 'DOCUMENTATION';
 
   @override
-  String get buildingFormBuildingToVerify => 'Edifici a verificar';
+  String get buildingFormBuildingToVerify => 'Building to verify';
 
   @override
   String get buildingFormSubmittingDocuments => 'Sending documentation...';
@@ -1690,7 +1694,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String editHabitatgeSelectorFloorDoor(String floor, String door) {
-    return 'Floor $floor ? Door $door';
+    return 'Floor $floor · Door $door';
   }
 
   @override
@@ -1762,10 +1766,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabitatgeFinalEnergyConsumption => 'Consum energia final';
 
   @override
-  String get editHabitatgeCo2Emissions => 'CO? emissions';
+  String get editHabitatgeCo2Emissions => 'CO₂ emissions';
 
   @override
-  String get editHabitatgeAnnualEnergyCost => 'Annual energy cost (?)';
+  String get editHabitatgeAnnualEnergyCost => 'Annual energy cost (€)';
 
   @override
   String get editHabitatgeConsumptionByUse => 'Consumption by use';
@@ -1858,7 +1862,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String adminAuditPageRange(int firstItem, int lastItem, int totalCount) {
-    return '$firstItem?$lastItem of $totalCount';
+    return '$firstItem-$lastItem of $totalCount';
   }
 
   @override
@@ -1924,7 +1928,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get simulationNoSaved =>
-      'There are no saved simulations for this building yet. Calculate a preview and tap ?Save simulation?.';
+      'There are no saved simulations for this building yet. Calculate a preview and tap \"Save simulation\".';
 
   @override
   String get simulationImplementedTitle => 'Applied improvements';
@@ -1973,12 +1977,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String simulationTotalCostAndEngine(String cost, String engine) {
-    return 'Estimated total cost: $cost ? Engine $engine';
+    return 'Estimated total cost: $cost · Engine $engine';
   }
 
   @override
   String simulationDateAndEngine(String date, String engine) {
-    return 'Date: $date ? Engine $engine';
+    return 'Date: $date · Engine $engine';
   }
 
   @override
@@ -2002,7 +2006,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String altSimulationPreparedSnack(int count) {
-    return 'Simulaci? preparada per presentar a votaci? amb $count millora/es.';
+    return 'Simulation ready to submit to a vote with $count improvement(s).';
   }
 
   @override
@@ -2012,13 +2016,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationDetailedImpact => 'Impacte detallat';
 
   @override
-  String get altSimulationPresentVote => 'Presentar a votaci?';
+  String get altSimulationPresentVote => 'Submit to vote';
 
   @override
-  String get altSimulationLive => 'SIMULACI? EN DIRECTE';
+  String get altSimulationLive => 'LIVE SIMULATION';
 
   @override
-  String get altSimulationExpectedPerformance => 'Rendiment previst';
+  String get altSimulationExpectedPerformance => 'Expected performance';
 
   @override
   String get altSimulationImpact => 'IMPACTE';
@@ -2027,25 +2031,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationEstimatedCost => 'COST\nESTIM';
 
   @override
-  String get altSimulationOperationalForecast => 'PREVISI? OPERATIVA';
+  String get altSimulationOperationalForecast => 'OPERATING FORECAST';
 
   @override
-  String get altSimulationAnnualEnergyCost => 'Cost energ?tic anual';
+  String get altSimulationAnnualEnergyCost => 'Annual energy cost';
 
   @override
   String get altSimulationCarbonFootprint => 'Petjada de carboni';
 
   @override
-  String get altSimulationEnergyIntensity => 'Intensitat energ?tica';
+  String get altSimulationEnergyIntensity => 'Energy intensity';
 
   @override
-  String get altSimulationTotalInvestment => 'INVERSI? TOTAL';
+  String get altSimulationTotalInvestment => 'TOTAL INVESTMENT';
 
   @override
   String get altSimulationAnnualSavings => 'ESTALVI ANUAL';
 
   @override
-  String get altSimulationPaybackPeriod => 'PER?ODE DE RETORN';
+  String get altSimulationPaybackPeriod => 'PAYBACK PERIOD';
 
   @override
   String altSimulationYears(String years) {
@@ -2062,10 +2066,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationGlazingTitle => 'Triple vidre';
 
   @override
-  String get altSimulationGlazingSubtitle => 'Alt rendiment';
+  String get altSimulationGlazingSubtitle => 'High performance';
 
   @override
-  String get altSimulationInsulationTitle => 'A?llament de paret';
+  String get altSimulationInsulationTitle => 'Wall insulation';
 
   @override
   String get altSimulationInsulationSubtitle => 'Mineral exterior';
@@ -2086,7 +2090,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votesStatusArchived => 'Arxivada';
 
   @override
-  String get votesStatusCancelled => 'Cancel?lada';
+  String get votesStatusCancelled => 'Cancelled';
 
   @override
   String get votesRetry => 'Torna-ho a provar';
@@ -2102,26 +2106,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get votesSelectOptionSnack => 'Selecciona una opci? per votar.';
+  String get votesSelectOptionSnack => 'Select an option to vote.';
 
   @override
   String get votesRegisteredSnack => 'Vot registrat correctament.';
 
   @override
-  String get votesDeleteTitle => 'Eliminar votaci?';
+  String get votesDeleteTitle => 'Delete vote';
 
   @override
   String get votesDeleteBody =>
-      'Segur que vols eliminar aquesta votaci?? S?esborraran totes les opcions i vots emesos. Aquesta acci? no es pot desfer.';
+      'Are you sure you want to delete this vote? All options and submitted votes will be deleted. This action cannot be undone.';
 
   @override
-  String get votesCancel => 'Cancel?lar';
+  String get votesCancel => 'Cancel';
 
   @override
   String get votesDelete => 'Eliminar';
 
   @override
-  String get votesFallbackTitle => 'Votaci?';
+  String get votesFallbackTitle => 'Vote';
 
   @override
   String get votesEdit => 'Editar';
@@ -2132,14 +2136,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get votesSelectOption => 'Selecciona una opci?';
+  String get votesSelectOption => 'Select an option';
 
   @override
-  String get votesOptions => 'Opcions';
+  String get votesOptions => 'Options';
 
   @override
   String get votesPermissionOnlyOwners =>
-      'Nom?s els propietaris i administradors de finca vinculats a aquest edifici poden emetre vot.';
+      'Only owners and property managers linked to this building can vote.';
 
   @override
   String get votesVote => 'Votar';
@@ -2161,7 +2165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get votesEditTitle => 'Editar votaci?';
+  String get votesEditTitle => 'Edit vote';
 
   @override
   String get votesSave => 'Desar';
@@ -2170,277 +2174,274 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votesSaveChanges => 'Desar canvis';
 
   @override
-  String get votesMinimumOptionsSnack => 'Cal un m?nim de 2 opcions.';
+  String get votesMinimumOptionsSnack => 'At least 2 options are required.';
 
   @override
   String get votesDuplicateOptionsSnack =>
       'Hi ha opcions duplicades. Revisa\'ls.';
 
   @override
-  String get votesTitleRequired => 'El t?tol ?s obligatori.';
+  String get votesTitleRequired => 'The title is required.';
 
   @override
   String get votesTitleMinLength =>
       'The title must be at least 4 characters long.';
 
   @override
-  String get votesDescriptionOptional => 'Descripci? (opcional)';
+  String get votesDescriptionOptional => 'Description (optional)';
 
   @override
-  String get votesDeadline => 'Data l?mit';
+  String get votesDeadline => 'Deadline';
 
   @override
-  String get votesOptionsRange => 'M?nim 2 ? M?xim 8';
+  String get votesOptionsRange => 'Minimum 2 · Maximum 8';
 
   @override
   String get votesOptionsWarning =>
-      'Atenci?: modificar les opcions pot afectar els vots existents.';
+      'Warning: changing the options may affect existing votes.';
 
   @override
   String get votesState => 'Estat';
 
   @override
-  String get votesCancelledLocked =>
-      'Una votaci? cancel?lada no es pot reobrir.';
+  String get votesCancelledLocked => 'A cancelled vote cannot be reopened.';
 
   @override
-  String get votesOptionRequired => 'Aquesta opci? no pot estar buida.';
+  String get votesOptionRequired => 'This option cannot be empty.';
 
   @override
-  String get votesListTitle => 'Votaci? interna';
+  String get votesListTitle => 'Internal vote';
 
   @override
   String votesListSubtitle(String buildingName) {
-    return 'Presa de decisions per $buildingName';
+    return 'Decision-making for $buildingName';
   }
 
   @override
-  String get votesGeneralSection => 'VOTACIONS GENERALS';
+  String get votesGeneralSection => 'GENERAL VOTES';
 
   @override
-  String get votesSimulationSection => 'VOTACIONS DE SIMULACI?';
+  String get votesSimulationSection => 'SIMULATION VOTES';
 
   @override
   String votesTabActive(int count) {
-    return 'Actiu ($count)';
+    return 'Active ($count)';
   }
 
   @override
   String votesTabCompleted(int count) {
-    return 'Completat ($count)';
+    return 'Completed ($count)';
   }
 
   @override
-  String get votesTabMyProposals => 'Les meves propostes';
+  String get votesTabMyProposals => 'My proposals';
 
   @override
-  String get votesTabMyVotes => 'Les meves votacions';
+  String get votesTabMyVotes => 'My votes';
 
   @override
-  String get votesEmptyActive => 'No hi ha votacions actives ara mateix.';
+  String get votesEmptyActive => 'There are no active votes right now.';
 
   @override
-  String get votesEmptySection => 'No hi ha votacions en aquesta secci?.';
+  String get votesEmptySection => 'There are no votes in this section.';
 
   @override
   String get votesEmptyBody =>
-      'Quan l?administrador sotmeti una simulaci? a votaci?, apareixer? aqu?.';
+      'When the administrator submits a simulation to a vote, it will appear here.';
 
   @override
   String get votesInfoCanVote =>
-      'Pots participar en les votacions de la comunitat vinculades a aquest edifici.';
+      'You can participate in community votes linked to this building.';
 
   @override
   String get votesInfoCannotVote =>
-      'Nom?s propietaris i administradors de finca vinculats a l?edifici poden votar.';
+      'Only owners and property managers linked to the building can vote.';
 
   @override
-  String get votesRegisteredFavor => 'Vot a favor registrat.';
+  String get votesRegisteredFavor => 'Vote in favor registered.';
 
   @override
-  String get votesRegisteredAgainst => 'Vot en contra registrat.';
+  String get votesRegisteredAgainst => 'Vote against registered.';
 
   @override
-  String get votesActive => 'Activa';
+  String get votesActive => 'Active';
 
   @override
-  String get votesEndsToday => 'Finalitza avui';
+  String get votesEndsToday => 'Ends today';
 
   @override
   String votesDaysRemaining(int days) {
-    return '$days dies restants';
+    return '$days days remaining';
   }
 
   @override
-  String get votesEnergyProposalFallback => 'Proposta de millora energ?tica.';
+  String get votesEnergyProposalFallback => 'Energy improvement proposal.';
 
   @override
-  String get votesQuorumProgress => 'Progr?s del qu?rum';
+  String get votesQuorumProgress => 'Quorum progress';
 
   @override
-  String get votesQuorumReached => 'Qu?rum assolit';
+  String get votesQuorumReached => 'Quorum reached';
 
   @override
-  String get votesNeedMoreParticipation => 'Cal m?s participaci?';
+  String get votesNeedMoreParticipation => 'More participation needed';
 
   @override
-  String get votesVoteSection => 'VOTA';
+  String get votesVoteSection => 'VOTE';
 
   @override
-  String get votesFavor => 'A favor';
+  String get votesFavor => 'In favor';
 
   @override
-  String get votesAgainst => 'En contra';
+  String get votesAgainst => 'Against';
 
   @override
   String votesEstimatedCostSaving(String cost, String saving) {
-    return 'Cost estimat $cost ? +$saving ?/any';
+    return 'Estimated cost $cost € +$saving €/year';
   }
 
   @override
-  String get votesKeepCurrentState => 'Mantenir l\'estat actual';
+  String get votesKeepCurrentState => 'Keep current state';
 
   @override
   String votesYourVote(String vote) {
-    return 'El teu vot: $vote';
+    return 'Your vote: $vote';
   }
 
   @override
-  String get votesPendingVote => 'Pendent de vot';
+  String get votesPendingVote => 'Pending vote';
 
   @override
-  String get votesNotReported => 'no informat';
+  String get votesNotReported => 'not reported';
 
   @override
   String adminUsersSuspendTitle(String email) {
-    return 'Suspendre $email';
+    return 'Suspend $email';
   }
 
   @override
-  String get adminUsersReasonLabel => 'Motiu (opcional)';
+  String get adminUsersReasonLabel => 'Reason (optional)';
 
   @override
-  String get adminUsersReasonHint => 'Descriu el motiu de la suspensi?...';
+  String get adminUsersReasonHint =>
+      'Describe the reason for the suspension...';
 
   @override
-  String get adminUsersEndDate => 'Data fi';
+  String get adminUsersEndDate => 'End date';
 
   @override
-  String get adminUsersRemoveDate => 'Eliminar data';
+  String get adminUsersRemoveDate => 'Remove date';
 
   @override
-  String get adminUsersConfirm => 'Confirmar';
+  String get adminUsersConfirm => 'Confirm';
 
   @override
-  String get adminUsersTitle => 'Gesti? d\'usuaris';
+  String get adminUsersTitle => 'User management';
 
   @override
   String adminUsersCount(int count) {
-    return '$count usuaris';
+    return '$count users';
   }
 
   @override
-  String get adminUsersEmpty => 'No hi ha usuaris.';
+  String get adminUsersEmpty => 'There are no users.';
 
   @override
   String adminUsersReason(String reason) {
-    return 'Motiu: $reason';
+    return 'Reason: $reason';
   }
 
   @override
-  String get adminUsersSuspend => 'Suspendre';
+  String get adminUsersSuspend => 'Suspend';
 
   @override
-  String get adminHomeVerificationPending => 'Verificacions pendents';
+  String get adminHomeVerificationPending => 'Pending verifications';
 
   @override
-  String get adminHomeSearchHint => 'Cerca edificis o usuaris...';
+  String get adminHomeSearchHint => 'Search buildings or users...';
 
   @override
-  String get adminHomeVerificationQueue => 'Cua de verificaci? documental';
+  String get adminHomeVerificationQueue => 'Document verification queue';
 
   @override
   String adminHomePendingCount(int count) {
-    return '$count pendents';
+    return '$count pending';
   }
 
   @override
-  String get adminHomeNoPendingVerifications =>
-      'No hi ha verificacions pendents';
+  String get adminHomeNoPendingVerifications => 'No pending verifications';
 
   @override
   String get adminHomeNoPendingVerificationsBody =>
-      'Quan una verificaci? acabi el processament d?IA apareixer? aqu?.';
+      'When a verification finishes AI processing, it will appear here.';
 
   @override
-  String get adminHomeCreateSeason => 'Crear nova temporada';
+  String get adminHomeCreateSeason => 'Create new season';
 
   @override
   String get adminHomeChatsBody =>
-      'Accedeix als xats dels edificis i aplica accions de moderaci?.';
+      'Access building chats and apply moderation actions.';
 
   @override
-  String get adminHomeOpenBuildingChats => 'Accedir als xats dels edificis';
+  String get adminHomeOpenBuildingChats => 'Open building chats';
 
   @override
-  String get adminHomeUsersTitle => 'Gesti? d\'usuaris';
+  String get adminHomeUsersTitle => 'User management';
 
   @override
-  String get adminHomeUsersBody =>
-      'Bloqueja, susp?n i gestiona els comptes dels usuaris.';
+  String get adminHomeUsersBody => 'Block, suspend, and manage user accounts.';
 
   @override
-  String get adminHomeOpenUsers => 'Accedir a la gesti? d?usuaris';
+  String get adminHomeOpenUsers => 'Open user management';
 
   @override
   String get adminHomeAnomalyBody =>
-      '5 edificis de la categoria ?Comercial? han presentat dades que superen els punts de refer?ncia hist?rics en m?s d?un 20%. Cal una auditoria manual.';
+      '5 buildings in the \"Commercial\" category submitted data more than 20% above historical benchmarks. A manual audit is required.';
 
   @override
   String get adminHomeUnexpectedVerificationError =>
-      'S?ha produ?t un error inesperat revisant la verificaci?.';
+      'An unexpected error occurred while reviewing the verification.';
 
   @override
-  String get adminHomeRejectionReason => 'Motiu de rebuig';
+  String get adminHomeRejectionReason => 'Rejection reason';
 
   @override
-  String get adminHomeRejectionHint => 'Explica breument per qu? es rebutja...';
+  String get adminHomeRejectionHint =>
+      'Briefly explain why it is being rejected...';
 
   @override
-  String get adminHomeCancel => 'Cancel?la';
+  String get adminHomeCancel => 'Cancel';
 
   @override
-  String get adminHomeReject => 'Rebutja';
+  String get adminHomeReject => 'Reject';
 
   @override
-  String get adminHomeFiltersPending =>
-      'Filtres avan?ats pendents d?integraci?.';
+  String get adminHomeFiltersPending => 'Advanced filters pending integration.';
 
   @override
   String get adminHomeCreateSeasonPending =>
-      'Creaci? de temporada pendent d?integraci?.';
+      'Season creation pending integration.';
 
   @override
-  String get adminHomeRolesPending =>
-      'Matriu de permisos pendent d?integraci?.';
+  String get adminHomeRolesPending => 'Permissions matrix pending integration.';
 
   @override
-  String get adminHomeApprove => 'Aprova';
+  String get adminHomeApprove => 'Approve';
 
   @override
-  String get adminHomeRejected => 'Rebutjat';
+  String get adminHomeRejected => 'Rejected';
 
   @override
-  String get adminHomeApproved => 'Aprovat';
+  String get adminHomeApproved => 'Approved';
 
   @override
   String adminHomeSeasonStats(String range, int participants) {
-    return '$range ? $participants edificis';
+    return '$range · $participants buildings';
   }
 
   @override
   String adminHomeRoleStats(int users, int permissions) {
-    return '$users usuaris ? $permissions permisos';
+    return '$users users · $permissions permissions';
   }
 
   @override
@@ -2462,4 +2463,142 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminHomeSeasonManagement => 'Season management';
+
+  @override
+  String adminUsersBlockedSnack(String email) {
+    return '$email has been blocked.';
+  }
+
+  @override
+  String adminUsersUnblockedSnack(String email) {
+    return '$email has been unblocked.';
+  }
+
+  @override
+  String adminUsersSuspendedSnack(String email) {
+    return '$email has been suspended.';
+  }
+
+  @override
+  String adminUsersUnsuspendedSnack(String email) {
+    return 'The suspension for $email has been lifted.';
+  }
+
+  @override
+  String get adminUsersIndefiniteSuspension => 'Indefinite suspension';
+
+  @override
+  String adminHomeSeasonLabel(int seasonNumber) {
+    return 'Season $seasonNumber';
+  }
+
+  @override
+  String get adminHomeActiveUsers => 'Active users';
+
+  @override
+  String get adminHomeValidatedImprovements => 'Validated improvements';
+
+  @override
+  String get adminHomeIntegrityAlerts => 'Integrity alerts';
+
+  @override
+  String get adminHomeNewTrend => 'New';
+
+  @override
+  String get adminHomeTasksTab => 'Tasks';
+
+  @override
+  String get adminHomeSeasonsTab => 'Seasons';
+
+  @override
+  String get adminHomeRolesTab => 'Roles';
+
+  @override
+  String get adminHomeVerificationLoadError => 'Could not load verifications';
+
+  @override
+  String get adminHomeRefreshVerifications => 'Refresh verifications';
+
+  @override
+  String adminHomeRecordsCount(int count) {
+    return '$count records';
+  }
+
+  @override
+  String get adminHomeRolesAndPermissions => 'Roles and permissions';
+
+  @override
+  String adminHomeRolesCount(int count) {
+    return '$count roles';
+  }
+
+  @override
+  String get adminHomeReviewPermissionsMatrix => 'Review permissions matrix';
+
+  @override
+  String get adminVerificationDocumentsTitle => 'Administrator documentation';
+
+  @override
+  String get adminVerificationDocumentsBody =>
+      'Attach documentation proving that you can act as property manager for this building. The verification will remain pending review.';
+
+  @override
+  String get adminVerificationAttachDocuments => 'Attach documents';
+
+  @override
+  String get adminVerificationJpgOnly => 'Attach documents in JPG format.';
+
+  @override
+  String get adminVerificationRemoveDocument => 'Delete document';
+
+  @override
+  String get adminVerificationDocumentType => 'Document type';
+
+  @override
+  String get weatherLoadError => 'Could not load weather data.';
+
+  @override
+  String get weatherLoadingBarcelona => 'Loading weather data for Barcelona...';
+
+  @override
+  String weatherCurrentInCity(String city) {
+    return 'Current weather in $city';
+  }
+
+  @override
+  String get weatherUpdatedByXema =>
+      'Weather data updated by the XEMA service.';
+
+  @override
+  String leagueInfoBody(String currentLeague, String nextLeague) {
+    return 'This building is currently in the $currentLeague. Improve its energy rating to move into the $nextLeague.';
+  }
+
+  @override
+  String get rankingComingSoonButton => 'Coming soon: view ranking';
+
+  @override
+  String get weatherPrecipitationUnavailable => 'Precipitation unavailable';
+
+  @override
+  String weatherSolarIrradiance(String value) {
+    return 'Solar irradiance: $value W/m²';
+  }
+
+  @override
+  String weatherCurrentTemperature(String value) {
+    return 'Current temperature: $value°C';
+  }
+
+  @override
+  String get weatherTemperatureUnavailable => 'Temperature unavailable';
+
+  @override
+  String weatherPrecipitation(String value) {
+    return 'Precipitation: $value mm';
+  }
+
+  @override
+  String get weatherSolarIrradianceUnavailable =>
+      'Solar irradiance unavailable';
 }

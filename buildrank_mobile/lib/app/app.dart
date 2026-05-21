@@ -16,6 +16,14 @@ class BuildRankApp extends StatelessWidget {
 
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
+  static Locale _streamChatDateLocale(Locale appLocale) {
+    return switch (appLocale.languageCode) {
+      'ca' || 'es' => const Locale('es'),
+      'en' => const Locale('en'),
+      _ => const Locale('en'),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     ApiClient.onSessionExpired = () {
@@ -55,40 +63,50 @@ class BuildRankApp extends StatelessWidget {
               useMaterial3: true,
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
             ),
-            builder: (context, child) => StreamChat(
-              client: StreamService.client,
-              streamChatThemeData: StreamChatThemeData(
-                colorTheme: StreamColorTheme.light(accentPrimary: Colors.green),
-                ownMessageTheme: StreamMessageThemeData(
-                  messageBackgroundColor: Colors.green,
-                  messageTextStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
+            builder: (context, child) => Localizations.override(
+              context: context,
+              locale: _streamChatDateLocale(localeController.locale),
+              child: StreamChat(
+                client: StreamService.client,
+                streamChatThemeData: StreamChatThemeData(
+                  colorTheme: StreamColorTheme.light(
+                    accentPrimary: Colors.green,
                   ),
-                  createdAtStyle: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 11,
+                  ownMessageTheme: StreamMessageThemeData(
+                    messageBackgroundColor: Colors.green,
+                    messageTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                    createdAtStyle: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 11,
+                    ),
+                    reactionsBackgroundColor: Colors.green.shade700,
                   ),
-                  reactionsBackgroundColor: Colors.green.shade700,
+                  otherMessageTheme: StreamMessageThemeData(
+                    messageBackgroundColor: Colors.white,
+                    messageTextStyle: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 15,
+                    ),
+                    messageAuthorStyle: TextStyle(
+                      color: Colors.green.shade700,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    createdAtStyle: const TextStyle(
+                      color: Colors.black45,
+                      fontSize: 11,
+                    ),
+                  ),
                 ),
-                otherMessageTheme: StreamMessageThemeData(
-                  messageBackgroundColor: Colors.white,
-                  messageTextStyle: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 15,
-                  ),
-                  messageAuthorStyle: TextStyle(
-                    color: Colors.green.shade700,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                  createdAtStyle: const TextStyle(
-                    color: Colors.black45,
-                    fontSize: 11,
-                  ),
+                child: Localizations.override(
+                  context: context,
+                  locale: localeController.locale,
+                  child: child!,
                 ),
               ),
-              child: child!,
             ),
             home: const SessionGateScreen(),
           );

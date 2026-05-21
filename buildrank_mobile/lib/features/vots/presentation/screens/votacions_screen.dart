@@ -234,20 +234,9 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
         ),
         const SizedBox(height: 4),
-        Text.rich(
-          TextSpan(
-            text: AppLocalizations.of(context).votesListSubtitle(''),
-            style: const TextStyle(color: Colors.black54, fontSize: 15),
-            children: [
-              TextSpan(
-                text: widget.buildingName,
-                style: TextStyle(
-                  color: Colors.green.shade700,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
+        Text(
+          AppLocalizations.of(context).votesListSubtitle(widget.buildingName),
+          style: const TextStyle(color: Colors.black54, fontSize: 15),
         ),
       ],
     );
@@ -362,8 +351,8 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
           const SizedBox(height: 12),
           Text(
             _tab == 0
-                ? 'No hi ha votacions actives ara mateix.'
-                : 'No hi ha votacions en aquesta secció.',
+                ? AppLocalizations.of(context).votesEmptyActive
+                : AppLocalizations.of(context).votesEmptySection,
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
@@ -392,8 +381,8 @@ class _VotacionsScreenState extends State<VotacionsScreen> {
           const SizedBox(height: 10),
           Text(
             _canVoteCommunity
-                ? 'Pots participar en les votacions de la comunitat vinculades a aquest edifici.'
-                : 'Només propietaris i administradors de finca vinculats a l’edifici poden votar.',
+                ? AppLocalizations.of(context).votesInfoCanVote
+                : AppLocalizations.of(context).votesInfoCannotVote,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontWeight: FontWeight.w700,

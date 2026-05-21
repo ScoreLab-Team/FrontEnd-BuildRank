@@ -47,26 +47,31 @@ class _UsersPanelState extends State<UsersPanel> {
   }
 
   Future<void> _blockUser(AdminUser user) async {
+    final l10n = AppLocalizations.of(context);
+
     try {
       final updated = await _service.blockUser(user.id);
       _replaceUser(updated);
-      _showSnack('${user.email} ha estat bloquejat.');
+      _showSnack(l10n.adminUsersBlockedSnack(user.email));
     } catch (e) {
       _showSnack(e.toString().replaceFirst('Exception: ', ''), isError: true);
     }
   }
 
   Future<void> _unblockUser(AdminUser user) async {
+    final l10n = AppLocalizations.of(context);
+
     try {
       final updated = await _service.unblockUser(user.id);
       _replaceUser(updated);
-      _showSnack('${user.email} ha estat desbloquejat.');
+      _showSnack(l10n.adminUsersUnblockedSnack(user.email));
     } catch (e) {
       _showSnack(e.toString().replaceFirst('Exception: ', ''), isError: true);
     }
   }
 
   Future<void> _showSuspendDialog(AdminUser user) async {
+    final l10n = AppLocalizations.of(context);
     final reasonController = TextEditingController();
     DateTime? selectedDate;
 
@@ -87,7 +92,7 @@ class _UsersPanelState extends State<UsersPanel> {
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context).adminUsersReasonLabel,
                   border: OutlineInputBorder(),
-                  hintText: 'Descriu el motiu de la suspensió...',
+                  hintText: AppLocalizations.of(context).adminUsersReasonHint,
                 ),
               ),
               const SizedBox(height: 16),
@@ -96,7 +101,9 @@ class _UsersPanelState extends State<UsersPanel> {
                   Expanded(
                     child: Text(
                       selectedDate == null
-                          ? 'Suspensió indefinida'
+                          ? AppLocalizations.of(
+                              context,
+                            ).adminUsersIndefiniteSuspension
                           : AppLocalizations.of(
                               context,
                             ).adminUsersUntilDate(_formatDate(selectedDate!)),
@@ -136,7 +143,7 @@ class _UsersPanelState extends State<UsersPanel> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogCtx, false),
-              child: const Text('Cancel·lar'),
+              child: Text(AppLocalizations.of(context).commonCancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(dialogCtx, true),
@@ -162,17 +169,19 @@ class _UsersPanelState extends State<UsersPanel> {
         suspendedUntil: selectedDate,
       );
       _replaceUser(updated);
-      _showSnack('${user.email} ha estat suspès.');
+      _showSnack(l10n.adminUsersSuspendedSnack(user.email));
     } catch (e) {
       _showSnack(e.toString().replaceFirst('Exception: ', ''), isError: true);
     }
   }
 
   Future<void> _unsuspendUser(AdminUser user) async {
+    final l10n = AppLocalizations.of(context);
+
     try {
       final updated = await _service.unsuspendUser(user.id);
       _replaceUser(updated);
-      _showSnack('La suspensió de ${user.email} ha estat aixecada.');
+      _showSnack(l10n.adminUsersUnsuspendedSnack(user.email));
     } catch (e) {
       _showSnack(e.toString().replaceFirst('Exception: ', ''), isError: true);
     }

@@ -168,7 +168,7 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel·lar'),
+            child: Text(AppLocalizations.of(context).commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
@@ -237,7 +237,7 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        'Eliminar',
+                        AppLocalizations.of(context).votesDelete,
                         style: TextStyle(color: Colors.red[700]),
                       ),
                     ],

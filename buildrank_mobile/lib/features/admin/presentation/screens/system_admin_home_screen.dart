@@ -244,7 +244,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                '${widget.adminName} · Temporada ${widget.seasonNumber}',
+                '${widget.adminName} · ${AppLocalizations.of(context).adminHomeSeasonLabel(widget.seasonNumber)}',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF6B7280),
@@ -297,31 +297,33 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             iconColor: const Color(0xFF19C463),
           ),
           const SizedBox(width: 12),
-          const _MetricCard(
+          _MetricCard(
             icon: Icons.groups_2_outlined,
             title: '1,284',
-            subtitle: 'Usuaris actius',
+            subtitle: AppLocalizations.of(context).adminHomeActiveUsers,
             trend: '+5.4%',
-            iconBackground: Color(0xFFE5F9ED),
-            iconColor: Color(0xFF19C463),
+            iconBackground: const Color(0xFFE5F9ED),
+            iconColor: const Color(0xFF19C463),
           ),
           const SizedBox(width: 12),
           _MetricCard(
             icon: Icons.verified_outlined,
             title: verified.toString(),
-            subtitle: 'Millores validades',
+            subtitle: AppLocalizations.of(
+              context,
+            ).adminHomeValidatedImprovements,
             trend: '+8%',
             iconBackground: const Color(0xFFEAF2FF),
             iconColor: const Color(0xFF2563EB),
           ),
           const SizedBox(width: 12),
-          const _MetricCard(
+          _MetricCard(
             icon: Icons.warning_amber_rounded,
             title: '5',
-            subtitle: 'Alertes d’integritat',
-            trend: 'Nou',
-            iconBackground: Color(0xFFFFF7E6),
-            iconColor: Color(0xFFE08A00),
+            subtitle: AppLocalizations.of(context).adminHomeIntegrityAlerts,
+            trend: AppLocalizations.of(context).adminHomeNewTrend,
+            iconBackground: const Color(0xFFFFF7E6),
+            iconColor: const Color(0xFFE08A00),
           ),
         ],
       ),
@@ -373,17 +375,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       child: Row(
         children: [
           _AdminTabButton(
-            label: 'Tasques',
+            label: AppLocalizations.of(context).adminHomeTasksTab,
             selected: _selectedTab == _AdminTab.tasks,
             onTap: () => setState(() => _selectedTab = _AdminTab.tasks),
           ),
           _AdminTabButton(
-            label: 'Temporades',
+            label: AppLocalizations.of(context).adminHomeSeasonsTab,
             selected: _selectedTab == _AdminTab.seasons,
             onTap: () => setState(() => _selectedTab = _AdminTab.seasons),
           ),
           _AdminTabButton(
-            label: 'Rols',
+            label: AppLocalizations.of(context).adminHomeRolesTab,
             selected: _selectedTab == _AdminTab.roles,
             onTap: () => setState(() => _selectedTab = _AdminTab.roles),
           ),
@@ -427,7 +429,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         else if (_verificationError != null)
           _EmptyState(
             icon: Icons.error_outline,
-            title: 'No s’han pogut carregar les verificacions',
+            title: AppLocalizations.of(context).adminHomeVerificationLoadError,
             subtitle: _verificationError!,
           )
         else if (filteredTasks.isEmpty)
@@ -449,7 +451,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               onReject: () => _reviewVerification(task.verificationId, false),
             ),
         _PanelActionButton(
-          label: 'Actualitza verificacions',
+          label: AppLocalizations.of(context).adminHomeRefreshVerifications,
           onTap: _loadVerifications,
         ),
       ],
@@ -459,7 +461,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   Widget _buildSeasonsPanel() {
     return _PanelCard(
       title: AppLocalizations.of(context).adminHomeSeasonManagement,
-      badge: '${_seasons.length} registres',
+      badge: AppLocalizations.of(
+        context,
+      ).adminHomeRecordsCount(_seasons.length),
       children: [
         for (final season in _seasons) _SeasonTile(season: season),
         _PanelActionButton(
@@ -473,12 +477,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   Widget _buildRolesPanel() {
     return _PanelCard(
-      title: 'Rols i permisos',
-      badge: '${_roles.length} rols',
+      title: AppLocalizations.of(context).adminHomeRolesAndPermissions,
+      badge: AppLocalizations.of(context).adminHomeRolesCount(_roles.length),
       children: [
         for (final role in _roles) _RoleTile(role: role),
         _PanelActionButton(
-          label: 'Revisar matriu de permisos',
+          label: AppLocalizations.of(context).adminHomeReviewPermissionsMatrix,
           icon: Icons.admin_panel_settings_outlined,
           onTap: _showRolesSnackBar,
         ),
@@ -849,15 +853,15 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               controller: controller,
               autofocus: true,
               maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'Explica breument per què es rebutja...',
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context).adminHomeRejectionHint,
                 border: OutlineInputBorder(),
               ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel·la'),
+                child: Text(AppLocalizations.of(context).adminHomeCancel),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, controller.text),
@@ -887,10 +891,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       _showSnackBar(AppLocalizations.of(context).adminHomeFiltersPending);
 
   void _showCreateSeasonSnackBar() =>
-      _showSnackBar('Creació de temporada pendent d’integració.');
+      _showSnackBar(AppLocalizations.of(context).adminHomeCreateSeasonPending);
 
   void _showRolesSnackBar() =>
-      _showSnackBar('Matriu de permisos pendent d’integració.');
+      _showSnackBar(AppLocalizations.of(context).adminHomeRolesPending);
 }
 
 class _MetricCard extends StatelessWidget {
