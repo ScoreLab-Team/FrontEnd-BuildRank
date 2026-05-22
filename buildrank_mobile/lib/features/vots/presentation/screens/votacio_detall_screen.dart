@@ -85,7 +85,7 @@ class _VotacioDetallScreenState extends State<VotacioDetallScreen> {
     final opcioId = _selectedOpcioId;
     if (opcioId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecciona una opció per votar.')),
+        SnackBar(content: Text(AppLocalizations.of(context).votesSelectOptionSnack)),
       );
       return;
     }

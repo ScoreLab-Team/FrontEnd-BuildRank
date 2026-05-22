@@ -706,6 +706,12 @@ abstract class AppLocalizations {
   /// **'Gestió d\'usuaris'**
   String get adminUserManagementTitle;
 
+  /// No description provided for @adminUsersRefreshList.
+  ///
+  /// In ca, this message translates to:
+  /// **'Actualitzar llistat'**
+  String get adminUsersRefreshList;
+
   /// No description provided for @notificationsTitle.
   ///
   /// In ca, this message translates to:
@@ -4322,6 +4328,36 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'S\'ha produït un error inesperat revisant la verificació.'**
   String get adminHomeUnexpectedVerificationError;
+
+  /// No description provided for @adminHomeLogoutButton.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tanca sessió'**
+  String get adminHomeLogoutButton;
+
+  /// No description provided for @adminHomeLoggingOut.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sortint...'**
+  String get adminHomeLoggingOut;
+
+  /// No description provided for @adminHomeNoAccessPermission.
+  ///
+  /// In ca, this message translates to:
+  /// **'No tens permisos per accedir al panell d\'administració del sistema.'**
+  String get adminHomeNoAccessPermission;
+
+  /// No description provided for @adminHomeIntegrityAlertTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Alerta d\'integritat de dades'**
+  String get adminHomeIntegrityAlertTitle;
+
+  /// No description provided for @adminHomeRunAuditNow.
+  ///
+  /// In ca, this message translates to:
+  /// **'Executa l\'auditoria d\'integritat ara'**
+  String get adminHomeRunAuditNow;
 
   /// No description provided for @adminHomeRejectionReason.
   ///
