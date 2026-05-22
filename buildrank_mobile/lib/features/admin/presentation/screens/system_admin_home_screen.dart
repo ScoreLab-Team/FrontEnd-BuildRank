@@ -30,6 +30,18 @@ class AdminPanelScreen extends StatefulWidget {
 
 enum _AdminTab { tasks, seasons, roles }
 
+class _SeasonCreationFormData {
+  final String name;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  const _SeasonCreationFormData({
+    required this.name,
+    required this.startDate,
+    required this.endDate,
+  });
+}
+
 class _AdminPanelScreenState extends State<AdminPanelScreen> {
   final TextEditingController _searchController = TextEditingController();
   final AdminVerificationService _verificationService =
@@ -872,36 +884,21 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   Future<void> _confirmCreateAndStartSeason() async {
     final l10n = AppLocalizations.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        final dialogL10n = AppLocalizations.of(context);
+    final creation = await _askSeasonCreationDetails();
 
-        return AlertDialog(
-          title: Text(dialogL10n.adminHomeSeasonActivationTitle),
-          content: Text(dialogL10n.adminHomeSeasonActivationBody),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(dialogL10n.adminHomeCancel),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(dialogL10n.adminHomeSeasonActivationConfirm),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmed != true || _isCreatingSeason) return;
+    if (!mounted) return;
+    if (creation == null || _isCreatingSeason) return;
 
     setState(() {
       _isCreatingSeason = true;
     });
 
     try {
-      final result = await _seasonService.createAndStartSeason();
+      final result = await _seasonService.createAndStartSeason(
+        name: creation.name,
+        startDate: creation.startDate,
+        endDate: creation.endDate,
+      );
 
       if (!mounted) return;
 
@@ -914,7 +911,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       await Future.wait([_loadSeasons(), _loadVerifications()]);
     } on SeasonApiException catch (e) {
       if (!mounted) return;
-      _showSnackBar(e.message);
+      _showSnackBar(_seasonCreationErrorMessage(e, l10n));
     } catch (_) {
       if (!mounted) return;
       _showSnackBar(l10n.adminHomeSeasonActivationUnexpectedError);
@@ -927,11 +924,36 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     }
   }
 
+  Future<_SeasonCreationFormData?> _askSeasonCreationDetails() async {
+    return showDialog<_SeasonCreationFormData>(
+      context: context,
+      builder: (context) => const _CreateSeasonDialog(),
+    );
+  }
+
+  String _seasonCreationErrorMessage(
+    SeasonApiException error,
+    AppLocalizations l10n,
+  ) {
+    final details = error.details;
+    if (details is Map) {
+      if (details.containsKey('nom')) return l10n.adminHomeSeasonNameRequired;
+      if (details.containsKey('dataInici')) {
+        return l10n.adminHomeSeasonStartDateRequired;
+      }
+      if (details.containsKey('dataFi')) {
+        return l10n.adminHomeSeasonEndDateRequired;
+      }
+    }
+    return error.message;
+  }
+
   Future<void> _reviewVerification(int verificationId, bool approve) async {
     String? reason;
 
     if (!approve) {
       reason = await _askRejectReason();
+      if (!mounted) return;
       if (reason == null || reason.trim().isEmpty) return;
     }
 
@@ -971,39 +993,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Future<String?> _askRejectReason() async {
-    final controller = TextEditingController();
-
-    try {
-      return showDialog<String>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context).adminHomeRejectionReason),
-            content: TextField(
-              controller: controller,
-              autofocus: true,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).adminHomeRejectionHint,
-                border: OutlineInputBorder(),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(AppLocalizations.of(context).adminHomeCancel),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, controller.text),
-                child: Text(AppLocalizations.of(context).adminHomeReject),
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      controller.dispose();
-    }
+    return showDialog<String>(
+      context: context,
+      builder: (context) => const _RejectReasonDialog(),
+    );
   }
 
   void _showSnackBar(String message) {
@@ -1022,6 +1015,207 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   void _showRolesSnackBar() =>
       _showSnackBar(AppLocalizations.of(context).adminHomeRolesPending);
+}
+
+class _CreateSeasonDialog extends StatefulWidget {
+  const _CreateSeasonDialog();
+
+  @override
+  State<_CreateSeasonDialog> createState() => _CreateSeasonDialogState();
+}
+
+class _CreateSeasonDialogState extends State<_CreateSeasonDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _startDateController = TextEditingController();
+  final _endDateController = TextEditingController();
+
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickDate({required bool isStart}) async {
+    final now = DateTime.now();
+    final initialDate = isStart
+        ? _startDate ?? _endDate ?? now
+        : _endDate ?? _startDate ?? now;
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(now.year + 20, 12, 31),
+      builder: (ctx, child) => Theme(
+        data: Theme.of(ctx).copyWith(
+          colorScheme: const ColorScheme.light(primary: Color(0xFF19C463)),
+        ),
+        child: child!,
+      ),
+    );
+
+    if (picked == null || !mounted) return;
+
+    setState(() {
+      if (isStart) {
+        _startDate = picked;
+        _startDateController.text = _formatDateForApi(picked);
+      } else {
+        _endDate = picked;
+        _endDateController.text = _formatDateForApi(picked);
+      }
+    });
+    _formKey.currentState?.validate();
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() != true) return;
+
+    Navigator.pop(
+      context,
+      _SeasonCreationFormData(
+        name: _nameController.text.trim(),
+        startDate: _startDate!,
+        endDate: _endDate!,
+      ),
+    );
+  }
+
+  String _formatDateForApi(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text(l10n.adminHomeSeasonActivationTitle),
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.adminHomeSeasonActivationBody),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _nameController,
+                autofocus: true,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelText: l10n.adminHomeSeasonNameLabel,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? l10n.adminHomeSeasonNameRequired
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _startDateController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: l10n.adminHomeSeasonStartDateLabel,
+                  hintText: l10n.adminHomeSeasonSelectStartDate,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: const Icon(Icons.calendar_month_outlined),
+                ),
+                onTap: () => _pickDate(isStart: true),
+                validator: (_) => _startDate == null
+                    ? l10n.adminHomeSeasonStartDateRequired
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _endDateController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: l10n.adminHomeSeasonEndDateLabel,
+                  hintText: l10n.adminHomeSeasonSelectEndDate,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: const Icon(Icons.calendar_month_outlined),
+                ),
+                onTap: () => _pickDate(isStart: false),
+                validator: (_) {
+                  if (_endDate == null) {
+                    return l10n.adminHomeSeasonEndDateRequired;
+                  }
+                  if (_startDate != null && _endDate!.isBefore(_startDate!)) {
+                    return l10n.adminHomeSeasonEndBeforeStart;
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.adminHomeCancel),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: Text(l10n.adminHomeSeasonActivationConfirm),
+        ),
+      ],
+    );
+  }
+}
+
+class _RejectReasonDialog extends StatefulWidget {
+  const _RejectReasonDialog();
+
+  @override
+  State<_RejectReasonDialog> createState() => _RejectReasonDialogState();
+}
+
+class _RejectReasonDialogState extends State<_RejectReasonDialog> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text(l10n.adminHomeRejectionReason),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        maxLines: 3,
+        decoration: InputDecoration(
+          hintText: l10n.adminHomeRejectionHint,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.adminHomeCancel),
+        ),
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, _controller.text),
+          child: Text(l10n.adminHomeReject),
+        ),
+      ],
+    );
+  }
 }
 
 class _MetricCard extends StatelessWidget {

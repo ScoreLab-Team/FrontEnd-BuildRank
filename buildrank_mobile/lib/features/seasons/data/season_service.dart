@@ -52,12 +52,18 @@ class SeasonService {
   }
 
   Future<SeasonActivationResult> createAndStartSeason({
-    Map<String, dynamic>? payload,
+    required String name,
+    required DateTime startDate,
+    required DateTime endDate,
   }) async {
     try {
       final response = await ApiClient.post(
         Uri.parse(ApiConfig.seasonsCreateAndStart),
-        body: jsonEncode(payload ?? const <String, dynamic>{}),
+        body: jsonEncode({
+          'nom': name,
+          'dataInici': _formatDateForApi(startDate),
+          'dataFi': _formatDateForApi(endDate),
+        }),
         timeout: const Duration(seconds: 45),
       );
 
@@ -104,6 +110,12 @@ class SeasonService {
         'S’ha produït un error inesperat creant la temporada.',
       );
     }
+  }
+
+  String _formatDateForApi(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
   }
 
   dynamic _tryDecodeBody(String body) {

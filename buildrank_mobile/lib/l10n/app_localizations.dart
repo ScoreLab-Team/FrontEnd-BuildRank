@@ -4599,6 +4599,60 @@ abstract class AppLocalizations {
   /// **'El backend tancarà automàticament la temporada activa actual, si n\'hi ha, crearà la nova temporada i actualitzarà puntuacions i snapshots del rànquing.'**
   String get adminHomeSeasonActivationBody;
 
+  /// No description provided for @adminHomeSeasonNameLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Nom de la temporada'**
+  String get adminHomeSeasonNameLabel;
+
+  /// No description provided for @adminHomeSeasonStartDateLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Data d’inici'**
+  String get adminHomeSeasonStartDateLabel;
+
+  /// No description provided for @adminHomeSeasonEndDateLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Data de fi'**
+  String get adminHomeSeasonEndDateLabel;
+
+  /// No description provided for @adminHomeSeasonSelectStartDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Selecciona la data d’inici'**
+  String get adminHomeSeasonSelectStartDate;
+
+  /// No description provided for @adminHomeSeasonSelectEndDate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Selecciona la data de fi'**
+  String get adminHomeSeasonSelectEndDate;
+
+  /// No description provided for @adminHomeSeasonNameRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'El nom de la temporada és obligatori'**
+  String get adminHomeSeasonNameRequired;
+
+  /// No description provided for @adminHomeSeasonStartDateRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'La data d’inici és obligatòria'**
+  String get adminHomeSeasonStartDateRequired;
+
+  /// No description provided for @adminHomeSeasonEndDateRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'La data de fi és obligatòria'**
+  String get adminHomeSeasonEndDateRequired;
+
+  /// No description provided for @adminHomeSeasonEndBeforeStart.
+  ///
+  /// In ca, this message translates to:
+  /// **'La data de fi no pot ser anterior a la data d’inici'**
+  String get adminHomeSeasonEndBeforeStart;
+
   /// No description provided for @adminHomeSeasonActivationConfirm.
   ///
   /// In ca, this message translates to:

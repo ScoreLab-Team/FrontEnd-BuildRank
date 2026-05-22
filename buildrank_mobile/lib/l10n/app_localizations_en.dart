@@ -2567,6 +2567,34 @@ class AppLocalizationsEn extends AppLocalizations {
       'The backend will automatically close the current active season, if any, create the new season, and update ranking scores and snapshots.';
 
   @override
+  String get adminHomeSeasonNameLabel => 'Season name';
+
+  @override
+  String get adminHomeSeasonStartDateLabel => 'Start date';
+
+  @override
+  String get adminHomeSeasonEndDateLabel => 'End date';
+
+  @override
+  String get adminHomeSeasonSelectStartDate => 'Select start date';
+
+  @override
+  String get adminHomeSeasonSelectEndDate => 'Select end date';
+
+  @override
+  String get adminHomeSeasonNameRequired => 'Season name is required';
+
+  @override
+  String get adminHomeSeasonStartDateRequired => 'Start date is required';
+
+  @override
+  String get adminHomeSeasonEndDateRequired => 'End date is required';
+
+  @override
+  String get adminHomeSeasonEndBeforeStart =>
+      'End date cannot be before start date';
+
+  @override
   String get adminHomeSeasonActivationConfirm => 'Create and start';
 
   @override
