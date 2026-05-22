@@ -206,7 +206,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                 )
               : const Icon(Icons.logout, size: 18),
           label: Text(
-            _isLoggingOut ? AppLocalizations.of(context).adminHomeLoggingOut : AppLocalizations.of(context).adminHomeLogoutButton,
+            _isLoggingOut
+                ? AppLocalizations.of(context).adminHomeLoggingOut
+                : AppLocalizations.of(context).adminHomeLogoutButton,
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
@@ -285,9 +287,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             ),
           ),
           icon: const Icon(Icons.verified_user_outlined, size: 18),
-          label: const Text(
-            'Auditoria',
-            style: TextStyle(fontWeight: FontWeight.w800),
+          label: Text(
+            AppLocalizations.of(context).adminHomeAuditButton,
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
         ),
       ],
@@ -577,17 +579,19 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Moderació de xats',
-                        style: TextStyle(
+                        AppLocalizations.of(
+                          context,
+                        ).adminHomeChatsModerationTitle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                           color: Color(0xFF111827),
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        'Accedeix als xats dels edificis i aplica accions de moderació.',
-                        style: TextStyle(
+                        AppLocalizations.of(context).adminHomeChatsBody,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Color(0xFF6B7280),
                         ),
@@ -706,7 +710,11 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.shield_outlined, color: Color(0xFF19C463), size: 18),
+              const Icon(
+                Icons.shield_outlined,
+                color: Color(0xFF19C463),
+                size: 18,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(

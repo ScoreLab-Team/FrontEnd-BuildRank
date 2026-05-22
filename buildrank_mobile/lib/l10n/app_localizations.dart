@@ -4329,6 +4329,36 @@ abstract class AppLocalizations {
   /// **'S\'ha produït un error inesperat revisant la verificació.'**
   String get adminHomeUnexpectedVerificationError;
 
+  /// No description provided for @revisionCardNextReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Propera revisió: 15 des. 2026'**
+  String get revisionCardNextReview;
+
+  /// No description provided for @revisionCardDataComplete.
+  ///
+  /// In ca, this message translates to:
+  /// **'Les dades de verificació estan completes al 75%.'**
+  String get revisionCardDataComplete;
+
+  /// No description provided for @buildingListScoreLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'PUNTUACIÓ BUILDRANK'**
+  String get buildingListScoreLabel;
+
+  /// No description provided for @adminHomeChatsModerationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Moderació de xats'**
+  String get adminHomeChatsModerationTitle;
+
+  /// No description provided for @adminHomeAuditButton.
+  ///
+  /// In ca, this message translates to:
+  /// **'Auditoria'**
+  String get adminHomeAuditButton;
+
   /// No description provided for @adminHomeLogoutButton.
   ///
   /// In ca, this message translates to:

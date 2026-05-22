@@ -2434,19 +2434,37 @@ class AppLocalizationsEs extends AppLocalizations {
       'Se ha producido un error inesperado al revisar la verificación.';
 
   @override
+  String get revisionCardNextReview => 'Próxima revisión: 15 dic. 2026';
+
+  @override
+  String get revisionCardDataComplete =>
+      'Los datos de verificación están completos al 75%.';
+
+  @override
+  String get buildingListScoreLabel => 'PUNTUACIÓN BUILDRANK';
+
+  @override
+  String get adminHomeChatsModerationTitle => 'Moderación de chats';
+
+  @override
+  String get adminHomeAuditButton => 'Auditoría';
+
+  @override
   String get adminHomeLogoutButton => 'Cerrar sesión';
 
   @override
   String get adminHomeLoggingOut => 'Saliendo...';
 
   @override
-  String get adminHomeNoAccessPermission => 'No tienes permisos para acceder al panel de administración del sistema.';
+  String get adminHomeNoAccessPermission =>
+      'No tienes permisos para acceder al panel de administración del sistema.';
 
   @override
   String get adminHomeIntegrityAlertTitle => 'Alerta de integridad de datos';
 
   @override
-  String get adminHomeRunAuditNow => 'Ejecutar la auditoría de integridad ahora';
+  String get adminHomeRunAuditNow =>
+      'Ejecutar la auditoría de integridad ahora';
 
   @override
   String get adminHomeRejectionReason => 'Motivo de rechazo';

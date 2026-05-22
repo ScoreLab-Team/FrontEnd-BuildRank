@@ -2406,13 +2406,29 @@ class AppLocalizationsEn extends AppLocalizations {
       'An unexpected error occurred while reviewing the verification.';
 
   @override
+  String get revisionCardNextReview => 'Next review: 15 Dec 2026';
+
+  @override
+  String get revisionCardDataComplete => 'Verification data is 75% complete.';
+
+  @override
+  String get buildingListScoreLabel => 'BUILDRANK SCORE';
+
+  @override
+  String get adminHomeChatsModerationTitle => 'Chat moderation';
+
+  @override
+  String get adminHomeAuditButton => 'Audit';
+
+  @override
   String get adminHomeLogoutButton => 'Sign out';
 
   @override
   String get adminHomeLoggingOut => 'Signing out...';
 
   @override
-  String get adminHomeNoAccessPermission => 'You do not have permission to access the system administration panel.';
+  String get adminHomeNoAccessPermission =>
+      'You do not have permission to access the system administration panel.';
 
   @override
   String get adminHomeIntegrityAlertTitle => 'Data integrity alert';
