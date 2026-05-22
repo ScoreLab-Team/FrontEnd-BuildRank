@@ -1,5 +1,6 @@
 import 'package:buildrank_mobile/core/services/stream_service.dart';
 import 'package:buildrank_mobile/features/xat/data/chat_service.dart';
+import 'package:buildrank_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -14,7 +15,7 @@ class DirectChannelScreen extends StatefulWidget {
     required this.channelId,
     required this.channelName,
     this.channelType = 'messaging',
-    this.description = 'Conversa directa entre administradors de finca.',
+    this.description = '',
   });
 
   @override
@@ -39,7 +40,7 @@ class _DirectChannelScreenState extends State<DirectChannelScreen> {
 
       if (StreamService.client.state.currentUser == null) {
         setState(
-          () => _error = 'Usuari no connectat. Tanca sessió i torna a entrar.',
+          () => _error = AppLocalizations.of(context).chatUserNotConnectedError,
         );
         return;
       }
@@ -60,13 +61,15 @@ class _DirectChannelScreenState extends State<DirectChannelScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (_error != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Xat')),
+        appBar: AppBar(title: Text(l10n.chatFallbackName)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: Text('Error al connectar el xat:\n$_error'),
+            child: Text(l10n.chatConnectionError(_error!)),
           ),
         ),
       );
@@ -103,6 +106,8 @@ class _DirectChannelScreenState extends State<DirectChannelScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
@@ -116,7 +121,9 @@ class _DirectChannelScreenState extends State<DirectChannelScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            widget.description,
+            widget.description.isNotEmpty
+                ? widget.description
+                : l10n.chatDirectDescription,
             style: const TextStyle(color: Colors.black54, height: 1.35),
           ),
         ],

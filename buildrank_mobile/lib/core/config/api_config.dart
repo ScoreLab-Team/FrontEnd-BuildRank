@@ -174,6 +174,9 @@ class ApiConfig {
   // Ranking / leagues / seasons endpoints
   // =========================
   static const String seasons = '$baseUrl/api/seasons/';
+  static const String seasonsCreateAndStart =
+      '$baseUrl/api/seasons/crear-i-iniciar/';
+  static const String previousSeasons = '$baseUrl/api/seasons/anteriors/';
   static const String leagues = '$baseUrl/api/leagues/';
   static const String participations = '$baseUrl/api/participations/';
 
@@ -187,10 +190,22 @@ class ApiConfig {
   static Uri rankingEvolution({
     required int buildingId,
     String categoria = 'PROGRES',
+    int? limit,
   }) {
     return uri(
       '${leagues}evolucio/',
-      queryParameters: {'edifici': buildingId, 'categoria': categoria},
+      queryParameters: {
+        'edifici': buildingId,
+        'categoria': categoria,
+        'limit': ?limit,
+      },
+    );
+  }
+
+  static Uri progressRanking({required int seasonId, int window = 3}) {
+    return uri(
+      '$seasons$seasonId/ranking/progres/',
+      queryParameters: {'window': window},
     );
   }
 

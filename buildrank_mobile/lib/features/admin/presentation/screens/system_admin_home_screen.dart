@@ -3,8 +3,11 @@ import 'package:buildrank_mobile/features/admin/presentation/screens/audit_logs_
 import 'package:buildrank_mobile/features/admin/presentation/screens/user_management_screen.dart';
 import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/auth_base_screen.dart';
+import 'package:buildrank_mobile/features/seasons/data/season_models.dart';
+import 'package:buildrank_mobile/features/seasons/data/season_service.dart';
 import 'package:buildrank_mobile/features/verification/data/admin_verification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:buildrank_mobile/l10n/app_localizations.dart';
 import 'package:buildrank_mobile/features/legal/presentation/screens/legal_document_screen.dart';
 
 import '../../../myChat/my_chats_screen.dart';
@@ -27,11 +30,23 @@ class AdminPanelScreen extends StatefulWidget {
 
 enum _AdminTab { tasks, seasons, roles }
 
+class _SeasonCreationFormData {
+  final String name;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  const _SeasonCreationFormData({
+    required this.name,
+    required this.startDate,
+    required this.endDate,
+  });
+}
+
 class _AdminPanelScreenState extends State<AdminPanelScreen> {
   final TextEditingController _searchController = TextEditingController();
   final AdminVerificationService _verificationService =
       const AdminVerificationService();
-  final List<_SeasonRow> _seasons = _SeasonRow.samples();
+  final SeasonService _seasonService = const SeasonService();
   final List<_RoleRow> _roles = _RoleRow.samples();
 
   _AdminTab _selectedTab = _AdminTab.tasks;
@@ -42,6 +57,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   String? _verificationError;
   List<AdminVerificationItem> _verifications = [];
   final Set<int> _processingVerificationIds = {};
+  bool _isLoadingSeasons = true;
+  bool _isCreatingSeason = false;
+  String? _seasonsError;
+  List<Season> _seasons = [];
 
   List<_VerificationTask> get _tasks {
     return _verifications.map(_VerificationTask.fromVerification).toList();
@@ -54,6 +73,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       setState(() => _search = _searchController.text.trim().toLowerCase());
     });
     _loadVerifications();
+    _loadSeasons();
   }
 
   @override
@@ -63,7 +83,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Future<void> _refresh() async {
-    await _loadVerifications();
+    await Future.wait([_loadVerifications(), _loadSeasons()]);
   }
 
   Future<void> _handleLogout() async {
@@ -232,8 +252,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Panell d’administració',
+              Text(
+                AppLocalizations.of(context).adminHomePanelTitle,
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w900,
@@ -243,7 +263,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                '${widget.adminName} · Temporada ${widget.seasonNumber}',
+                '${widget.adminName} · ${AppLocalizations.of(context).adminHomeSeasonLabel(widget.seasonNumber)}',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF6B7280),
@@ -290,37 +310,39 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           _MetricCard(
             icon: Icons.error_outline,
             title: pending.toString(),
-            subtitle: 'Verificacions pendents',
+            subtitle: AppLocalizations.of(context).adminHomeVerificationPending,
             trend: '+12%',
             iconBackground: const Color(0xFFE5F9ED),
             iconColor: const Color(0xFF19C463),
           ),
           const SizedBox(width: 12),
-          const _MetricCard(
+          _MetricCard(
             icon: Icons.groups_2_outlined,
             title: '1,284',
-            subtitle: 'Usuaris actius',
+            subtitle: AppLocalizations.of(context).adminHomeActiveUsers,
             trend: '+5.4%',
-            iconBackground: Color(0xFFE5F9ED),
-            iconColor: Color(0xFF19C463),
+            iconBackground: const Color(0xFFE5F9ED),
+            iconColor: const Color(0xFF19C463),
           ),
           const SizedBox(width: 12),
           _MetricCard(
             icon: Icons.verified_outlined,
             title: verified.toString(),
-            subtitle: 'Millores validades',
+            subtitle: AppLocalizations.of(
+              context,
+            ).adminHomeValidatedImprovements,
             trend: '+8%',
             iconBackground: const Color(0xFFEAF2FF),
             iconColor: const Color(0xFF2563EB),
           ),
           const SizedBox(width: 12),
-          const _MetricCard(
+          _MetricCard(
             icon: Icons.warning_amber_rounded,
             title: '5',
-            subtitle: 'Alertes d’integritat',
-            trend: 'Nou',
-            iconBackground: Color(0xFFFFF7E6),
-            iconColor: Color(0xFFE08A00),
+            subtitle: AppLocalizations.of(context).adminHomeIntegrityAlerts,
+            trend: AppLocalizations.of(context).adminHomeNewTrend,
+            iconBackground: const Color(0xFFFFF7E6),
+            iconColor: const Color(0xFFE08A00),
           ),
         ],
       ),
@@ -332,7 +354,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       controller: _searchController,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-        hintText: 'Cerca edificis o usuaris...',
+        hintText: AppLocalizations.of(context).adminHomeSearchHint,
         hintStyle: const TextStyle(color: Color(0xFF6B7280)),
         prefixIcon: const Icon(Icons.search, color: Color(0xFF6B7280)),
         suffixIcon: IconButton(
@@ -372,17 +394,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       child: Row(
         children: [
           _AdminTabButton(
-            label: 'Tasques',
+            label: AppLocalizations.of(context).adminHomeTasksTab,
             selected: _selectedTab == _AdminTab.tasks,
             onTap: () => setState(() => _selectedTab = _AdminTab.tasks),
           ),
           _AdminTabButton(
-            label: 'Temporades',
+            label: AppLocalizations.of(context).adminHomeSeasonsTab,
             selected: _selectedTab == _AdminTab.seasons,
             onTap: () => setState(() => _selectedTab = _AdminTab.seasons),
           ),
           _AdminTabButton(
-            label: 'Rols',
+            label: AppLocalizations.of(context).adminHomeRolesTab,
             selected: _selectedTab == _AdminTab.roles,
             onTap: () => setState(() => _selectedTab = _AdminTab.roles),
           ),
@@ -413,8 +435,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     }).toList();
 
     return _PanelCard(
-      title: 'Cua de verificació documental',
-      badge: '${filteredTasks.length} pendents',
+      title: AppLocalizations.of(context).adminHomeVerificationQueue,
+      badge: AppLocalizations.of(
+        context,
+      ).adminHomePendingCount(filteredTasks.length),
       children: [
         if (_isLoadingVerifications)
           const Padding(
@@ -424,15 +448,16 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         else if (_verificationError != null)
           _EmptyState(
             icon: Icons.error_outline,
-            title: 'No s’han pogut carregar les verificacions',
+            title: AppLocalizations.of(context).adminHomeVerificationLoadError,
             subtitle: _verificationError!,
           )
         else if (filteredTasks.isEmpty)
-          const _EmptyState(
+          _EmptyState(
             icon: Icons.fact_check_outlined,
-            title: 'No hi ha verificacions pendents',
-            subtitle:
-                'Quan una verificació acabi el processament d’IA apareixerà aquí.',
+            title: AppLocalizations.of(context).adminHomeNoPendingVerifications,
+            subtitle: AppLocalizations.of(
+              context,
+            ).adminHomeNoPendingVerificationsBody,
           )
         else
           for (final task in filteredTasks)
@@ -445,7 +470,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               onReject: () => _reviewVerification(task.verificationId, false),
             ),
         _PanelActionButton(
-          label: 'Actualitza verificacions',
+          label: AppLocalizations.of(context).adminHomeRefreshVerifications,
           onTap: _loadVerifications,
         ),
       ],
@@ -453,15 +478,46 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Widget _buildSeasonsPanel() {
+    final l10n = AppLocalizations.of(context);
+
     return _PanelCard(
-      title: 'Gestió de temporades',
-      badge: '${_seasons.length} registres',
+      title: l10n.adminHomeSeasonManagement,
+      badge: _isLoadingSeasons
+          ? l10n.adminHomeSeasonsLoading
+          : l10n.adminHomeClosedSeasonsCount(_seasons.length),
       children: [
-        for (final season in _seasons) _SeasonTile(season: season),
+        if (_isLoadingSeasons)
+          const Padding(
+            padding: EdgeInsets.all(24),
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (_seasonsError != null)
+          _EmptyState(
+            icon: Icons.error_outline,
+            title: l10n.adminHomeSeasonLoadErrorTitle,
+            subtitle: _seasonsError!,
+          )
+        else if (_seasons.isEmpty)
+          _EmptyState(
+            icon: Icons.calendar_month_outlined,
+            title: l10n.adminHomeNoClosedSeasonsTitle,
+            subtitle: l10n.adminHomeNoClosedSeasonsBody,
+          )
+        else
+          for (final season in _seasons) _SeasonTile(season: season),
         _PanelActionButton(
-          label: 'Crear nova temporada',
-          icon: Icons.add,
-          onTap: _showCreateSeasonSnackBar,
+          label: _isCreatingSeason
+              ? l10n.adminHomeCreatingAndStartingSeason
+              : l10n.adminHomeCreateAndStartSeason,
+          icon: _isCreatingSeason ? Icons.hourglass_top : Icons.add,
+          onTap: _isCreatingSeason ? null : _confirmCreateAndStartSeason,
+        ),
+        _PanelActionButton(
+          label: _seasonsError == null
+              ? l10n.adminHomeRefreshSeasonHistory
+              : l10n.adminHomeRetryLoadSeasons,
+          icon: Icons.refresh,
+          onTap: _loadSeasons,
         ),
       ],
     );
@@ -469,12 +525,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
   Widget _buildRolesPanel() {
     return _PanelCard(
-      title: 'Rols i permisos',
-      badge: '${_roles.length} rols',
+      title: AppLocalizations.of(context).adminHomeRolesAndPermissions,
+      badge: AppLocalizations.of(context).adminHomeRolesCount(_roles.length),
       children: [
         for (final role in _roles) _RoleTile(role: role),
         _PanelActionButton(
-          label: 'Revisar matriu de permisos',
+          label: AppLocalizations.of(context).adminHomeReviewPermissionsMatrix,
           icon: Icons.admin_panel_settings_outlined,
           onTap: _showRolesSnackBar,
         ),
@@ -516,7 +572,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -544,7 +600,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           ),
           const Divider(height: 1, color: Color(0xFFE2E6EA)),
           _PanelActionButton(
-            label: 'Accedir als xats dels edificis',
+            label: AppLocalizations.of(context).adminHomeOpenBuildingChats,
             icon: Icons.chat_bubble_outline,
             onTap: () => Navigator.push(
               context,
@@ -590,12 +646,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestió d\'usuaris',
+                        AppLocalizations.of(context).adminUsersTitle,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
@@ -604,7 +660,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       ),
                       SizedBox(height: 2),
                       Text(
-                        'Bloqueja, suspèn i gestiona els comptes dels usuaris.',
+                        AppLocalizations.of(context).adminHomeUsersBody,
                         style: TextStyle(
                           fontSize: 12,
                           color: Color(0xFF6B7280),
@@ -618,7 +674,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           ),
           const Divider(height: 1, color: Color(0xFFE2E6EA)),
           _PanelActionButton(
-            label: 'Accedir a la gestió d\'usuaris',
+            label: AppLocalizations.of(context).adminHomeOpenUsers,
             icon: Icons.manage_accounts,
             onTap: () => Navigator.push(
               context,
@@ -789,11 +845,115 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     }
   }
 
+  Future<void> _loadSeasons() async {
+    setState(() {
+      _isLoadingSeasons = true;
+      _seasonsError = null;
+    });
+
+    try {
+      final seasons = await _seasonService.getPreviousSeasons();
+
+      if (!mounted) return;
+
+      setState(() {
+        _seasons = seasons;
+      });
+    } on SeasonApiException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _seasonsError = e.message;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _seasonsError = AppLocalizations.of(
+          context,
+        ).adminHomeSeasonUnexpectedLoadError;
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingSeasons = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _confirmCreateAndStartSeason() async {
+    final l10n = AppLocalizations.of(context);
+    final creation = await _askSeasonCreationDetails();
+
+    if (!mounted) return;
+    if (creation == null || _isCreatingSeason) return;
+
+    setState(() {
+      _isCreatingSeason = true;
+    });
+
+    try {
+      final result = await _seasonService.createAndStartSeason(
+        name: creation.name,
+        startDate: creation.startDate,
+        endDate: creation.endDate,
+      );
+
+      if (!mounted) return;
+
+      _showSnackBar(
+        l10n.adminHomeSeasonActivationSuccess(
+          result.displaySummary(l10n.adminHomeSeasonActivationDefaultSummary),
+        ),
+      );
+
+      await Future.wait([_loadSeasons(), _loadVerifications()]);
+    } on SeasonApiException catch (e) {
+      if (!mounted) return;
+      _showSnackBar(_seasonCreationErrorMessage(e, l10n));
+    } catch (_) {
+      if (!mounted) return;
+      _showSnackBar(l10n.adminHomeSeasonActivationUnexpectedError);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isCreatingSeason = false;
+        });
+      }
+    }
+  }
+
+  Future<_SeasonCreationFormData?> _askSeasonCreationDetails() async {
+    return showDialog<_SeasonCreationFormData>(
+      context: context,
+      builder: (context) => const _CreateSeasonDialog(),
+    );
+  }
+
+  String _seasonCreationErrorMessage(
+    SeasonApiException error,
+    AppLocalizations l10n,
+  ) {
+    final details = error.details;
+    if (details is Map) {
+      if (details.containsKey('nom')) return l10n.adminHomeSeasonNameRequired;
+      if (details.containsKey('dataInici')) {
+        return l10n.adminHomeSeasonStartDateRequired;
+      }
+      if (details.containsKey('dataFi')) {
+        return l10n.adminHomeSeasonEndDateRequired;
+      }
+    }
+    return error.message;
+  }
+
   Future<void> _reviewVerification(int verificationId, bool approve) async {
     String? reason;
 
     if (!approve) {
       reason = await _askRejectReason();
+      if (!mounted) return;
       if (reason == null || reason.trim().isEmpty) return;
     }
 
@@ -820,7 +980,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       _showSnackBar(e.message);
     } catch (_) {
       if (!mounted) return;
-      _showSnackBar('S’ha produït un error inesperat revisant la verificació.');
+      _showSnackBar(
+        AppLocalizations.of(context).adminHomeUnexpectedVerificationError,
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -831,39 +993,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   Future<String?> _askRejectReason() async {
-    final controller = TextEditingController();
-
-    try {
-      return showDialog<String>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Motiu de rebuig'),
-            content: TextField(
-              controller: controller,
-              autofocus: true,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'Explica breument per què es rebutja...',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel·la'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, controller.text),
-                child: const Text('Rebutja'),
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      controller.dispose();
-    }
+    return showDialog<String>(
+      context: context,
+      builder: (context) => const _RejectReasonDialog(),
+    );
   }
 
   void _showSnackBar(String message) {
@@ -878,13 +1011,211 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   );
 
   void _showFiltersSnackBar() =>
-      _showSnackBar('Filtres avançats pendents d’integració.');
-
-  void _showCreateSeasonSnackBar() =>
-      _showSnackBar('Creació de temporada pendent d’integració.');
+      _showSnackBar(AppLocalizations.of(context).adminHomeFiltersPending);
 
   void _showRolesSnackBar() =>
-      _showSnackBar('Matriu de permisos pendent d’integració.');
+      _showSnackBar(AppLocalizations.of(context).adminHomeRolesPending);
+}
+
+class _CreateSeasonDialog extends StatefulWidget {
+  const _CreateSeasonDialog();
+
+  @override
+  State<_CreateSeasonDialog> createState() => _CreateSeasonDialogState();
+}
+
+class _CreateSeasonDialogState extends State<_CreateSeasonDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _startDateController = TextEditingController();
+  final _endDateController = TextEditingController();
+
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickDate({required bool isStart}) async {
+    final now = DateTime.now();
+    final initialDate = isStart
+        ? _startDate ?? _endDate ?? now
+        : _endDate ?? _startDate ?? now;
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(now.year + 20, 12, 31),
+      builder: (ctx, child) => Theme(
+        data: Theme.of(ctx).copyWith(
+          colorScheme: const ColorScheme.light(primary: Color(0xFF19C463)),
+        ),
+        child: child!,
+      ),
+    );
+
+    if (picked == null || !mounted) return;
+
+    setState(() {
+      if (isStart) {
+        _startDate = picked;
+        _startDateController.text = _formatDateForApi(picked);
+      } else {
+        _endDate = picked;
+        _endDateController.text = _formatDateForApi(picked);
+      }
+    });
+    _formKey.currentState?.validate();
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() != true) return;
+
+    Navigator.pop(
+      context,
+      _SeasonCreationFormData(
+        name: _nameController.text.trim(),
+        startDate: _startDate!,
+        endDate: _endDate!,
+      ),
+    );
+  }
+
+  String _formatDateForApi(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text(l10n.adminHomeSeasonActivationTitle),
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.adminHomeSeasonActivationBody),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _nameController,
+                autofocus: true,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelText: l10n.adminHomeSeasonNameLabel,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? l10n.adminHomeSeasonNameRequired
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _startDateController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: l10n.adminHomeSeasonStartDateLabel,
+                  hintText: l10n.adminHomeSeasonSelectStartDate,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: const Icon(Icons.calendar_month_outlined),
+                ),
+                onTap: () => _pickDate(isStart: true),
+                validator: (_) => _startDate == null
+                    ? l10n.adminHomeSeasonStartDateRequired
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _endDateController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: l10n.adminHomeSeasonEndDateLabel,
+                  hintText: l10n.adminHomeSeasonSelectEndDate,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: const Icon(Icons.calendar_month_outlined),
+                ),
+                onTap: () => _pickDate(isStart: false),
+                validator: (_) {
+                  if (_endDate == null) {
+                    return l10n.adminHomeSeasonEndDateRequired;
+                  }
+                  if (_startDate != null && _endDate!.isBefore(_startDate!)) {
+                    return l10n.adminHomeSeasonEndBeforeStart;
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.adminHomeCancel),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: Text(l10n.adminHomeSeasonActivationConfirm),
+        ),
+      ],
+    );
+  }
+}
+
+class _RejectReasonDialog extends StatefulWidget {
+  const _RejectReasonDialog();
+
+  @override
+  State<_RejectReasonDialog> createState() => _RejectReasonDialogState();
+}
+
+class _RejectReasonDialogState extends State<_RejectReasonDialog> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text(l10n.adminHomeRejectionReason),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        maxLines: 3,
+        decoration: InputDecoration(
+          hintText: l10n.adminHomeRejectionHint,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.adminHomeCancel),
+        ),
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, _controller.text),
+          child: Text(l10n.adminHomeReject),
+        ),
+      ],
+    );
+  }
 }
 
 class _MetricCard extends StatelessWidget {
@@ -1183,14 +1514,14 @@ class _VerificationTaskTile extends StatelessWidget {
                   icon: Icons.check_circle_outline,
                   color: const Color(0xFF1F2937),
                   onTap: onApprove,
-                  tooltip: 'Aprova',
+                  tooltip: AppLocalizations.of(context).adminHomeApprove,
                 ),
                 const SizedBox(height: 8),
                 _CircleActionButton(
                   icon: Icons.cancel_outlined,
                   color: const Color(0xFFFF5555),
                   onTap: onReject,
-                  tooltip: 'Rebutja',
+                  tooltip: AppLocalizations.of(context).adminHomeReject,
                 ),
               ] else ...[
                 Container(
@@ -1297,7 +1628,7 @@ class _CircleActionButton extends StatelessWidget {
 class _PanelActionButton extends StatelessWidget {
   final String label;
   final IconData icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _PanelActionButton({
     required this.label,
@@ -1307,6 +1638,9 @@ class _PanelActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final enabled = onTap != null;
+    final color = enabled ? const Color(0xFF19C463) : const Color(0xFF9CA3AF);
+
     return InkWell(
       onTap: onTap,
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
@@ -1319,15 +1653,15 @@ class _PanelActionButton extends StatelessWidget {
               child: Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xFF19C463),
+                style: TextStyle(
+                  color: color,
                   fontSize: 13,
                   fontWeight: FontWeight.w900,
                 ),
               ),
             ),
             const SizedBox(width: 10),
-            Icon(icon, size: 17, color: const Color(0xFF19C463)),
+            Icon(icon, size: 17, color: color),
           ],
         ),
       ),
@@ -1336,12 +1670,17 @@ class _PanelActionButton extends StatelessWidget {
 }
 
 class _SeasonTile extends StatelessWidget {
-  final _SeasonRow season;
+  final Season season;
 
   const _SeasonTile({required this.season});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final range = _formatRange(context, season.startDate, season.endDate);
+    final isActive = _isActiveStatus(season.status);
+    final stats = l10n.adminHomeSeasonStats(range, season.participants);
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 15, 16, 15),
       decoration: const BoxDecoration(
@@ -1376,7 +1715,7 @@ class _SeasonTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${season.range} · ${season.participants} edificis',
+                  stats,
                   style: const TextStyle(
                     color: Color(0xFF6B7280),
                     fontSize: 12,
@@ -1386,12 +1725,46 @@ class _SeasonTile extends StatelessWidget {
             ),
           ),
           _SmallLabel(
-            text: season.isActive ? 'ACTIVA' : 'TANCADA',
-            active: season.isActive,
+            text: isActive
+                ? l10n.adminHomeSeasonStatusActive
+                : l10n.adminHomeSeasonStatusClosed,
+            active: isActive,
           ),
         ],
       ),
     );
+  }
+
+  bool _isActiveStatus(String status) {
+    final normalized = status.trim().toUpperCase();
+    return normalized == 'ACTIVA' ||
+        normalized == 'ACTIU' ||
+        normalized == 'ACTIVE';
+  }
+
+  String _formatRange(
+    BuildContext context,
+    DateTime? startDate,
+    DateTime? endDate,
+  ) {
+    final l10n = AppLocalizations.of(context);
+
+    if (startDate == null && endDate == null) {
+      return l10n.adminHomeSeasonDatesUnavailable;
+    }
+
+    final start = startDate == null ? null : _formatDate(startDate);
+    final end = endDate == null ? null : _formatDate(endDate);
+
+    if (start != null && end != null) return '$start - $end';
+    if (start != null) return l10n.adminHomeSeasonStartedOn(start);
+    return l10n.adminHomeSeasonEndedOn(end!);
+  }
+
+  String _formatDate(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    return '$day/$month/${date.year}';
   }
 }
 
@@ -1433,7 +1806,9 @@ class _RoleTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${role.users} usuaris · ${role.permissions} permisos',
+                  AppLocalizations.of(
+                    context,
+                  ).adminHomeRoleStats(role.users, role.permissions),
                   style: const TextStyle(
                     color: Color(0xFF6B7280),
                     fontSize: 12,
@@ -1572,37 +1947,6 @@ class _VerificationTask {
       status: status,
       rawStatus: item.status,
     );
-  }
-}
-
-class _SeasonRow {
-  final String name;
-  final String range;
-  final int participants;
-  final bool isActive;
-
-  const _SeasonRow({
-    required this.name,
-    required this.range,
-    required this.participants,
-    required this.isActive,
-  });
-
-  static List<_SeasonRow> samples() {
-    return const [
-      _SeasonRow(
-        name: 'Temporada 4 · Estiu 2026',
-        range: 'Abr 2026 - Set 2026',
-        participants: 1284,
-        isActive: true,
-      ),
-      _SeasonRow(
-        name: 'Temporada 3 · Hivern 2026',
-        range: 'Oct 2025 - Mar 2026',
-        participants: 1038,
-        isActive: false,
-      ),
-    ];
   }
 }
 

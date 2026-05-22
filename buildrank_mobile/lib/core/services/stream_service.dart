@@ -13,7 +13,7 @@ class StreamService {
     required String userName,
     required String token,
   }) async {
-    // Ja connectat com el mateix usuari — no fer res
+    // Ja connectat com el mateix usuari i amb el mateix nom
     if (client.state.currentUser?.id == userId &&
         client.wsConnectionStatus == ConnectionStatus.connected) {
       return;

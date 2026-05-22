@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:buildrank_mobile/features/legal/presentation/screens/legal_document_screen.dart';
-
-import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/core/services/stream_service.dart';
 import 'package:buildrank_mobile/features/xat/data/chat_service.dart';
 import 'package:buildrank_mobile/features/admin/presentation/screens/system_admin_home_screen.dart';
+import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
+import 'package:buildrank_mobile/features/legal/presentation/screens/legal_document_screen.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/profile_screen.dart';
+import 'package:buildrank_mobile/l10n/app_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
   final void Function(String email)? onRegisterSuccess;
@@ -32,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _successText;
 
   Future<void> _handleRegister() async {
+    final l10n = AppLocalizations.of(context);
     final firstName = _firstNameController.text.trim();
     final lastName = _lastNameController.text.trim();
     final email = _emailController.text.trim();
@@ -44,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password.isEmpty ||
         confirmPassword.isEmpty) {
       setState(() {
-        _errorText = 'Has d’omplir tots els camps.';
+        _errorText = l10n.registerMissingFieldsError;
         _successText = null;
       });
       return;
@@ -52,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (password != confirmPassword) {
       setState(() {
-        _errorText = 'Les contrasenyes no coincideixen.';
+        _errorText = l10n.registerPasswordsMismatchError;
         _successText = null;
       });
       return;
@@ -60,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (!_acceptedTerms) {
       setState(() {
-        _errorText = 'Has d’acceptar els termes i condicions.';
+        _errorText = l10n.registerAcceptTermsError;
         _successText = null;
       });
       return;
@@ -93,15 +94,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _selectedRole = 'tenant';
         _acceptedTerms = false;
-        _successText = 'Compte creat correctament. Ara ja pots iniciar sessió.';
+        _successText = l10n.registerSuccessInline;
       });
 
       if (widget.onRegisterSuccess != null) {
         widget.onRegisterSuccess!(email);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registre completat correctament.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.registerSuccessSnackBar)));
       }
     } catch (e) {
       setState(() {
@@ -147,9 +148,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _handleGoogleRegister() async {
+    final l10n = AppLocalizations.of(context);
     if (!_acceptedTerms) {
       setState(() {
-        _errorText = 'Has d’acceptar els termes i condicions.';
+        _errorText = l10n.registerAcceptTermsError;
         _successText = null;
       });
       return;
@@ -235,7 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ).push(MaterialPageRoute(builder: (_) => LegalDocumentScreen(type: type)));
   }
 
-  Widget _buildTermsBlock() {
+  Widget _buildTermsBlock(AppLocalizations l10n) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -277,30 +279,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Text(
-                'Accepto els ',
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+              Text(
+                l10n.registerAcceptTermsPrefix,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               InkWell(
                 onTap: () => _openLegalDocument(LegalDocumentType.terms),
-                child: const Text(
-                  'Termes del Servei',
-                  style: TextStyle(
+                child: Text(
+                  l10n.registerTermsOfService,
+                  style: const TextStyle(
                     fontSize: 14,
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const Text(
-                ' i la ',
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+              Text(
+                l10n.registerAcceptTermsMiddle,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               InkWell(
                 onTap: () => _openLegalDocument(LegalDocumentType.privacy),
-                child: const Text(
-                  'Política de Privacitat',
-                  style: TextStyle(
+                child: Text(
+                  l10n.registerPrivacyPolicy,
+                  style: const TextStyle(
                     fontSize: 14,
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.w600,
@@ -330,22 +332,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
             const SizedBox(height: 10),
-            const Text(
-              'Crea un compte',
+            Text(
+              l10n.registerTitle,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Comença el seguiment del teu edifici avui',
+            Text(
+              l10n.registerSubtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 height: 1.4,
                 color: Colors.black54,
@@ -368,19 +372,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Registra’t',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  Text(
+                    l10n.registerCardTitle,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Crea el teu compte per començar a gestionar edificis.',
-                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                  Text(
+                    l10n.registerCardSubtitle,
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'SELECCIONA EL TEU ROL',
-                    style: TextStyle(
+                  Text(
+                    l10n.registerRoleHeader,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Colors.black54,
@@ -392,73 +399,73 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _buildRoleCard(
                         'admin',
                         Icons.business_center_outlined,
-                        'Admin.\nfinca',
+                        l10n.registerRoleAdmin,
                       ),
                       const SizedBox(width: 8),
                       _buildRoleCard(
                         'owner',
                         Icons.apartment_outlined,
-                        'Propietari',
+                        l10n.registerRoleOwner,
                       ),
                       const SizedBox(width: 8),
                       _buildRoleCard(
                         'tenant',
                         Icons.person_outline,
-                        'Llogater',
+                        l10n.registerRoleTenant,
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _firstNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nom',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.firstNameLabel,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.person_outline),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _lastNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Cognoms',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.badge_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.lastNameLabel,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.badge_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Correu electrònic',
-                      hintText: 'nom@exemple.com',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.emailLabel,
+                      hintText: l10n.emailHint,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.email_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Contrasenya',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.passwordLabel,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock_outline),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _confirmPasswordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Confirmar contrasenya',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.confirmPasswordLabel,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock_outline),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildTermsBlock(),
+                  _buildTermsBlock(l10n),
                   if (_errorText != null) ...[
                     const SizedBox(height: 8),
                     Text(
@@ -486,9 +493,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               width: 22,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text(
-                              'Crea el compte de BuildRank',
-                              style: TextStyle(fontSize: 16),
+                          : Text(
+                              l10n.registerCreateAccountButton,
+                              style: const TextStyle(fontSize: 16),
                             ),
                     ),
                   ),
@@ -498,7 +505,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ? null
                         : _handleGoogleRegister,
                     icon: const Icon(Icons.g_mobiledata),
-                    label: const Text('Crear compte amb Google'),
+                    label: Text(l10n.registerGoogleButton),
                   ),
                 ],
               ),
