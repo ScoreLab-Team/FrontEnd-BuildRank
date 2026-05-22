@@ -24,10 +24,7 @@ class StreamService {
       await client.disconnectUser();
     }
 
-    await client.connectUser(
-      User(id: userId, name: userName),
-      token,
-    );
+    await client.connectUser(User(id: userId, name: userName), token);
   }
 
   static Future<void> registerFcmToken(String token) async {

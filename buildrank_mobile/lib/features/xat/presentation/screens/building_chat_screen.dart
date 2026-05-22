@@ -614,8 +614,8 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
                         StreamService.client.state.currentUser?.id;
 
                     // Ocultar missatges d'usuaris silenciats
-                    final mutedIds = StreamService
-                            .client.state.currentUser?.mutes
+                    final mutedIds =
+                        StreamService.client.state.currentUser?.mutes
                             .map((m) => m.target.id)
                             .toSet() ??
                         {};
