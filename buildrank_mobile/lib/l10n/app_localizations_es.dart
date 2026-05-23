@@ -1190,36 +1190,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get rankingBadgesEarned => 'Insignias conseguidas';
-
-  @override
-  String get rankingViewAll => 'Ver todo';
-
-  @override
-  String get rankingBadgeSolarMaster => 'Maestro solar';
-
-  @override
-  String get rankingBadgeDateOct25 => 'Oct 25';
-
-  @override
-  String get rankingBadgeMaxSavings => 'M�ximo ahorro';
-
-  @override
-  String get rankingBadgeDateNov25 => 'Nov 25';
-
-  @override
-  String get rankingBadgeResilient => 'Resilient';
-
-  @override
-  String get rankingBadgeDateDec25 => 'Dec 25';
-
-  @override
-  String get rankingBadgeTest => 'Prueba';
-
-  @override
-  String get rankingBadgeDateJan26 => 'Ene 26';
-
-  @override
   String get rankingSearchHint => 'Buscar por calle...';
 
   @override
@@ -1339,20 +1309,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get buildingCardRecommendedActions => 'ACCIONS RECOMANADES';
-
-  @override
-  String get buildingCardActionSimulationTitle => 'Ejecutar simulaci?n';
-
-  @override
-  String get buildingCardActionSimulationSubtitle =>
-      'Prova escenaris de millora per aquest edifici';
-
-  @override
-  String get buildingCardActionVoteTitle => 'Votaci?n de la comunidad';
-
-  @override
-  String get buildingCardActionVoteSubtitle =>
-      'Funcionalitat preparada per futures propostes';
 
   @override
   String get buildingCardActionReportTitle => 'Informe de junta (properament)';

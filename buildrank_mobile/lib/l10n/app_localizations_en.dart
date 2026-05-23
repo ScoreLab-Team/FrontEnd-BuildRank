@@ -1176,36 +1176,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get rankingBadgesEarned => 'Badges earned';
-
-  @override
-  String get rankingViewAll => 'View all';
-
-  @override
-  String get rankingBadgeSolarMaster => 'Solar master';
-
-  @override
-  String get rankingBadgeDateOct25 => 'Oct 25';
-
-  @override
-  String get rankingBadgeMaxSavings => 'Maximum savings';
-
-  @override
-  String get rankingBadgeDateNov25 => 'Nov 25';
-
-  @override
-  String get rankingBadgeResilient => 'Resilient';
-
-  @override
-  String get rankingBadgeDateDec25 => 'Dec 25';
-
-  @override
-  String get rankingBadgeTest => 'Test';
-
-  @override
-  String get rankingBadgeDateJan26 => 'Jan 26';
-
-  @override
   String get rankingSearchHint => 'Search by street...';
 
   @override
@@ -1324,20 +1294,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buildingCardRecommendedActions => 'RECOMMENDED ACTIONS';
-
-  @override
-  String get buildingCardActionSimulationTitle => 'Run simulation';
-
-  @override
-  String get buildingCardActionSimulationSubtitle =>
-      'Try improvement scenarios for this building';
-
-  @override
-  String get buildingCardActionVoteTitle => 'Community vote';
-
-  @override
-  String get buildingCardActionVoteSubtitle =>
-      'Feature ready for future proposals';
 
   @override
   String get buildingCardActionReportTitle => 'Board report (coming soon)';

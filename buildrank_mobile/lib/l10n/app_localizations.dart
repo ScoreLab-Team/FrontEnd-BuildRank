@@ -2170,66 +2170,6 @@ abstract class AppLocalizations {
   /// **'Top {target}'**
   String rankingTopTarget(int target);
 
-  /// No description provided for @rankingBadgesEarned.
-  ///
-  /// In ca, this message translates to:
-  /// **'Insígnies aconseguides'**
-  String get rankingBadgesEarned;
-
-  /// No description provided for @rankingViewAll.
-  ///
-  /// In ca, this message translates to:
-  /// **'Veure-ho tot'**
-  String get rankingViewAll;
-
-  /// No description provided for @rankingBadgeSolarMaster.
-  ///
-  /// In ca, this message translates to:
-  /// **'Mestre solar'**
-  String get rankingBadgeSolarMaster;
-
-  /// No description provided for @rankingBadgeDateOct25.
-  ///
-  /// In ca, this message translates to:
-  /// **'Oct 25'**
-  String get rankingBadgeDateOct25;
-
-  /// No description provided for @rankingBadgeMaxSavings.
-  ///
-  /// In ca, this message translates to:
-  /// **'Màxim estalvi'**
-  String get rankingBadgeMaxSavings;
-
-  /// No description provided for @rankingBadgeDateNov25.
-  ///
-  /// In ca, this message translates to:
-  /// **'Nov 25'**
-  String get rankingBadgeDateNov25;
-
-  /// No description provided for @rankingBadgeResilient.
-  ///
-  /// In ca, this message translates to:
-  /// **'Resilient'**
-  String get rankingBadgeResilient;
-
-  /// No description provided for @rankingBadgeDateDec25.
-  ///
-  /// In ca, this message translates to:
-  /// **'Dec 25'**
-  String get rankingBadgeDateDec25;
-
-  /// No description provided for @rankingBadgeTest.
-  ///
-  /// In ca, this message translates to:
-  /// **'Prova'**
-  String get rankingBadgeTest;
-
-  /// No description provided for @rankingBadgeDateJan26.
-  ///
-  /// In ca, this message translates to:
-  /// **'Gen 26'**
-  String get rankingBadgeDateJan26;
-
   /// No description provided for @rankingSearchHint.
   ///
   /// In ca, this message translates to:
@@ -2427,30 +2367,6 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'ACCIONS RECOMANADES'**
   String get buildingCardRecommendedActions;
-
-  /// No description provided for @buildingCardActionSimulationTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Executa simulació'**
-  String get buildingCardActionSimulationTitle;
-
-  /// No description provided for @buildingCardActionSimulationSubtitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Prova escenaris de millora per aquest edifici'**
-  String get buildingCardActionSimulationSubtitle;
-
-  /// No description provided for @buildingCardActionVoteTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Votació de la comunitat'**
-  String get buildingCardActionVoteTitle;
-
-  /// No description provided for @buildingCardActionVoteSubtitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Funcionalitat preparada per futures propostes'**
-  String get buildingCardActionVoteSubtitle;
 
   /// No description provided for @buildingCardActionReportTitle.
   ///
