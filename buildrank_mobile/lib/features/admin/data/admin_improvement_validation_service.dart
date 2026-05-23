@@ -83,8 +83,8 @@ class AdminImprovementValidationService {
 
     final payload = {
       'accio': approve ? 'validar' : 'rebutjar',
-      'estatValidacio': approve ? 'VALIDADA' : 'REBUTJADA',
-      'estat_validacio': approve ? 'VALIDADA' : 'REBUTJADA',
+      'estatValidacio': approve ? 'Validada' : 'Rebutjada',
+      'estat_validacio': approve ? 'Validada' : 'Rebutjada',
       if (observations != null && observations.isNotEmpty)
         'observacionsAdmin': observations,
       if (observations != null && observations.isNotEmpty)
