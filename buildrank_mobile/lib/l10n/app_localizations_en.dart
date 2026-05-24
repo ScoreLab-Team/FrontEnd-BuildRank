@@ -1013,19 +1013,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'BuildRank';
 
   @override
-  String get commonUnavailable => 'No disponible';
+  String get commonUnavailable => 'Unavailable';
 
   @override
-  String get commonUnknownError => 'Error desconegut.';
+  String get commonUnknownError => 'Unknown error.';
 
   @override
-  String get commonRequiredField => 'Camp obligatori';
+  String get commonRequiredField => 'Required field';
 
   @override
   String get commonInvalidNumber => 'Enter a valid number';
 
   @override
-  String get commonGreaterThanZero => 'Ha de ser superior a 0';
+  String get commonGreaterThanZero => 'Must be greater than 0';
 
   @override
   String get commonContinue => 'Continue →';
@@ -1049,10 +1049,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitatgeCadastralReference => 'Cadastral reference';
 
   @override
-  String get habitatgeFloor => 'Planta';
+  String get habitatgeFloor => 'Floor';
 
   @override
-  String get habitatgeDoor => 'Porta';
+  String get habitatgeDoor => 'Door';
 
   @override
   String get habitatgeSurface => 'Area (m²)';
@@ -1214,7 +1214,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rankingPointsRange(int startPoints, int currentPoints) {
-    return '$startPoints · $currentPoints points';
+    return '$startPoints → $currentPoints points';
   }
 
   @override
@@ -1223,7 +1223,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get rankingViewDetail => 'Veure detall';
+  String get rankingViewDetail => 'View details';
 
   @override
   String get buildingCardDetailLoadError =>
@@ -1536,7 +1536,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormPostalCodeHint => 'e.g., 08025';
 
   @override
-  String get buildingFormOr => 'o';
+  String get buildingFormOr => 'or';
 
   @override
   String get buildingFormNeighborhoodLabel => 'Neighborhood';
@@ -1562,7 +1562,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormNumberLabel => 'Number';
 
   @override
-  String get buildingFormNumberHint => 'p. ex., 123';
+  String get buildingFormNumberHint => 'e.g., 123';
 
   @override
   String get buildingFormLocationInfo =>
@@ -1611,7 +1611,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingFormFloorsHint => 'e.g., 6';
 
   @override
-  String get buildingFormSurfaceLabel => 'Total area (m�)';
+  String get buildingFormSurfaceLabel => 'Total area (m²)';
 
   @override
   String get buildingFormSurfaceHint => 'e.g., 850';
@@ -1695,7 +1695,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Basic information about the home linked to your account.';
 
   @override
-  String get editHabitatgeRenovationYear => 'Any reforma';
+  String get editHabitatgeRenovationYear => 'Renovation year';
 
   @override
   String get editHabitatgeInvalidYear => 'Enter a valid year';
@@ -1722,7 +1722,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Primary energy consumption';
 
   @override
-  String get editHabitatgeFinalEnergyConsumption => 'Consum energia final';
+  String get editHabitatgeFinalEnergyConsumption => 'Final energy consumption';
 
   @override
   String get editHabitatgeCo2Emissions => 'CO₂ emissions';
@@ -1740,10 +1740,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabitatgeCoolingEnergy => 'Cooling energy';
 
   @override
-  String get editHabitatgeAcsEnergy => 'Energia ACS';
+  String get editHabitatgeAcsEnergy => 'DHW energy';
 
   @override
-  String get editHabitatgeLightingEnergy => 'Energia enllumenament';
+  String get editHabitatgeLightingEnergy => 'Lighting energy';
 
   @override
   String get editHabitatgeEmissionsByUse => 'Emissions by use';
@@ -1755,10 +1755,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabitatgeCoolingEmissions => 'Cooling emissions';
 
   @override
-  String get editHabitatgeAcsEmissions => 'Emissions ACS';
+  String get editHabitatgeAcsEmissions => 'DHW emissions';
 
   @override
-  String get editHabitatgeLightingEmissions => 'Emissions enllumenament';
+  String get editHabitatgeLightingEmissions => 'Lighting emissions';
 
   @override
   String get editHabitatgeCertificationEnvelope => 'Certification and envelope';
@@ -1767,7 +1767,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabitatgeThermalInsulation => 'Thermal insulation';
 
   @override
-  String get editHabitatgeWindowValue => 'Valor finestres';
+  String get editHabitatgeWindowValue => 'Window value';
 
   @override
   String get editHabitatgeCertificationTool => 'Certification tool';
@@ -1969,10 +1969,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get altSimulationSelectUpdates => 'Seleccioneu\nactualitzacions';
+  String get altSimulationSelectUpdates => 'Select\nupdates';
 
   @override
-  String get altSimulationDetailedImpact => 'Impacte detallat';
+  String get altSimulationDetailedImpact => 'Detailed impact';
 
   @override
   String get altSimulationPresentVote => 'Submit to vote';
@@ -1984,10 +1984,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationExpectedPerformance => 'Expected performance';
 
   @override
-  String get altSimulationImpact => 'IMPACTE';
+  String get altSimulationImpact => 'IMPACT';
 
   @override
-  String get altSimulationEstimatedCost => 'COST\nESTIM';
+  String get altSimulationEstimatedCost => 'ESTIMATED\nCOST';
 
   @override
   String get altSimulationOperationalForecast => 'OPERATING FORECAST';
@@ -1996,7 +1996,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationAnnualEnergyCost => 'Annual energy cost';
 
   @override
-  String get altSimulationCarbonFootprint => 'Petjada de carboni';
+  String get altSimulationCarbonFootprint => 'Carbon footprint';
 
   @override
   String get altSimulationEnergyIntensity => 'Energy intensity';
@@ -2005,24 +2005,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationTotalInvestment => 'TOTAL INVESTMENT';
 
   @override
-  String get altSimulationAnnualSavings => 'ESTALVI ANUAL';
+  String get altSimulationAnnualSavings => 'ANNUAL SAVINGS';
 
   @override
   String get altSimulationPaybackPeriod => 'PAYBACK PERIOD';
 
   @override
   String altSimulationYears(String years) {
-    return '$years anys';
+    return '$years years';
   }
 
   @override
-  String get altSimulationSolarTitle => 'Panell solar fotovoltaic';
+  String get altSimulationSolarTitle => 'Photovoltaic solar panel';
 
   @override
-  String get altSimulationSolarSubtitle => '10 kW teulada';
+  String get altSimulationSolarSubtitle => '10 kW roof';
 
   @override
-  String get altSimulationGlazingTitle => 'Triple vidre';
+  String get altSimulationGlazingTitle => 'Triple glazing';
 
   @override
   String get altSimulationGlazingSubtitle => 'High performance';
@@ -2031,44 +2031,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get altSimulationInsulationTitle => 'Wall insulation';
 
   @override
-  String get altSimulationInsulationSubtitle => 'Mineral exterior';
+  String get altSimulationInsulationSubtitle => 'External mineral insulation';
 
   @override
-  String get altSimulationHeatPumpTitle => 'Bomba de calor';
+  String get altSimulationHeatPumpTitle => 'Heat pump';
 
   @override
-  String get altSimulationHeatPumpSubtitle => 'Sistema eficient aire-aigua';
+  String get altSimulationHeatPumpSubtitle => 'Efficient air-to-water system';
 
   @override
-  String get votesStatusOpen => 'Oberta';
+  String get votesStatusOpen => 'Open';
 
   @override
-  String get votesStatusClosed => 'Tancada';
+  String get votesStatusClosed => 'Closed';
 
   @override
-  String get votesStatusArchived => 'Arxivada';
+  String get votesStatusArchived => 'Archived';
 
   @override
   String get votesStatusCancelled => 'Cancelled';
 
   @override
-  String get votesRetry => 'Torna-ho a provar';
+  String get votesRetry => 'Try again';
 
   @override
   String votesCount(int count) {
-    return '$count vots';
+    return '$count votes';
   }
 
   @override
   String votesCountSingular(int count) {
-    return '$count vot';
+    return '$count vote';
   }
 
   @override
   String get votesSelectOptionSnack => 'Select an option to vote.';
 
   @override
-  String get votesRegisteredSnack => 'Vot registrat correctament.';
+  String get votesRegisteredSnack => 'Vote registered successfully.';
 
   @override
   String get votesDeleteTitle => 'Delete vote';
@@ -2081,17 +2081,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votesCancel => 'Cancel';
 
   @override
-  String get votesDelete => 'Eliminar';
+  String get votesDelete => 'Delete';
 
   @override
   String get votesFallbackTitle => 'Vote';
 
   @override
-  String get votesEdit => 'Editar';
+  String get votesEdit => 'Edit';
 
   @override
   String votesUntilDate(String date) {
-    return 'Fins al $date';
+    return 'Until $date';
   }
 
   @override
@@ -2105,39 +2105,39 @@ class AppLocalizationsEn extends AppLocalizations {
       'Only owners and property managers linked to this building can vote.';
 
   @override
-  String get votesVote => 'Votar';
+  String get votesVote => 'Vote';
 
   @override
-  String get votesViewResults => 'Veure resultats';
+  String get votesViewResults => 'View results';
 
   @override
-  String get votesResults => 'Resultats';
+  String get votesResults => 'Results';
 
   @override
   String votesTotal(int count) {
-    return 'Total: $count vots';
+    return 'Total: $count votes';
   }
 
   @override
   String votesTotalSingular(int count) {
-    return 'Total: $count vot';
+    return 'Total: $count vote';
   }
 
   @override
   String get votesEditTitle => 'Edit vote';
 
   @override
-  String get votesSave => 'Desar';
+  String get votesSave => 'Save';
 
   @override
-  String get votesSaveChanges => 'Desar canvis';
+  String get votesSaveChanges => 'Save changes';
 
   @override
   String get votesMinimumOptionsSnack => 'At least 2 options are required.';
 
   @override
   String get votesDuplicateOptionsSnack =>
-      'Hi ha opcions duplicades. Revisa\'ls.';
+      'There are duplicate options. Review them.';
 
   @override
   String get votesTitleRequired => 'The title is required.';
@@ -2160,7 +2160,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Warning: changing the options may affect existing votes.';
 
   @override
-  String get votesState => 'Estat';
+  String get votesState => 'State';
 
   @override
   String get votesCancelledLocked => 'A cancelled vote cannot be reopened.';
