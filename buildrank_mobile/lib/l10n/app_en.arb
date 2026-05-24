@@ -845,7 +845,7 @@
     "buildingFormRegulationSummaryLabel":  "Regulation",
     "buildingFormFloorsLabel":  "Number of floors",
     "buildingFormFloorsHint":  "e.g., 6",
-    "buildingFormSurfaceLabel":  "Total area (m�)",
+    "buildingFormSurfaceLabel":  "Total area (m²)",
     "buildingFormSurfaceHint":  "e.g., 850",
     "buildingFormOrientationLabel":  "Main orientation",
     "buildingFormOrientationHint":  "Select an orientation",
