@@ -672,10 +672,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pendingRequestsResidentChip => 'Residente';
 
   @override
-  String get pendingRequestsRequestTypeLabel => 'Tipo de solicitud';
+  String get pendingRequestsRequestedRoleLabel => 'Rol solicitado';
 
   @override
-  String get pendingRequestsResidentJoinType => 'Unión como residente';
+  String get pendingRequestsRoleOwner => 'Propietario';
+
+  @override
+  String get pendingRequestsRoleTenant => 'Inquilino';
+
+  @override
+  String get pendingRequestsRoleUnknown => 'Rol no especificado';
 
   @override
   String get pendingRequestsDateLabel => 'Fecha';

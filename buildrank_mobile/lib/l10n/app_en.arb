@@ -314,8 +314,10 @@
                                                       }
                                  },
     "pendingRequestsResidentChip":  "Resident",
-    "pendingRequestsRequestTypeLabel":  "Request type",
-    "pendingRequestsResidentJoinType":  "Resident join request",
+    "pendingRequestsRequestedRoleLabel": "Requested role",
+    "pendingRequestsRoleOwner": "Owner",
+    "pendingRequestsRoleTenant": "Tenant",
+    "pendingRequestsRoleUnknown": "Unspecified role",
     "pendingRequestsDateLabel":  "Date",
     "pendingRequestsCadastralReferenceLabel":  "Cadastral reference",
     "pendingRequestsHomeLabel":  "Home",

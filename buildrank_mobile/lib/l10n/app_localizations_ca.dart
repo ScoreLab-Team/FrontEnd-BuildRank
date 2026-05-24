@@ -671,10 +671,16 @@ class AppLocalizationsCa extends AppLocalizations {
   String get pendingRequestsResidentChip => 'Resident';
 
   @override
-  String get pendingRequestsRequestTypeLabel => 'Tipus de sol·licitud';
+  String get pendingRequestsRequestedRoleLabel => 'Rol sol·licitat';
 
   @override
-  String get pendingRequestsResidentJoinType => 'Unió com a resident';
+  String get pendingRequestsRoleOwner => 'Propietari';
+
+  @override
+  String get pendingRequestsRoleTenant => 'Llogater';
+
+  @override
+  String get pendingRequestsRoleUnknown => 'Rol no especificat';
 
   @override
   String get pendingRequestsDateLabel => 'Data';

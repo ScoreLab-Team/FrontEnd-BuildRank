@@ -1252,17 +1252,29 @@ abstract class AppLocalizations {
   /// **'Resident'**
   String get pendingRequestsResidentChip;
 
-  /// No description provided for @pendingRequestsRequestTypeLabel.
+  /// No description provided for @pendingRequestsRequestedRoleLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Tipus de sol·licitud'**
-  String get pendingRequestsRequestTypeLabel;
+  /// **'Rol sol·licitat'**
+  String get pendingRequestsRequestedRoleLabel;
 
-  /// No description provided for @pendingRequestsResidentJoinType.
+  /// No description provided for @pendingRequestsRoleOwner.
   ///
   /// In ca, this message translates to:
-  /// **'Unió com a resident'**
-  String get pendingRequestsResidentJoinType;
+  /// **'Propietari'**
+  String get pendingRequestsRoleOwner;
+
+  /// No description provided for @pendingRequestsRoleTenant.
+  ///
+  /// In ca, this message translates to:
+  /// **'Llogater'**
+  String get pendingRequestsRoleTenant;
+
+  /// No description provided for @pendingRequestsRoleUnknown.
+  ///
+  /// In ca, this message translates to:
+  /// **'Rol no especificat'**
+  String get pendingRequestsRoleUnknown;
 
   /// No description provided for @pendingRequestsDateLabel.
   ///

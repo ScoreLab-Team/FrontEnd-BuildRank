@@ -314,8 +314,10 @@
                                                       }
                                  },
     "pendingRequestsResidentChip":  "Residente",
-    "pendingRequestsRequestTypeLabel":  "Tipo de solicitud",
-    "pendingRequestsResidentJoinType":  "Unión como residente",
+    "pendingRequestsRequestedRoleLabel": "Rol solicitado",
+    "pendingRequestsRoleOwner": "Propietario",
+    "pendingRequestsRoleTenant": "Inquilino",
+    "pendingRequestsRoleUnknown": "Rol no especificado",
     "pendingRequestsDateLabel":  "Fecha",
     "pendingRequestsCadastralReferenceLabel":  "Referencia catastral",
     "pendingRequestsHomeLabel":  "Vivienda",

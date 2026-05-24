@@ -314,8 +314,10 @@
                                                       }
                                  },
     "pendingRequestsResidentChip":  "Resident",
-    "pendingRequestsRequestTypeLabel":  "Tipus de sol·licitud",
-    "pendingRequestsResidentJoinType":  "Unió com a resident",
+    "pendingRequestsRequestedRoleLabel": "Rol sol·licitat",
+    "pendingRequestsRoleOwner": "Propietari",
+    "pendingRequestsRoleTenant": "Llogater",
+    "pendingRequestsRoleUnknown": "Rol no especificat",
     "pendingRequestsDateLabel":  "Data",
     "pendingRequestsCadastralReferenceLabel":  "Referència cadastral",
     "pendingRequestsHomeLabel":  "Habitatge",
