@@ -16,6 +16,8 @@ class BuildingDetailScreen extends StatefulWidget {
   final String title;
   final String address;
   final int score;
+  final BuildingService? buildingService;
+  final ImageProvider? avatarImage;
 
   const BuildingDetailScreen({
     super.key,
@@ -25,6 +27,8 @@ class BuildingDetailScreen extends StatefulWidget {
     required this.title,
     required this.address,
     required this.score,
+    this.buildingService,
+    this.avatarImage,
   });
 
   @override
@@ -32,7 +36,7 @@ class BuildingDetailScreen extends StatefulWidget {
 }
 
 class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
-  final BuildingService _buildingService = BuildingService();
+  late final BuildingService _buildingService;
 
   int _tabIndex = 0;
   bool _isLoading = true;
@@ -46,6 +50,7 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _buildingService = widget.buildingService ?? BuildingService();
     _buildingDetail = widget.building;
     _loadBuildingDetail();
     _loadBuildingBadges();
@@ -351,10 +356,12 @@ class _BuildingDetailScreenState extends State<BuildingDetailScreen> {
                         )
                       : const Icon(Icons.refresh),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 16),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage("https://i.pravatar.cc/100"),
+                    backgroundImage:
+                        widget.avatarImage ??
+                        const NetworkImage("https://i.pravatar.cc/100"),
                   ),
                 ),
               ],
