@@ -33,6 +33,11 @@ void main() {
     expect(find.text('72'), findsOneWidget);
     expect(find.text('RENDIMENT'), findsOneWidget);
     expect(find.textContaining('INS'), findsOneWidget);
+    expect(find.textContaining('Informe'), findsNothing);
+    expect(find.textContaining('Silver'), findsNothing);
+    expect(find.textContaining('League'), findsNothing);
+    expect(find.textContaining('revis'), findsNothing);
+    expect(find.textContaining('habitatge'), findsWidgets);
   });
 }
 

@@ -214,7 +214,6 @@ class _ProfileScreenState extends State<ProfileScreen>
         builder: (_) => EditProfileScreen(
           initialFullName: _buildFullName(),
           initialEmail: (_userData?['email'] ?? '').toString(),
-          initialRoleLabel: _buildRoleLabel(),
         ),
       ),
     );
@@ -324,10 +323,6 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                   _buildMapAccessCard(),
 
-                  const SizedBox(height: 16),
-
-                  _buildSeasonCard(),
-
                   const SizedBox(height: 20),
 
                   _buildBuildingsHeader(),
@@ -343,14 +338,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             ),
     );
-  }
-
-  void _showReportsSoon() {
-    final l10n = AppLocalizations.of(context);
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.profileReportsSoon)));
   }
 
   Widget _buildRoleActions() {
@@ -371,26 +358,17 @@ class _ProfileScreenState extends State<ProfileScreen>
               const SizedBox(width: 10),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: _showReportsSoon,
-                  icon: const Icon(Icons.description_outlined),
-                  label: Text(AppLocalizations.of(context).profileReports),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MyChatsScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.chat_bubble_outline),
+                  label: Text(AppLocalizations.of(context).myChatsTitle),
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const MyChatsScreen()),
-                );
-              },
-              icon: const Icon(Icons.chat_bubble_outline),
-              label: Text(AppLocalizations.of(context).myChatsTitle),
-            ),
           ),
         ],
       );
@@ -639,32 +617,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                 subtitle: AppLocalizations.of(context).profileMetricProgress,
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSeasonCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.green,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocalizations.of(context).profileSeasonRestart,
-            style: const TextStyle(color: Colors.white),
-          ),
-          const SizedBox(height: 8),
-          const LinearProgressIndicator(value: 0.7),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(context).profileSeasonDaysLeft(12),
-            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),

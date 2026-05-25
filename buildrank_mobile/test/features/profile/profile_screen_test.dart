@@ -16,7 +16,7 @@ void main() {
     await pumpLocalizedWidget(
       tester,
       ProfileScreen(
-        authService: FakeAuthService(),
+        authService: FakeAuthService(role: 'admin'),
         buildingService: FakeBuildingService(),
         notificacionsService: FakeNotificacionsService(),
         weatherService: FakeWeatherService(),
@@ -31,10 +31,13 @@ void main() {
 
     expect(find.text('Laia Pons'), findsOneWidget);
     expect(find.text('laia@example.com'), findsOneWidget);
-    expect(find.text('Propietari'), findsOneWidget);
+    expect(find.text('Administrador de finca'), findsOneWidget);
     expect(find.textContaining('Mapa'), findsWidgets);
     expect(find.textContaining('Barcelona'), findsOneWidget);
-    expect(find.textContaining('Encara no tens habitatges'), findsOneWidget);
+    expect(find.textContaining('Encara no tens cap edifici'), findsOneWidget);
+    expect(find.textContaining('Informes'), findsNothing);
+    expect(find.textContaining('reinici'), findsNothing);
+    expect(find.text('Els meus xats'), findsOneWidget);
   });
 
   testWidgets('ProfileScreen mostra estat error si falla el perfil', (
@@ -60,8 +63,9 @@ void main() {
 
 class FakeAuthService extends AuthService {
   final bool shouldThrow;
+  final String role;
 
-  FakeAuthService({this.shouldThrow = false});
+  FakeAuthService({this.shouldThrow = false, this.role = 'owner'});
 
   @override
   Future<Map<String, dynamic>> getMe() async {
@@ -70,7 +74,7 @@ class FakeAuthService extends AuthService {
       'first_name': 'Laia',
       'last_name': 'Pons',
       'email': 'laia@example.com',
-      'role': 'owner',
+      'role': role,
     };
   }
 
