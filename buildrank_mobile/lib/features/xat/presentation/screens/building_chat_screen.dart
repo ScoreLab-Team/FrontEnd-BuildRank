@@ -84,8 +84,15 @@ class _BuildingChatScreenState extends State<BuildingChatScreen> {
     _initChannel();
   }
 
-  int _djangoId(String streamUserId) =>
-      int.tryParse(streamUserId.replaceFirst('user_', '')) ?? 0;
+  // Extreu l'ID de Django d'un stream_user_id. Accepta dues formes:
+  //  - "user_17"        → 17
+  //  - "user_17_v2"     → 17  (cas en què el user_id antic va quedar
+  //                            tombstoned a GetStream i es va bumpar la
+  //                            versió al backend)
+  int _djangoId(String streamUserId) {
+    final match = RegExp(r'^user_(\d+)').firstMatch(streamUserId);
+    return match != null ? int.parse(match.group(1)!) : 0;
+  }
 
   void _showFeedback(String message, {bool isError = false}) {
     if (!mounted) return;
