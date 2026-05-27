@@ -1,11 +1,9 @@
-import 'package:buildrank_mobile/core/services/stream_service.dart';
 import 'package:buildrank_mobile/features/xat/data/chat_service.dart';
 import 'package:buildrank_mobile/features/admin/presentation/screens/system_admin_home_screen.dart';
 import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
 import 'package:buildrank_mobile/features/legal/presentation/screens/legal_document_screen.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:buildrank_mobile/l10n/app_localizations.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -122,17 +120,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final me = await _authService.getMe();
     final isSystemAdmin = me['is_system_admin'] == true;
 
-    try {
-      final userName = '${me['first_name'] ?? ''} ${me['last_name'] ?? ''}'
-          .trim();
-
-      await ChatService.provisionAndReconnect(
-        userName: userName.isNotEmpty ? userName : null,
-      );
-
-      final token = await FirebaseMessaging.instance.getToken();
-      if (token != null) await StreamService.registerFcmToken(token);
-    } catch (_) {}
+    // Connecta el xat en segon pla: la handshake amb GetStream pot trigar
+    // 20-30s i no ha de bloquejar la navegació post-registre.
+    final userName = '${me['first_name'] ?? ''} ${me['last_name'] ?? ''}'
+        .trim();
+    ChatService.startSessionInBackground(
+      userName: userName.isNotEmpty ? userName : null,
+    );
 
     if (!mounted) return;
 
