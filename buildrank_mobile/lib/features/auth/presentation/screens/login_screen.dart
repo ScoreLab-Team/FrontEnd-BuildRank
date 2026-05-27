@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:buildrank_mobile/features/auth/data/auth_service.dart';
+import 'package:buildrank_mobile/features/auth/data/google_signin_web_button.dart';
 import 'package:buildrank_mobile/features/xat/data/chat_service.dart';
 import 'package:buildrank_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:buildrank_mobile/features/admin/presentation/screens/system_admin_home_screen.dart';
 import 'package:buildrank_mobile/features/auth/presentation/screens/password_reset_screen.dart';
 import 'package:buildrank_mobile/l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,6 +25,67 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isLoading = false;
   String? _errorText;
+
+  // Stream subscription per al flux de Google Sign-In en Web. El plugin
+  // emet un esdeveniment quan l'usuari clica el botó oficial de GIS.
+  StreamSubscription<GoogleSignInAuthenticationEvent>? _googleAuthSub;
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      _setupWebGoogleSignIn();
+    }
+  }
+
+  Future<void> _setupWebGoogleSignIn() async {
+    try {
+      await _authService.ensureGoogleSignInReady();
+    } catch (_) {
+      // Si la inicialització falla, el botó no servirà però la pantalla
+      // segueix funcionant amb login per email/contrasenya.
+      return;
+    }
+    if (!mounted) return;
+    _googleAuthSub = GoogleSignIn.instance.authenticationEvents.listen(
+      _handleWebGoogleEvent,
+    );
+  }
+
+  Future<void> _handleWebGoogleEvent(
+    GoogleSignInAuthenticationEvent event,
+  ) async {
+    if (event is! GoogleSignInAuthenticationEventSignIn) return;
+
+    final idToken = event.user.authentication.idToken;
+    if (idToken == null || idToken.isEmpty) {
+      if (mounted) {
+        setState(() => _errorText = 'Google no ha retornat cap id_token.');
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+
+    try {
+      await _authService.exchangeGoogleIdToken(idToken: idToken);
+      if (!mounted) return;
+      await _finishAuthenticatedNavigation();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorText = e.toString().replaceFirst('Exception: ', '');
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   Future<void> _handleLogin() async {
     final l10n = AppLocalizations.of(context);
@@ -103,6 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    _googleAuthSub?.cancel();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -224,11 +291,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    onPressed: _isLoading ? null : _handleGoogleLogin,
-                    icon: const Icon(Icons.g_mobiledata),
-                    label: Text(l10n.loginGoogleButton),
-                  ),
+                  // En Web, `google_sign_in` 7.x requereix renderitzar el
+                  // botó oficial de Google Identity Services (no accepta
+                  // crida imperativa). El resultat arriba pel stream
+                  // `authenticationEvents`, gestionat a `_handleWebGoogleEvent`.
+                  if (kIsWeb)
+                    Center(child: renderGoogleSignInWebButton())
+                  else
+                    OutlinedButton.icon(
+                      onPressed: _isLoading ? null : _handleGoogleLogin,
+                      icon: const Icon(Icons.g_mobiledata),
+                      label: Text(l10n.loginGoogleButton),
+                    ),
                 ],
               ),
             ),

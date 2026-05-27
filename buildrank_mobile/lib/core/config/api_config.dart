@@ -372,6 +372,29 @@ class ApiConfig {
 
   static const String xemaApiKey = String.fromEnvironment('XEMA_API_KEY');
 
+  // =========================
+  // Google OAuth
+  // =========================
+  /// Web client ID d'OAuth 2.0 (de Google Cloud Console / Firebase).
+  ///
+  /// Requerit per `GoogleSignIn.instance.initialize(serverClientId: ...)` en
+  /// Android amb `google_sign_in` >=7.0: sense aquest valor, l'`idToken` no
+  /// es genera i el plugin natiu pot llançar "Null check operator used on a
+  /// null value".
+  ///
+  /// El backend ha d'usar exactament aquest mateix valor com a
+  /// `GOOGLE_OAUTH_CLIENT_ID` per verificar el token (l'audience ha de
+  /// coincidir).
+  ///
+  /// Per defecte agafa el web client del `google-services.json` del repo.
+  /// Es pot sobreescriure amb:
+  ///   flutter build apk --dart-define=GOOGLE_OAUTH_SERVER_CLIENT_ID=...
+  static const String googleOAuthServerClientId = String.fromEnvironment(
+    'GOOGLE_OAUTH_SERVER_CLIENT_ID',
+    defaultValue:
+        '151978577358-rlroa7mvj0n64anlvvip4slngldv87ch.apps.googleusercontent.com',
+  );
+
   static Uri xemaCurrentWeather({String city = 'Barcelona'}) {
     return Uri.parse(
       '$xemaWeatherBaseUrl/api/weather/current/',
