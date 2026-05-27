@@ -392,4 +392,24 @@ class ApiConfig {
       ),
     );
   }
+
+  /// Reconstrueix una URL de media (avatar, etc.) perquè apunti a [baseUrl].
+  ///
+  /// El backend genera URLs absolutes amb `request.build_absolute_uri()`, que
+  /// depèn del header `Host` que veu Django. Si entre el client i el backend
+  /// hi ha un NAT/proxy que reescriu o stripeja el `Host` (per exemple,
+  /// nattech a la UPC), la URL retornada apunta a un host/port inaccessible
+  /// des de fora. Aquest helper extreu el path i el torna a compondre amb el
+  /// [baseUrl] que el front ja està utilitzant amb èxit per parlar amb el
+  /// backend — així la URL és sempre accessible.
+  static String absoluteMediaUrl(String url) {
+    final trimmed = url.trim();
+    if (trimmed.isEmpty) return trimmed;
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      final parsed = Uri.parse(trimmed);
+      final query = parsed.hasQuery ? '?${parsed.query}' : '';
+      return '$baseUrl${parsed.path}$query';
+    }
+    return '$baseUrl$trimmed';
+  }
 }
